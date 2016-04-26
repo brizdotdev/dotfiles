@@ -1,0 +1,8 @@
+#!/bin/bash
+app='--app=https://www.messenger.com'
+if [[ "$1" == "tab" ]]
+then
+  app='https://www.messenger.com'
+fi
+
+exec google-chrome-stable $app

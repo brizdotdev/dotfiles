@@ -1,0 +1,8 @@
+#!/bin/bash
+app='--app=https://hangouts.google.com'
+if [[ "$1" == "tab" ]]
+then
+  app='https://hangouts.google.com'
+fi
+
+exec google-chrome-stable $app

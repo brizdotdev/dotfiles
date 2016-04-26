@@ -1,0 +1,12 @@
+#!/bin/bash
+args=""
+for a in "$@"
+do
+  if [[ "$args" != "" ]]
+  then
+    args+="%20"
+  fi
+  args+=$a
+done
+
+google-chrome-stable https://aur.archlinux.org/packages/?O=0&K=$args
