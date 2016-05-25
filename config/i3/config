@@ -136,10 +136,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+        bindsym h resize shrink width 10 px or 10 ppt
+        bindsym j resize grow height 10 px or 10 ppt
+        bindsym k resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
@@ -171,6 +171,14 @@ bar {
   tray_output primary
   font pango: leggie 10
   status_command i3blocks -c /home/brizzz/.config/i3/i3blocks.conf
+  colors {
+    background #222222
+    statusline #ffffff
+    focused_workspace #ffffff #222222 #ffffff
+    active_workspace  #ffff00 #222222 #ffff00
+    inactive_workspace #555555 #222222 #555555
+    urgent_workspace #ff0000  #222222 #ff00ff
+  }
 }
 
 # Volume controls
@@ -178,6 +186,9 @@ bindsym XF86AudioRaiseVolume exec "amixer -D pulse sset Master 5%+"
 bindsym XF86AudioLowerVolume exec "amixer -D pulse sset Master 5%-"
 bindsym XF86AudioMute exec "amixer -D pulse sset Master toggle"
 
+bindsym $mod+bracketright exec "amixer -D pulse sset Master 5%+"
+bindsym $mod+bracketleft exec "amixer -D pulse sset Master 5%-"
+bindsym $mod+backslash exec "amixer -D pulse sset Master toggle"
 
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
