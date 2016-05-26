@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "`lscpu | grep 'CPU MHz' | awk '{print $3}' | awk '{ $spd = $1/1000; print $spd}' | grep -o '....'` GHz"

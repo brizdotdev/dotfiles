@@ -18,6 +18,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+space exec rofi -show run
 bindsym $mod+F11 exec i3-dmenu-desktop
 bindsym $mod+c exec google-chrome-stable
+bindsym $mod+a exec atom
 
 #floating image viewer
 for_window[class="feh"] floating enable
@@ -81,7 +82,7 @@ bindsym $mod+Shift+space floating toggle
 # bindsym $mod+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+a focus parent
+bindsym $mod+Shift+a focus parent
 
 # focus the child container
 #bindsym $mod+d focus child
@@ -168,7 +169,6 @@ client.background       #ffffff
 # finds out, if available)
 bar {
   mode hide
-  tray_output primary
   font pango: leggie 10
   status_command i3blocks -c /home/brizzz/.config/i3/i3blocks.conf
   colors {
