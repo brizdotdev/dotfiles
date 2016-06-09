@@ -26,7 +26,7 @@ for_window[class="ristretto"] floating enable
 for_window[class="Ristretto"] floating enable
 for_window[class="eog"] floating enable
 for_window[class="Eog"] floating enable
-
+for_window[title="Join by joaoapps"] floating enable
 
 # gaps
 gaps inner 5
@@ -169,6 +169,7 @@ client.background       #ffffff
 # finds out, if available)
 bar {
   mode hide
+  tray_output primary
   font pango: leggie 10
   status_command i3blocks -c /home/brizzz/.config/i3/i3blocks.conf
   colors {
@@ -190,6 +191,10 @@ bindsym $mod+bracketright exec "amixer -D pulse sset Master 5%+"
 bindsym $mod+bracketleft exec "amixer -D pulse sset Master 5%-"
 bindsym $mod+backslash exec "amixer -D pulse sset Master toggle"
 
+bindsym $mod+z exec "amixer -D pulse sset Master 5%+"
+bindsym $mod+x exec "amixer -D pulse sset Master 5%-"
+bindsym $mod+shift+z exec "amixer -D pulse sset Master toggle"
+
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
 bindsym XF86AudioPause exec playerctl pause
@@ -199,9 +204,6 @@ bindsym XF86AudioPrev exec playerctl previous
 # Lock Screen script
 bindsym $mod+F12 exec lock-screen
 
-#Default workspaces
-workspace $workspace1 output HDMI-1
-workspace $workspace2 output LVDS-1
 
 
 #Gaps mode

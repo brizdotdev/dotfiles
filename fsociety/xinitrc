@@ -8,15 +8,7 @@ sysmodmap=/etc/X11/xinit/.Xmodmap
 # merge in defaults and keymaps
 
 if [ -f $sysresources ]; then
-
-
-
-
-
-
-
     xrdb -merge $sysresources
-
 fi
 
 if [ -f $sysmodmap ]; then
@@ -24,15 +16,7 @@ if [ -f $sysmodmap ]; then
 fi
 
 if [ -f "$userresources" ]; then
-
-
-
-
-
-
-
     xrdb -merge "$userresources"
-
 fi
 
 if [ -f "$usermodmap" ]; then
@@ -48,7 +32,9 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
-export QT_STYLE-OVERRIDE=GTK+
-xrandr --output HDMI-1 --auto --left-of LVDS-1
+export QT_STYLE-OVERRIDE=GTK
+xrandr --output LVDS1 --auto --primary
+cp ~/.config/nitrogen/normal/*.cfg ~/.config/nitrogen/
 nitrogen --restore &
+menutray -g -i &
 exec i3

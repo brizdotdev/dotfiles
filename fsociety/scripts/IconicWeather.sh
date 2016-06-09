@@ -15,7 +15,7 @@ if (/Currently/) {
   my @values=split(":",$1);
   my $q = $values[0];
   $values[0]= lc($values[0]);
-  if( $values[0] eq "Sunny" || $values[0] eq "Mostly Sunny" || $values[0] eq "Partly Sunny" || $values[0] eq "Intermittent Clouds" || $values[0] eq "Hazy Sunshine" || $values[0] eq "Hazy Sunshine" || $values[0] eq "Hot")
+  if( $values[0] eq "sunny" || $values[0] eq "mostly sunny" || $values[0] eq "partly sunny" || $values[0] eq "intermittent clouds" || $values[0] eq "hazy sunshine" || $values[0] eq "hazy sunshine" || $values[0] eq "hot")
   {
     my $sun = "";
     binmode(STDOUT, ":utf8");
