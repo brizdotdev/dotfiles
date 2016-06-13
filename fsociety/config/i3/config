@@ -170,7 +170,7 @@ client.background       #ffffff
 bar {
   mode hide
   tray_output primary
-  font pango: leggie 10
+  font pango: leggie 9
   status_command i3blocks -c /home/brizzz/.config/i3/i3blocks.conf
   colors {
     background #222222
@@ -191,8 +191,8 @@ bindsym $mod+bracketright exec "amixer -D pulse sset Master 5%+"
 bindsym $mod+bracketleft exec "amixer -D pulse sset Master 5%-"
 bindsym $mod+backslash exec "amixer -D pulse sset Master toggle"
 
-bindsym $mod+z exec "amixer -D pulse sset Master 5%+"
-bindsym $mod+x exec "amixer -D pulse sset Master 5%-"
+bindsym $mod+z exec "amixer -D pulse sset Master 5%-"
+bindsym $mod+x exec "amixer -D pulse sset Master 5%+"
 bindsym $mod+shift+z exec "amixer -D pulse sset Master toggle"
 
 # Media player controls
