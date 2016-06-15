@@ -18,6 +18,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+space exec rofi -show run
 bindsym $mod+F11 exec i3-dmenu-desktop
 bindsym $mod+c exec google-chrome-stable
+bindsym $mod+equal exec gnome-calculator
 bindsym $mod+a exec atom
 
 #floating image viewer
