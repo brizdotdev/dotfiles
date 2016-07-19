@@ -28,6 +28,8 @@ for_window[class="Ristretto"] floating enable
 for_window[class="eog"] floating enable
 for_window[class="Eog"] floating enable
 for_window[title="Join by joaoapps"] floating enable
+for_window[class="shutter"] floating enable
+for_window[class="Shutter"] floating enable
 
 # gaps
 gaps inner 5
