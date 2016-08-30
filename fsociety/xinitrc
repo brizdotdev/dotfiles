@@ -37,4 +37,6 @@ xrandr --output LVDS1 --auto --primary
 cp ~/.config/nitrogen/normal/*.cfg ~/.config/nitrogen/
 nitrogen --restore &
 menutray -g -i &
+google-chrome --no-startup-window &
+setxkbmap -option compose:ralt
 exec i3
