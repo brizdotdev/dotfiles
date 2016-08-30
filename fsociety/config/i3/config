@@ -28,6 +28,8 @@ for_window[class="Ristretto"] floating enable
 for_window[class="eog"] floating enable
 for_window[class="Eog"] floating enable
 for_window[title="Join by joaoapps"] floating enable
+for_window[class="shutter"] floating enable
+for_window[class="Shutter"] floating enable
 
 # gaps
 gaps inner 5
@@ -197,10 +199,14 @@ bindsym $mod+x exec "amixer -D pulse sset Master 5%+"
 bindsym $mod+shift+z exec "amixer -D pulse sset Master toggle"
 
 # Media player controls
-bindsym XF86AudioPlay exec playerctl play
-bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
+bindsym $mod+Delete exec playerctl next
+bindsym $mod+Insert exec playerctl previous
+bindsym $mod+BackSpace exec playerctl play-pause
+
 
 # Lock Screen script
 bindsym $mod+F12 exec lock-screen
