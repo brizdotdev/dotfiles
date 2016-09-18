@@ -1,1 +1,1 @@
-/home/brizzz/.scripts/battery
+upower -i $(upower -e | grep 'BAT')

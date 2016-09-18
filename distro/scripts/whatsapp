@@ -1,1 +1,8 @@
-/home/brizzz/.scripts/whatsapp
+#!/bin/bash
+app='--app=https://web.whatsapp.com/'
+if [[ "$1" == "tab" ]]
+then
+  app='https://web.whatsapp.com/'
+fi
+
+exec google-chrome-stable $app

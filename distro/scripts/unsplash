@@ -1,1 +1,11 @@
-/home/brizzz/.scripts/unsplash
+#!/bin/bash
+
+#Thank you unsplash and unsplash.it!
+#Script based on Tymscar's Unsplash script. http://www.github.com/tymscar
+
+# Downloading picture
+wget https://unsplash.it/1920/1080/?random >/dev/null 2>&1 -O ~/Pictures/Wall/vga.jpg
+wget https://unsplash.it/1920/1080/?random >/dev/null 2>&1 -O ~/Pictures/Wall/lvds.jpg
+
+# Setting wallpaper
+nitrogen --restore

@@ -1,1 +1,2 @@
-/home/brizzz/.scripts/suspend
+!#/bin/bash
+systemctl suspend

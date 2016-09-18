@@ -1,1 +1,49 @@
-/home/brizzz/.Xresources
+URxvt*font: xft:terminus:pixelsize=11
+URxvt*boldFont: xft:terminus:pixelsize=11
+URxvt*allow_bold: true
+URxvt*letterspace: 0
+URxvt*scrollBar: false
+
+URxvt.perl-ext-common: default,matcher,selection-to-clipboard
+URxvt.url-launcher: /usr/bin/xdg-open
+URxvt.matcher.button: 1
+URxvt.matcher.rend.0: Uline Bold fg5
+
+URxvt*background 		: #263238
+URxvt*foreground 		: #eceff1
+
+! black
+URxvt*color0  			: #263238
+URxvt*color8  			: #37474f
+! red
+URxvt*color1  			: #ff9800
+URxvt*color9  			: #ffa74d
+! green
+URxvt*color2  			: #8bc34a
+URxvt*color10 			: #9ccc65
+! yellow
+URxvt*color3  			: #ffc107
+URxvt*color11 			: #ffa000
+! blue
+URxvt*color4  			: #03a9f4
+URxvt*color12 			: #81d4fa
+! magenta
+URxvt*color5  			: #e91e63
+URxvt*color13 			: #ad1457
+! cyan
+URxvt*color6  			: #009688
+URxvt*color14 			: #26a69a
+! white
+URxvt*color7  			: #cfd8dc
+URxvt*color15 			: #eceff1
+
+! ------------------------------------------------------------------------------
+! ROFI Color theme
+! ------------------------------------------------------------------------------
+rofi.color-enabled: true
+rofi.color-window: #263238, #263238, #263238
+rofi.color-normal: #263238, #eceff1, #263238, #263238, #ffa000
+rofi.color-active: #54637a, #ffffff, #607D8B, #263238, #ffa000
+rofi.color-urgent: #fdf6e3, #dc322f, #eee8d5, #dc322f, #fdf6e3
+rofi.font: terminus 12
+rofi.lines: 10

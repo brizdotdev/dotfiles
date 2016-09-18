@@ -1,1 +1,1 @@
-/home/brizzz/.scripts/pac_clean
+sudo pacman -Rns $(pacman -Qqtd)
