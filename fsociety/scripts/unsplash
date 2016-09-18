@@ -1,3 +1,5 @@
 #!/bin/bash
 unsplash-wallpaper -d ~/Pictures/Wall/ random > ~/Pictures/Wall/wall.log
 nitrogen --set-scaled --save `grep -o "/home/brizzz/Pictures/Wall/.*" ~/Pictures/Wall/wall.log`
+cp ~/.config/nitrogen/nitrogen.cfg ~/.config/nitrogen/normal/nitrogen.cfg
+cp ~/.config/nitrogen/bg-saved.cfg ~/.config/nitrogen/normal/bg-saved.cfg

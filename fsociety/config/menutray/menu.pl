@@ -124,6 +124,13 @@ sub load_menu {
     $apps->append($app);
 }
 {
+    my $app = 'Gtk2::ImageMenuItem'->new("Leafpad");
+    $app->signal_connect('activate', sub {system "leafpad &"});
+    $app->set_property('tooltip_text', "Simple\ text\ editor");
+    $app->set_image('Gtk2::Image'->new_from_icon_name("leafpad",q{menu}));
+    $apps->append($app);
+}
+{
     my $app = 'Gtk2::ImageMenuItem'->new("Mousepad");
     $app->signal_connect('activate', sub {system "mousepad &"});
     $app->set_property('tooltip_text', "Simple\ Text\ Editor");
@@ -170,6 +177,13 @@ sub load_menu {
     $app->signal_connect('activate', sub {system "xfce4\-sensors &"});
     $app->set_property('tooltip_text', "Show\ sensor\ values\.");
     $app->set_image('Gtk2::Image'->new_from_icon_name("xfce\-sensors",q{menu}));
+    $apps->append($app);
+}
+{
+    my $app = 'Gtk2::ImageMenuItem'->new("Shutter");
+    $app->signal_connect('activate', sub {system "shutter &"});
+    $app->set_property('tooltip_text', "Capture\,\ edit\ and\ share\ screenshots");
+    $app->set_image('Gtk2::Image'->new_from_icon_name("shutter",q{menu}));
     $apps->append($app);
 }
 {
@@ -224,6 +238,13 @@ sub load_menu {
     my $cat = 'Gtk2::ImageMenuItem'->new("Development");
     $cat->set_image('Gtk2::Image'->new_from_icon_name("applications\-development",q{menu}));
 {
+    my $app = 'Gtk2::ImageMenuItem'->new("Android\ SDK");
+    $app->signal_connect('activate', sub {system "android &"});
+    $app->set_property('tooltip_text', "Android\ Software\ Development\ Kit");
+    $app->set_image('Gtk2::Image'->new_from_icon_name("android\-sdk",q{menu}));
+    $apps->append($app);
+}
+{
     my $app = 'Gtk2::ImageMenuItem'->new("Android\ Studio");
     $app->signal_connect('activate', sub {system "android\-studio &"});
     $app->set_property('tooltip_text', "Develop\ with\ pleasure\!");
@@ -235,6 +256,12 @@ sub load_menu {
     $app->signal_connect('activate', sub {system "\/usr\/bin\/atom &"});
     $app->set_property('tooltip_text', "Chrome\-based\ text\ editor\ from\ Github");
     $app->set_image('Gtk2::Image'->new_from_icon_name("atom",q{menu}));
+    $apps->append($app);
+}
+{
+    my $app = 'Gtk2::ImageMenuItem'->new("Brackets");
+    $app->signal_connect('activate', sub {system "\/opt\/brackets\/brackets &"});
+    $app->set_image('Gtk2::Image'->new_from_icon_name("brackets",q{menu}));
     $apps->append($app);
 }
 {
@@ -383,6 +410,13 @@ sub load_menu {
     $apps->append($app);
 }
 {
+    my $app = 'Gtk2::ImageMenuItem'->new("Spotify");
+    $app->signal_connect('activate', sub {system "spotify &"});
+    $app->set_property('tooltip_text', "Spotify\ streaming\ music\ client");
+    $app->set_image('Gtk2::Image'->new_from_icon_name("spotify\-client",q{menu}));
+    $apps->append($app);
+}
+{
     my $app = 'Gtk2::ImageMenuItem'->new("traGtor");
     $app->signal_connect('activate', sub {system "tragtor &"});
     $app->set_property('tooltip_text', "traGtor\ \-\ a\ GUI\ for\ FFmpeg\ for\ audio\ and\ video\-conversion");
@@ -447,7 +481,7 @@ sub load_menu {
 {
     my $app = 'Gtk2::ImageMenuItem'->new("Firefox");
     $app->signal_connect('activate', sub {system "firefox &"});
-    $app->set_property('tooltip_text', "Browse\ the\ World\ Wide\ Web");
+    $app->set_property('tooltip_text', "Browse\ the\ Web");
     $app->set_image('Gtk2::Image'->new_from_icon_name("firefox",q{menu}));
     $apps->append($app);
 }
@@ -470,6 +504,13 @@ sub load_menu {
     $app->signal_connect('activate', sub {system "sftpman\-gtk &"});
     $app->set_property('tooltip_text', "Mount\ SSHFS\/SFTP\ filesystems");
     $app->set_image('Gtk2::Image'->new_from_icon_name("sftpman\-gtk",q{menu}));
+    $apps->append($app);
+}
+{
+    my $app = 'Gtk2::ImageMenuItem'->new("TeamViewer\ 11");
+    $app->signal_connect('activate', sub {system "\/opt\/teamviewer\/tv_bin\/script\/teamviewer &"});
+    $app->set_property('tooltip_text', "TeamViewer\ Remote\ Control\ Application");
+    $app->set_image('Gtk2::Image'->new_from_pixbuf('Gtk2::Gdk::Pixbuf'->new_from_file_at_size("\/opt\/teamviewer\/tv_bin\/desktop\/teamviewer\.png",16,16)));
     $apps->append($app);
 }
 {
@@ -716,7 +757,7 @@ sub load_menu {
     my $app = 'Gtk2::ImageMenuItem'->new("Power\ Manager");
     $app->signal_connect('activate', sub {system "xfce4\-power\-manager\-settings &"});
     $app->set_property('tooltip_text', "Settings\ for\ the\ Xfce\ Power\ Manager");
-    $app->set_image('Gtk2::Image'->new_from_icon_name("xfpm\-ac\-adapter",q{menu}));
+    $app->set_image('Gtk2::Image'->new_from_icon_name("xfce4\-power\-manager\-settings",q{menu}));
     $apps->append($app);
 }
 {
@@ -817,6 +858,13 @@ sub load_menu {
     $app->signal_connect('activate', sub {system "\/usr\/bin\/gparted_polkit &"});
     $app->set_property('tooltip_text', "Create\,\ reorganize\,\ and\ delete\ partitions");
     $app->set_image('Gtk2::Image'->new_from_icon_name("gparted",q{menu}));
+    $apps->append($app);
+}
+{
+    my $app = 'Gtk2::ImageMenuItem'->new("Grsync");
+    $app->signal_connect('activate', sub {system "\/usr\/bin\/grsync\ \-i &"});
+    $app->set_property('tooltip_text', "Synchronize\ files\ and\ folders\ \(a\ GTK\ GUI\ for\ rsync\)");
+    $app->set_image('Gtk2::Image'->new_from_icon_name("grsync",q{menu}));
     $apps->append($app);
 }
 {

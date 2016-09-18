@@ -39,4 +39,5 @@ nitrogen --restore &
 menutray -g -i &
 google-chrome --no-startup-window &
 setxkbmap -option compose:ralt
+unsplash &
 exec i3

@@ -30,6 +30,7 @@ for_window[class="Eog"] floating enable
 for_window[title="Join by joaoapps"] floating enable
 for_window[class="shutter"] floating enable
 for_window[class="Shutter"] floating enable
+for_window[title="Join"] floating enable
 
 # gaps
 gaps inner 5
