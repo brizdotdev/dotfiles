@@ -1,12 +1,1 @@
-#!/bin/bash
-args=""
-for a in "$@"
-do
-  if [[ "$args" != "" ]]
-  then
-    args+="%20"
-  fi
-  args+=$a
-done
-
-google-chrome-stable https://en.wikipedia.org/w/index.php?search=$args&title=Special:Search&go=Go
+/home/brizzz/.scripts/wiki

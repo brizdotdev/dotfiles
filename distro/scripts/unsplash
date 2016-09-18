@@ -1,3 +1,1 @@
-#!/bin/bash
-unsplash-wallpaper -d ~/Pictures/Wall/ random > ~/Pictures/Wall/wall.log
-nitrogen --set-scaled --save `grep -o "/home/brizzz/Pictures/Wall/.*" ~/Pictures/Wall/wall.log`
+/home/brizzz/.scripts/unsplash
