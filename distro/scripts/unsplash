@@ -4,8 +4,20 @@
 #Script based on Tymscar's Unsplash script. http://www.github.com/tymscar
 
 # Downloading picture
-wget https://unsplash.it/1920/1080/?random >/dev/null 2>&1 -O ~/Pictures/Wall/vga.jpg
-wget https://unsplash.it/1920/1080/?random >/dev/null 2>&1 -O ~/Pictures/Wall/lvds.jpg
+
+function download {
+  curl https://unsplash.it/1920/1080/?random > ~/Pictures/Wall/$1.jpg
+}
+
+#check args
+if [[ "$1" == "lvds" ]]; then
+  download lvds
+elif [[ "$1" == "vga" ]]; then
+  download vga
+else
+  download lvds
+  download vga
+fi
 
 # Setting wallpaper
 nitrogen --restore
