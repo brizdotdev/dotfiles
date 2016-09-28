@@ -1,0 +1,38 @@
+#!/bin/bash
+
+function play {
+  pwd
+  mpv *.mp3 --shuffle
+}
+
+
+cd ~/Music
+if [[ "$1" == "suicidesheep" ]]; then
+   cd MrSuicideSheep
+elif [[ "$1" == "ss" ]]; then
+  cd MrSuicideSheep
+elif [[ "$1" == "electropose" ]]; then
+  cd electropose1
+elif [[ "$1" == "ncs" ]]; then
+  cd NoCopyrightSounds
+elif [[ "$1" == "proximity" ]]; then
+  cd PandoraMus1c
+elif [[ "$1" == "liquicity" ]]; then
+  cd Liquicity
+elif [[ "$1" == "monstercat" ]]; then
+  cd MonstercatMedia
+elif [[ "$1" == "MrRevillz" ]]; then
+  cd MrRevillz
+else
+  echo "ss - SuicideSheep"
+  echo "electropose - Electropose"
+  echo "ncs - NoCopyrightSounds"
+  echo "proximity - Proximity"
+  echo "liquicity - Liquicity"
+  echo "monstercat - Monstercat"
+  echo "MrRevillz - MrRevillz"
+  exit
+fi
+
+play
+
