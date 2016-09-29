@@ -7,21 +7,22 @@ function play {
 
 
 cd ~/Music
-if [[ "$1" == "suicidesheep" ]]; then
+arg=${1,,}
+if [[ "$arg" == "suicidesheep" ]]; then
    cd MrSuicideSheep
-elif [[ "$1" == "ss" ]]; then
+elif [[ "$arg" == "ss" ]]; then
   cd MrSuicideSheep
-elif [[ "$1" == "electropose" ]]; then
+elif [[ "$arg" == "electropose" ]]; then
   cd electropose1
-elif [[ "$1" == "ncs" ]]; then
+elif [[ "$arg" == "ncs" ]]; then
   cd NoCopyrightSounds
-elif [[ "$1" == "proximity" ]]; then
+elif [[ "$arg" == "proximity" ]]; then
   cd PandoraMus1c
-elif [[ "$1" == "liquicity" ]]; then
+elif [[ "$arg" == "liquicity" ]]; then
   cd Liquicity
-elif [[ "$1" == "monstercat" ]]; then
+elif [[ "$arg" == "monstercat" ]]; then
   cd MonstercatMedia
-elif [[ "$1" == "MrRevillz" ]]; then
+elif [[ "$arg" == "mrrevillz" ]]; then
   cd MrRevillz
 else
   echo "ss - SuicideSheep"
@@ -30,7 +31,7 @@ else
   echo "proximity - Proximity"
   echo "liquicity - Liquicity"
   echo "monstercat - Monstercat"
-  echo "MrRevillz - MrRevillz"
+  echo "mrrevillz - MrRevillz"
   exit
 fi
 
