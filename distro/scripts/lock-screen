@@ -7,4 +7,6 @@ tmpbg='/tmp/screen.png'
 
 scrot "$tmpbg"
 convert "$tmpbg" -scale 10% -scale 1000% "$tmpbg"
+convert "$tmpbg" "$icon" -geometry +896+476 -composite -matte "$tmpbg"
+convert "$tmpbg" "$icon" -geometry +2543+320 -composite -matte "$tmpbg"
 i3lock -i "$tmpbg" -u
