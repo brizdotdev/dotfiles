@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function play {
-  pwd
+  basename `pwd` | figlet | lolcat
   mpv *.mp3 --shuffle
 }
 
