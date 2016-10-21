@@ -24,6 +24,8 @@ elif [[ "$arg" == "monstercat" ]]; then
   cd MonstercatMedia
 elif [[ "$arg" == "mrrevillz" ]]; then
   cd MrRevillz
+elif [[ "$arg" == "kk" ]]; then
+  cd koalakontrol
 else
   echo "ss - SuicideSheep"
   echo "electropose - Electropose"
@@ -32,6 +34,7 @@ else
   echo "liquicity - Liquicity"
   echo "monstercat - Monstercat"
   echo "mrrevillz - MrRevillz"
+  echo "kk - KoalaKontrol"
   exit
 fi
 
