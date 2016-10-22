@@ -38,6 +38,5 @@ cp ~/.config/nitrogen/normal/*.cfg ~/.config/nitrogen/
 nitrogen --restore &
 google-chrome --no-startup-window &
 setxkbmap -option compose:ralt
-unsplash &
-i3-nagbar -t  warning -m 'Connect to wifi?' -b 'Hotspot' '' -b 'Home' 'wifi' &
+i3-nagbar -t  warning -m 'Connect to wifi?' -b 'Hotspot' '' -b 'Home' 'connect-wifi wlp2s0-6_9\ Canterbury-0433926248' &
 exec i3

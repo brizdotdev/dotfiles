@@ -6,7 +6,7 @@ if [ "$STATUS" == "Charging" ]; then
 elif [ $CAPACITY -le 15 ]; then
   ICON=""
 elif [ $CAPACITY -le 40 ]; then
-  ICON=""
+  ICON=""
 elif [ $CAPACITY -le 65 ]; then
   ICON=""
 elif [ $CAPACITY -le 85 ]; then
