@@ -1,0 +1,3 @@
+#!/bin/bash
+gksudo netctl start wlp2s0-6_9\ Canterbury-0433926248
+killall i3-nagbar

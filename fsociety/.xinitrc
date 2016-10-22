@@ -36,8 +36,8 @@ export QT_STYLE-OVERRIDE=GTK
 xrandr --output LVDS1 --auto --primary
 cp ~/.config/nitrogen/normal/*.cfg ~/.config/nitrogen/
 nitrogen --restore &
-menutray -g -i &
 google-chrome --no-startup-window &
 setxkbmap -option compose:ralt
 unsplash &
+i3-nagbar -t  warning -m 'Connect to wifi?' -b 'Hotspot' '' -b 'Home' 'wifi' &
 exec i3

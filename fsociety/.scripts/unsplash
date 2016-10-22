@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Thank you unsplash and unsplash.it!
+# Script based on Tymscar's Unsplash script. http://www.github.com/tymscar
+# Inspired by https://github.com/mfin/earth-view-wallpaper for Earth View
+
+# Downloading picture
+
+function download {
+  CHANCE=$((RANDOM % 3))
+  if [[ $CHANCE == 0 ]]; then
+	  echo "Earth View"
+	  curl `shuf -n 1 ~/Pictures/Wall/earth_view.txt` > ~/Pictures/Wall/$1.new.jpg
+  else
+	  echo "Unsplash"
+	  curl https://unsplash.it/1920/1080/?random > ~/Pictures/Wall/$1.new.jpg
+  fi
+  cp ~/Pictures/Wall/$1.new.jpg ~/Pictures/Wall/$1.jpg
+}
+
+nitrogen --restore
+
+# Check args
+download lvds
+
+# Setting wallpaper
+nitrogen --restore

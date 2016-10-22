@@ -1,5 +1,5 @@
-URxvt*font: xft:terminus:pixelsize=13
-URxvt*boldFont: xft:terminus:pixelsize=13
+URxvt*font: xft:terminus:pixelsize=16
+URxvt*boldFont: xft:terminus:pixelsize=16
 URxvt*allow_bold: true
 URxvt*letterspace: 0
 URxvt*scrollBar: false

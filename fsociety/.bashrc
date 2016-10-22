@@ -6,9 +6,7 @@
 [[ $- != *i* ]] && return
 
 alias ls='ls --color=auto'
-alias wfica='/opt/Citrix/ICAClient/wfica'
 PS1='[\u@\h \W]\$ '
 
-export EDITOR=nano
 export PATH=$PATH:~/.scripts
 neofetch
