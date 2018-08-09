@@ -115,7 +115,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export HOME='/mnt/c/Users/ABriz'
+#export HOME='/mnt/c/Users/ABriz'
 alias atom='cmd.exe /c c:/Users/ABriz/AppData/Local/atom/app-1.18.0/resources/cli/atom.cmd'
 alias clear='clear; image'
 alias gti='git'
@@ -133,12 +133,10 @@ export GIT_EDITOR=vim
 export EDITOR=vim
 
 function image {
-  `ls /home/brizzz/scripts/ascii | shuf -n 1`
+  `find ~/scripts/ascii | shuf -n 1`
 }
 
 image
-
-LS_COLORS=$(ls_colors_generator)
 
 run_ls() {
 	ls-i --color=auto -w $(tput cols) "$@"
