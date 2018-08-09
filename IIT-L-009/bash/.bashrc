@@ -119,12 +119,14 @@ export HOME='/mnt/c/Users/ABriz'
 alias atom='cmd.exe /c c:/Users/ABriz/AppData/Local/atom/app-1.18.0/resources/cli/atom.cmd'
 alias clear='clear; image'
 alias gti='git'
+alias gut='git'
 alias cc='command clear'
 alias explorer='explorer.exe'
 
 export PATH=$PATH:/home/brizzz/scripts:/home/brizzz/scripts/ascii
 export PP=~/Documents/PearsonPlaces/DesktopModules/
 export TF=~/Documents/TaxFitness/DesktopModules/TaxFitness
+export AG=~/Documents/DnnAgent/DesktopModules/DnnAgentModule
 
 #/home/brizzz/scripts/pokemon.sh
 export GIT_EDITOR=vim
@@ -155,8 +157,8 @@ alias dir="run_dir"
 alias vdir="run_vdir"
 
 alias git-remote="git config --local -l | grep url | grep -o -i iit.* | sed -e 's/:/\//'"
-alias git-remove='(find . -type d -name ".git" && find . -name ".gitignore" && find . -name ".gitmodules" ) | xargs rm -rf'
+alias git-remote-branch='echo `git-remote | sed -e "s/\.git//"`/tree/`git rev-parse --abbrev-ref HEAD`'
+#alias git-remove='(find . -type d -name ".git" && find . -name ".gitignore" && find . -name ".gitmodules" ) | xargs rm -rf'
 
 export BROWSER=chrome.exe
 alias chrome='chrome.exe'
-alias gut='git'
