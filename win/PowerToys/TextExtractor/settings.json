@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "ActivationShortcut": {
+      "win": true,
+      "ctrl": false,
+      "alt": false,
+      "shift": true,
+      "code": 84,
+      "key": ""
+    }
+  },
+  "name": "TextExtractor",
+  "version": "1"
+}
