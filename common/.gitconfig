@@ -1,0 +1,52 @@
+[http]
+	sslverify = true
+[core]
+	autocrlf = true
+	editor = vim
+[push]
+	default = current
+[alias]
+	a = add
+	s = status
+	stauts = status
+	st = status
+	p = push
+	cehckout = checkout
+	checkotu = checkout
+	checkuot = checkout
+	chekcout = checkout
+[color]
+	ui = always
+[fetch]
+	prune = true
+[credential]
+	helper = manager
+[init]
+	defaultBranch = main
+[pull]
+	rebase = true
+[safe]
+	directory = *
+[diff]
+	tool = neovim
+[difftool "neovim"]
+	cmd = nvim -d $LOCAL $REMOTE
+[difftool "vscode"]
+	cmd = code --wait --diff $LOCAL $REMOTE
+[merge]
+	tool = neovim
+[mergetool]
+	keepBackup = false
+[mergetool "neovim"]
+	cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[mergetool "vscode"]
+	cmd = code --wait -m $LOCAL $REMOTE $BASE $MERGED
+
+###### TODO #######
+# [credential "{insert gitlab url here}"]
+# 	email = {insert email here}
+# 	provider = gitlab
+
+# [user]
+# 	name = {insert name here}
+# 	email = {insert email here}
