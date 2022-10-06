@@ -1,4 +1,0 @@
-#!/bin/bash
-echo "Press any key to Go Ahead"
-read yn
-( find . -type d -name ".git" && find . -name ".gitignore" && find . -name ".gitmodules" ) | xargs rm -rf

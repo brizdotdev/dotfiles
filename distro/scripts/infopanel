@@ -1,2 +1,0 @@
-#!/bin/bash
-google-chrome --app="file:///home/brizzz/Projects/InfoPanel/index.html"
