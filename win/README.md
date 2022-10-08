@@ -36,17 +36,36 @@ winget install Git.Git --override "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NOC
 ```
 > If the install fails,check the log in the User's TEMP folder
 
-3. Clone this repo
+3. Clone this repo and cd into the directory
 ```powershell
 git clone {Path to repo}
+cd dotfiles
 ```
 
-4. Run setup script
+4. Open a new PowerShell window **as Administrator** and run
 ```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 .\win\bootstrap.ps1
 ```
 
-5. Edit the [hosts](/win/ansible/hosts) file and setup the username, password and IP
+5. If WSL isn't installed, the bootstrap script will install it and reboot the machine. After reboot, setup a username and password for WSL and run the bootstrap script again to proceed.
+
+6. Edit the [hosts](/win/ansible/hosts) file and setup the username, password and IP
+
+7. Test the connection by running from WSL
+```powershell
+wsl --cd $(Get-Location).Path -- '$HOME'/.local/bin/ansible win -i ./win/ansible/hosts -m win_ping
+```
+
+You should see a response like
+```
+192.168.64.1 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+```
+
+8. Run the desired Ansible playbooks from WSL
 
 
 # Refs

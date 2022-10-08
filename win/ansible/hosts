@@ -1,7 +1,8 @@
 [win]
+{IP goes here}
 
 [win:vars]
-ansible_user=
-ansible_password=
+ansible_user={username}
+ansible_password={password}
 ansible_connection=winrm
 ansible_winrm_server_cert_validation=ignore
