@@ -52,7 +52,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 6. Edit the [hosts](/win/ansible/hosts) file and setup the username, password and IP
 
-7. Test the connection by running from WSL
+7. Test the connection by running from PowerShell from the dotfiles directory
 ```powershell
 wsl --cd $(Get-Location).Path -- '$HOME'/.local/bin/ansible win -i ./win/ansible/hosts -m win_ping
 ```
