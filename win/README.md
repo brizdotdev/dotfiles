@@ -54,11 +54,11 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 7. Test the connection by running from PowerShell from the dotfiles directory
 ```powershell
-wsl --cd $(Get-Location).Path -- '$HOME'/.local/bin/ansible win -i ./win/ansible/hosts -m win_ping
+wsl --cd $(Get-Location).Path -- '$HOME/.local/bin/ansible' win -i ./win/ansible/hosts -m win_ping
 ```
 
-You should see a response like
-```
+You should see a response similar to
+```json
 192.168.64.1 | SUCCESS => {
     "changed": false,
     "ping": "pong"
