@@ -67,6 +67,13 @@ You should see a response similar to
 
 8. Run the desired Ansible playbooks from WSL
 
+## Troubleshooting
+The Windows host IP set in the hosts file can change.
+To get the current IP, run the following command in WSL
+```bash
+cat /etc/resolv.conf | grep nameserver | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}"
+```
+
 
 # Refs
 [Git for Windows: Silent Install](https://github.com/git-for-windows/git/wiki/Silent-or-Unattended-Installatio)
