@@ -1,12 +1,8 @@
 ################################################################################
 # Utility Functions
 ################################################################################
-function ShowHistory{
+function Show-History{
     Get-Content (Get-PSReadlineOption).HistorySavePath
-}
-
-function ipg {
-    Import-Module posh-git
 }
 
 function idc {
@@ -14,7 +10,7 @@ function idc {
 }
 
 function which($command) {
-	Get-Command -Name $command -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
+   Get-Command -Name $command -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
 }
 
 function fullhd {
@@ -30,14 +26,19 @@ function ultrawide {
 }
 Set-Alias -Name "uw" -Value ultrawide -Option AllScope
 
-function CopyCurrentPath {
+function Copy-Pwd {
     $(pwd).Path | clip.exe
+}
+
+function Show-Path
+{
+    echo $env:Path | sed "s/;/\n/g" | sed -e "/^\s*$/d" | uniq | sort
 }
 
 function msbuild-sln
 {
-  $slnFile = Get-ChildItem -Name *.sln
-  msbuild /property:Configuration=Debug /property:DebugType=portable /t:Clean,Build /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=false $slnFile
+    $slnFile = Get-ChildItem -Name *.sln
+    msbuild /property:Configuration=Debug /property:DebugType=portable /t:Clean,Build /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=false $slnFile
 }
 
 function msbuild-csproj
@@ -131,9 +132,9 @@ Set-Alias -Name "pvpn-full" -Value ConnectPVPNFT
 ################################################################################
 # Aliases
 ################################################################################
-Set-Alias -Name "clear" -Value ClearScreen -Option AllScope
-Set-Alias -Name "c" -Value ClearScreen -Option AllScope
-Set-Alias -Name "history" -Value ShowHistory -Option AllScope
+Set-Alias -Name "clear" -Value Clear-Host -Option AllScope
+Set-Alias -Name "c" -Value Clear-Host -Option AllScope
+Set-Alias -Name "history" -Value Show-History -Option AllScope
 Set-Alias -Name "vim" -Value nvim
 Set-Alias -Name "g" -Value git
 Set-Alias -Name "got" -Value git
@@ -145,6 +146,7 @@ Set-Alias -Name "expl" -Value explorer
 del alias:sl -Force
 del alias:rm -Force
 del alias:ls -Force
+del alias:sort -Force
 
 ################################################################################
 # Imports
