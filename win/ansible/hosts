@@ -1,7 +1,7 @@
-[win]
+[winbox]
 {IP goes here}
 
-[win:vars]
+[winbox:vars]
 ansible_user={username}
 ansible_password={password}
 ansible_connection=winrm
