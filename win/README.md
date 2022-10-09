@@ -32,7 +32,7 @@ EnableFSMonitor=Disabled
 
 2. Install Git
 ```powershell
-winget install Git.Git --override "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NOCANCEL /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /SP- /LOG /LOADINF=git.inf"
+winget install Git.Git --accept-source-agreements --accept-package-agreements --override "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NOCANCEL /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /SP- /LOG /LOADINF=git.inf"
 ```
 > If the install fails,check the log in the User's TEMP folder
 
@@ -42,7 +42,7 @@ git clone {Path to repo}
 cd dotfiles
 ```
 
-4. Open a new PowerShell window **as Administrator** and run
+4. Open a new PowerShell window **as Administrator** in the dotfiles folder and run
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 .\win\bootstrap.ps1
@@ -54,7 +54,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 7. Test the connection by running from PowerShell from the dotfiles directory
 ```powershell
-wsl --cd $(Get-Location).Path -- '$HOME/.local/bin/ansible' win -i ./win/ansible/hosts -m win_ping
+wsl --cd $(Get-Location).Path -- '$HOME/.local/bin/ansible' winbox -m win_ping
 ```
 
 You should see a response similar to
