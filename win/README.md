@@ -54,7 +54,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 7. Test the connection by running from PowerShell from the dotfiles directory
 ```powershell
-wsl --cd $(Get-Location).Path -- '$HOME/.local/bin/ansible' winbox -m win_ping
+wsl --cd $(Get-Location).Path -- '$HOME/.local/bin/ansible' winbox -i ./win/ansible/hosts -m win_ping
 ```
 
 You should see a response similar to
