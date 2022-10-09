@@ -13,12 +13,15 @@ function which($command) {
    Get-Command -Name $command -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
 }
 
+# Change the screen resolution to 1920x1080
+# Useful for when I need to screenshare because my main monitor is 3440x1440
 function fullhd {
     Import-Module ChangeScreenResolution
     Set-ScreenResolution -Width 1920 -Height 1080
     Remove-Module ChangeScreenResolution
 }
 
+# Restore rewsolution to 3440x1440
 function ultrawide {
     Import-Module ChangeScreenResolution
     Set-ScreenResolution -Width 3440 -Height 1440
@@ -135,6 +138,7 @@ Set-Alias -Name "pvpn-full" -Value ConnectPVPNFT
 Set-Alias -Name "clear" -Value Clear-Host -Option AllScope
 Set-Alias -Name "c" -Value Clear-Host -Option AllScope
 Set-Alias -Name "history" -Value Show-History -Option AllScope
+Set-Alias -Name "vi" -Value nvim
 Set-Alias -Name "vim" -Value nvim
 Set-Alias -Name "g" -Value git
 Set-Alias -Name "got" -Value git
@@ -152,13 +156,13 @@ del alias:sort -Force
 # Imports
 ################################################################################
 Import-Module posh-git
-Import-Module Terminal-Icons
+# Import-Module Terminal-Icons
 
 ################################################################################
 # oh-my-posh
 ################################################################################
-Import-Module oh-my-posh
-oh-my-posh --init --shell pwsh --config ~/Documents/PowerShell/omp.json | Invoke-Expression
+# Import-Module oh-my-posh
+# oh-my-posh --init --shell pwsh --config ~/Documents/PowerShell/omp.json | Invoke-Expression
 
 ################################################################################
 # PSReadline
