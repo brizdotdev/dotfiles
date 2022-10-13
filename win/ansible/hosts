@@ -2,7 +2,5 @@
 {IP}
 
 [winbox:vars]
-ansible_user={username}
-ansible_password={password}
 ansible_connection=winrm
 ansible_winrm_server_cert_validation=ignore
