@@ -33,7 +33,7 @@
             {
                 "action": "globalSummon",
                 "desktop": "toCurrent",
-                "monitor": "toMouse",
+                "monitor": "toCurrent",
                 "name": "_quake",
                 "toggleVisibility": true
             },
