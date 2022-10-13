@@ -50,7 +50,10 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 5. If WSL isn't installed, the bootstrap script will install it and reboot the machine. After reboot, setup a username and password for WSL and run the bootstrap script again to proceed.
 
-6. Edit the [hosts](/win/ansible/hosts) file and setup the username, password and IP
+6. Add the IP address to the [hosts](/win/ansible/hosts) file by running
+```powershell
+.\win\scripts\setup-wsl-host-ip.ps1
+```
 
 7. Test the connection by running from PowerShell from the dotfiles directory
 ```powershell
@@ -72,6 +75,10 @@ The Windows host IP set in the hosts file can change.
 To get the current IP, run the following command in WSL
 ```bash
 cat /etc/resolv.conf | grep nameserver | grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}"
+```
+or PowerShell
+```powershell
+Get-NetIPAddress -AddressFamily IPv4 | Where-Object -Property InterfaceAlias -Like "*WSL*" | Select-Object -Property IPAddress
 ```
 
 

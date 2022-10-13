@@ -1,5 +1,5 @@
 [winbox]
-{IP goes here}
+{IP}
 
 [winbox:vars]
 ansible_user={username}
