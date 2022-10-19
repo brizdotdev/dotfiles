@@ -1,4 +1,2 @@
 shell:
-  program: wsl
-  args:
-    - "-- /home/brizzz/tmux-powershell.sh"
+  program: pwsh
