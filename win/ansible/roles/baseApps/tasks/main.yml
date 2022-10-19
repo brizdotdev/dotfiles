@@ -1,0 +1,71 @@
+---
+# Install basic applications that I need to use Windows
+
+- name: Install Chrome
+  win_chocolatey:
+    name: googlechrome
+    state: present
+
+- name: Install Firefox
+  win_chocolatey:
+    name: firefox
+    state: present
+    install_args: /NoDesktopShortcut /RemoveDistributionDir
+
+### Set Firefox as default browser using SetDefaultBrowser.exe
+- name: Install SetDefaultBrowser
+  win_chocolatey:
+    name: setdefaultbrowser
+    state: present
+
+- name: Set Firefox as default browser
+  ansible.windows.win_powershell:
+    script: |
+     SetDefaultBrowser.exe HKLM Firefox-308046B0AF4A39CB
+
+- name: Uninstall SetDefaultBrowser
+  win_chocolatey:
+    name: setdefaultbrowser
+    state: absent
+###
+
+- name: Install 7-zip
+  win_chocolatey:
+    name: 7zip
+    state: present
+
+- name: Install PowerToys
+  win_chocolatey:
+    name: powertoys
+    state: present
+
+# TODO: Configure PowerToys settings
+
+- name: Install VSCode
+  win_chocolatey:
+    name: vscode
+    state: present
+
+- name: Install mpv
+  win_chocolatey:
+    name: mpv
+    state: present
+
+# TODO: Set mpv as default player
+# "$env:ProgramData\chocolatey\lib\mpv.install\tools\mpv-install.bat"
+
+# - name: Configure WindowsTerminal
+#   ansible.windows.win_powershell:
+#     script: |
+#       New-Item -ItemType HardLink -Path "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Target ""
+
+
+- name: Install PowerShell Core
+  win_chocolatey:
+    name: powershell-core
+    state: present
+
+# TODO: Configure PowerShell Core
+# - name: Configure PowerShell Core
+
+# TODO: Copy .gitconfig
