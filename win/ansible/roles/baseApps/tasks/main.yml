@@ -39,7 +39,11 @@
     name: powertoys
     state: present
 
-# TODO: Configure PowerToys settings
+# TODO
+- name: Junction PowerToys settings
+  ansible.windows.win_powershell:
+    script: |
+      New-Item -ItemType Junction -Path "$env:LocalAppData\Microsoft\PowerToys" -Target "{{ role_path }}\files\PowerToys"
 
 - name: Install VSCode
   win_chocolatey:
@@ -54,10 +58,11 @@
 # TODO: Set mpv as default player
 # "$env:ProgramData\chocolatey\lib\mpv.install\tools\mpv-install.bat"
 
-# - name: Configure WindowsTerminal
-#   ansible.windows.win_powershell:
-#     script: |
-#       New-Item -ItemType HardLink -Path "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Target ""
+# TODO
+- name: Hardlink WindowsTerminal settings
+  ansible.windows.win_powershell:
+    script: |
+      New-Item -ItemType HardLink -Path "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Target "{{ role_path }}\files\WindowsTerminal\settings.json"
 
 
 - name: Install PowerShell Core
@@ -65,7 +70,13 @@
     name: powershell-core
     state: present
 
-# TODO: Configure PowerShell Core
-# - name: Configure PowerShell Core
+# TODO
+- name: Configure PowerShell Core
+  ansible.windows.win_powershell:
+    script: |
+      Install-Module -Name posh-git
+      Install-Module -Name DockerCompletion
+      Install-Module ChangeScreenResolution
+      New-Item -ItemType Junction -Path "$env:UserProfile\Documents\PowerShell" -Target "{{ role_path }}\files\PowerShell"
 
 # TODO: Copy .gitconfig
