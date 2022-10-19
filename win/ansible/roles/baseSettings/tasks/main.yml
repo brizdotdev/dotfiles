@@ -1,0 +1,9 @@
+---
+# Setup default Windows settings the way I like
+
+- name: Set an environment variable for the repos folder
+  ansible.windows.win_environment:
+    name: REPOS
+    value: C:\Users\{{ ansible_user }}\repos
+    state: present
+    level: user
