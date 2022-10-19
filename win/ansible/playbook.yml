@@ -1,0 +1,17 @@
+---
+- name: Make Windows usable
+  hosts:
+    - winbox
+
+  vars_prompt:
+
+    - name: "git_name"
+      prompt: "Enter Full Name for Git"
+      private: false
+
+    - name: "git_email"
+      prompt: "Enter Email for Git"
+      private: false
+
+  roles:
+  - baseApps
