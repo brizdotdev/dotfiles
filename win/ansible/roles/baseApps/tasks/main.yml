@@ -34,17 +34,6 @@
     name: 7zip
     state: present
 
-- name: Install PowerToys
-  win_chocolatey:
-    name: powertoys
-    state: present
-
-# TODO
-- name: Junction PowerToys settings
-  ansible.windows.win_powershell:
-    script: |
-      New-Item -ItemType Junction -Path "$env:LocalAppData\Microsoft\PowerToys" -Target "{{ role_path }}\files\PowerToys"
-
 - name: Install VSCode
   win_chocolatey:
     name: vscode
@@ -58,25 +47,36 @@
 # TODO: Set mpv as default player
 # "$env:ProgramData\chocolatey\lib\mpv.install\tools\mpv-install.bat"
 
-# TODO
+- name: Junction PowerToys settings
+  ansible.windows.win_powershell:
+    script: |
+      New-Item -ItemType Junction -Path "$env:LocalAppData\Microsoft\PowerToys" -Target "{{ dotfiles_repo }}\win\config\PowerToys"
+
+- name: Install PowerToys
+  win_chocolatey:
+    name: powertoys
+    state: present
+
 - name: Hardlink WindowsTerminal settings
   ansible.windows.win_powershell:
     script: |
-      New-Item -ItemType HardLink -Path "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Target "{{ role_path }}\files\WindowsTerminal\settings.json"
-
+      $settings = "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
+      if (Test-Path $settings) {
+          Remove-Item $settings
+      }
+      New-Item -ItemType HardLink -Path "$settings" -Target "{{ dotfiles_repo }}\win\config\WindowsTerminal\settings.json"
 
 - name: Install PowerShell Core
   win_chocolatey:
     name: powershell-core
     state: present
 
-# TODO
 - name: Configure PowerShell Core
   ansible.windows.win_powershell:
     script: |
-      Install-Module -Name posh-git
-      Install-Module -Name DockerCompletion
-      Install-Module ChangeScreenResolution
-      New-Item -ItemType Junction -Path "$env:UserProfile\Documents\PowerShell" -Target "{{ role_path }}\files\PowerShell"
+      Install-Module -Scope CurrentUser -Name posh-git
+      Install-Module -Scope CurrentUser -Name DockerCompletion
+      Install-Module -Scope CurrentUser -Name ChangeScreenResolution
+      New-Item -ItemType Junction -Path "$env:UserProfile\Documents\PowerShell" -Target "{{ dotfiles_repo }}\win\config\PowerShell"
 
 # TODO: Copy .gitconfig
