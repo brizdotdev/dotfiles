@@ -1,10 +1,10 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": 
+    "actions":
     [
         {
-            "command": 
+            "command":
             {
                 "action": "splitPane",
                 "split": "right",
@@ -13,7 +13,7 @@
             "keys": "alt+shift+v"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "moveFocus",
                 "direction": "up"
@@ -21,7 +21,7 @@
             "keys": "alt+up"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "moveFocus",
                 "direction": "up"
@@ -29,7 +29,7 @@
             "keys": "ctrl+k"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "globalSummon",
                 "desktop": "toCurrent",
@@ -44,7 +44,7 @@
             "keys": "ctrl+v"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "moveFocus",
                 "direction": "down"
@@ -52,7 +52,7 @@
             "keys": "alt+down"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "moveFocus",
                 "direction": "down"
@@ -60,7 +60,7 @@
             "keys": "ctrl+j"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "copy",
                 "singleLine": false
@@ -68,7 +68,7 @@
             "keys": "ctrl+c"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "moveFocus",
                 "direction": "right"
@@ -76,7 +76,7 @@
             "keys": "alt+right"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "moveFocus",
                 "direction": "right"
@@ -84,7 +84,7 @@
             "keys": "ctrl+l"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "splitPane",
                 "split": "down",
@@ -121,7 +121,7 @@
             "keys": "alt+k"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "splitPane",
                 "split": "auto",
@@ -130,7 +130,7 @@
             "keys": "alt+shift+d"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "moveFocus",
                 "direction": "left"
@@ -138,7 +138,7 @@
             "keys": "alt+left"
         },
         {
-            "command": 
+            "command":
             {
                 "action": "moveFocus",
                 "direction": "left"
@@ -151,17 +151,17 @@
     "copyOnSelect": false,
     "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
     "focusFollowMouse": false,
-    "profiles": 
+    "profiles":
     {
         "defaults": {},
-        "list": 
+        "list":
         [
             {
                 "colorScheme": "Horizon",
                 "experimental.retroTerminalEffect": false,
-                "font": 
+                "font":
                 {
-                    "face": "JetBrainsMono Nerd Font",
+                    "face": "Cascadia Code",
                     "weight": "light"
                 },
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
@@ -181,7 +181,7 @@
                 "closeOnExit": "always",
                 "colorScheme": "Andromeda",
                 "experimental.retroTerminalEffect": false,
-                "font": 
+                "font":
                 {
                     "face": "Iosevka Term",
                     "size": 11.0,
@@ -200,7 +200,7 @@
             {
                 "colorScheme": "Argonaut",
                 "experimental.retroTerminalEffect": false,
-                "font": 
+                "font":
                 {
                     "face": "Cascadia Code",
                     "size": 11.0,
@@ -216,7 +216,7 @@
                 "useAcrylic": true
             },
             {
-                "font": 
+                "font":
                 {
                     "face": "scientifica"
                 },
@@ -241,7 +241,7 @@
                 "colorScheme": "Breeze",
                 "commandline": "%PROGRAMFILES%/git/usr/bin/bash.exe -i -l",
                 "experimental.retroTerminalEffect": true,
-                "font": 
+                "font":
                 {
                     "face": "Hack"
                 },
@@ -265,7 +265,7 @@
             },
             {
                 "colorScheme": "Chalk",
-                "font": 
+                "font":
                 {
                     "face": "JetBrains Mono"
                 },
@@ -306,7 +306,7 @@
             }
         ]
     },
-    "schemes": 
+    "schemes":
     [
         {
             "background": "#262A33",
