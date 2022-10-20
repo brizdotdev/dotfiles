@@ -80,3 +80,17 @@
       New-Item -ItemType Junction -Path "$env:UserProfile\Documents\PowerShell" -Target "{{ dotfiles_repo }}\win\config\PowerShell"
 
 # TODO: Copy .gitconfig
+
+# Install curl from scoop. Mainly to make sure scoop is installed
+- name: Install Curl
+  community.windows.win_scoop:
+    name: curl
+
+- name: Add the nerd-fonts bucket
+  community.windows.win_scoop_bucket:
+    name: nerd-fonts
+    repo: https://github.com/matthewjberger/scoop-nerd-fonts
+
+- name: Install JetBrains Mono Nerd Font
+  community.windows.win_scoop:
+    name: JetBrains-Mono
