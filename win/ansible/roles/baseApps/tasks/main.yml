@@ -57,14 +57,14 @@
     name: powertoys
     state: present
 
-- name: Hardlink WindowsTerminal settings
+- name: Junction WindowsTerminal settings
   ansible.windows.win_powershell:
     script: |
-      $settings = "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
+      $settings = "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
       if (Test-Path $settings) {
-          Remove-Item $settings
+          Remove-Item -Recurse $settings
       }
-      New-Item -ItemType HardLink -Path "$settings" -Target "{{ dotfiles_repo }}\win\config\WindowsTerminal\settings.json"
+      New-Item -ItemType Junction -Path "$settings" -Target "{{ dotfiles_repo }}\win\config\WindowsTerminal"
 
 - name: Install PowerShell Core
   win_chocolatey:
