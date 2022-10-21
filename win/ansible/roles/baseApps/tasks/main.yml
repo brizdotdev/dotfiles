@@ -57,15 +57,6 @@
     name: powertoys
     state: present
 
-- name: Junction WindowsTerminal settings
-  ansible.windows.win_powershell:
-    script: |
-      $settings = "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
-      if (Test-Path $settings) {
-          Remove-Item -Recurse $settings
-      }
-      New-Item -ItemType Junction -Path "$settings" -Target "{{ dotfiles_repo }}\win\config\WindowsTerminal"
-
 - name: Install PowerShell Core
   win_chocolatey:
     name: powershell-core
@@ -86,6 +77,7 @@
   community.windows.win_scoop:
     name: curl
 
+### Install fonts. Windows Terminal config needs those
 - name: Add the nerd-fonts bucket
   community.windows.win_scoop_bucket:
     name: nerd-fonts
@@ -94,3 +86,21 @@
 - name: Install JetBrains Mono Nerd Font
   community.windows.win_scoop:
     name: JetBrains-Mono
+
+- name: Install Iosevka Nerd Font
+  community.windows.win_scoop:
+    name: Iosevka-NF
+
+- name: Install Cascadia Code Nerd Font
+  community.windows.win_scoop:
+    name: CascadiaCode-NF
+###
+
+- name: Junction WindowsTerminal settings
+  ansible.windows.win_powershell:
+    script: |
+      $settings = "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
+      if (Test-Path $settings) {
+          Remove-Item -Recurse $settings
+      }
+      New-Item -ItemType Junction -Path "$settings" -Target "{{ dotfiles_repo }}\win\config\WindowsTerminal"
