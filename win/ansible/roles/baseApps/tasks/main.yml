@@ -103,4 +103,33 @@
       if (Test-Path $settings) {
           Remove-Item -Recurse $settings
       }
-      New-Item -ItemType Junction -Path "$settings" -Target "{{ dotfiles_repo }}\win\config\WindowsTerminal"
+# git config
+- name: Configure git user
+  community.windows.win_lineinfile:
+    regex: '^#\[user\]'
+    backrefs: yes
+    line: "[user]"
+    path: '{{ dotfiles_repo_fullpath }}\\common\\config\\git\\.gitconfig'
+
+- name: Configure git user.name
+  community.windows.win_lineinfile:
+    regex: '^# name ='
+    backrefs: yes
+    line: " name = {{ git_name }}"
+    path: "{{ dotfiles_repo_fullpath }}\\common\\config\\git\\.gitconfig"
+
+- name: Configure git user.email
+  community.windows.win_lineinfile:
+    regex: '^# email ='
+    backrefs: yes
+    line: " email = {{ git_email }}"
+    path: "{{ dotfiles_repo_fullpath }}\\common\\config\\git\\.gitconfig"
+
+- name: HardLink git config
+  ansible.windows.win_powershell:
+    script: |
+      $source = "$env:UserProfile\.gitconfig"
+      $target = "{{ dotfiles_repo_fullpath }}\\common\\config\\git\\.gitconfig"
+      if (-Not (Test-Path $source)) {
+        New-Item -ItemType HardLink -Path "$source" -Target "$target"
+      }
