@@ -2,9 +2,6 @@
 - name: Make Windows usable
   hosts:
     - winbox
-      
-  vars:
-    dotfiles_repo: "$env:UserProfile\\repos\\dotfiles"
 
   vars_prompt:
 

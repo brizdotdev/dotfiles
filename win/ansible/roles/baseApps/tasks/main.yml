@@ -23,13 +23,7 @@
     script: |
      SetDefaultBrowser.exe HKLM Firefox-308046B0AF4A39CB
 
-- name: Uninstall SetDefaultBrowser
-  win_chocolatey:
-    name: setdefaultbrowser
-    state: absent
-###
-
-- name: Install 7-zip
+- name: Install 7zip
   win_chocolatey:
     name: 7zip
     state: present
@@ -47,10 +41,17 @@
 # TODO: Set mpv as default player
 # "$env:ProgramData\chocolatey\lib\mpv.install\tools\mpv-install.bat"
 
+- name: Set var for Windows path to dotfiles repo
+  set_fact:
+    dotfiles_repo_fullpath: "{{ lookup('env','DOTFILES_REPO_WIN') }}"
+
+
 - name: Junction PowerToys settings
   ansible.windows.win_powershell:
     script: |
-      New-Item -ItemType Junction -Path "$env:LocalAppData\Microsoft\PowerToys" -Target "{{ dotfiles_repo }}\win\config\PowerToys"
+      $source = "$env:LocalAppData\Microsoft\PowerToys"
+      $target  = "{{ dotfiles_repo_fullpath }}\win\config\PowerToys"
+      New-Item -ItemType Junction -Path "$source" -Target "{{ dotfiles_repo_fullpath }}\win\config\PowerToys"
 
 - name: Install PowerToys
   win_chocolatey:
@@ -65,15 +66,13 @@
 - name: Configure PowerShell Core
   ansible.windows.win_powershell:
     script: |
-      Install-Module -Scope CurrentUser -Name posh-git
-      Install-Module -Scope CurrentUser -Name DockerCompletion
-      Install-Module -Scope CurrentUser -Name ChangeScreenResolution
-      New-Item -ItemType Junction -Path "$env:UserProfile\Documents\PowerShell" -Target "{{ dotfiles_repo }}\win\config\PowerShell"
-
-# TODO: Copy .gitconfig
+      $source = "$env:UserProfile\Documents\PowerShell"
+      $target = "{{ dotfiles_repo_fullpath }}\win\config\PowerShell"
+      $existing = Get-Item -Path $source
+      New-Item -ItemType Junction -Path "$source" -Target "$target"
 
 # Install curl from scoop. Mainly to make sure scoop is installed
-- name: Install Curl
+- name: Install curl
   community.windows.win_scoop:
     name: curl
 
@@ -103,6 +102,8 @@
       if (Test-Path $settings) {
           Remove-Item -Recurse $settings
       }
+      New-Item -ItemType Junction -Path "$settings" -Target "{{ dotfiles_repo_fullpath }}\win\config\WindowsTerminal"
+
 # git config
 - name: Configure git user
   community.windows.win_lineinfile:
