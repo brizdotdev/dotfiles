@@ -162,7 +162,6 @@
                 "font":
                 {
                     "face": "Cascadia Code",
-                    "weight": "light"
                 },
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
                 "hidden": false,
@@ -183,7 +182,7 @@
                 "experimental.retroTerminalEffect": false,
                 "font":
                 {
-                    "face": "Iosevka Term",
+                    "face": "Iosevka",
                     "size": 11.0,
                     "weight": "normal"
                 },
