@@ -81,11 +81,17 @@ When setting up on a new Windows machine, do the following:
     }
     ```
 
+1. Set the Windows path to the repo as an environment variable
+
+    ```shell
+    export DOTFILES_REPO_WIN=`wslpath -w $(pwd)`
+    ```
+
 1. Run the desired Ansible playbooks from WSL
 
     ```shell
     cd win/ansible
-    ansible-playbook playbook.yml -i hosts -k -u {username}
+    ansible-playbook playbook.yml -i hosts --ask-pass -u {username}
     ```
 
 ## Troubleshooting
