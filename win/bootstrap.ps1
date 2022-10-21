@@ -28,19 +28,32 @@ Write-Host -ForegroundColor Blue "Copying scripts to WSL /tmp"
 $scriptsFolder = Join-Path -Path $($PSScriptRoot) -ChildPath "scripts"
 $wslTempPath = [IO.Path]::Combine("\\wsl$" , $distribution, "tmp")
 Copy-Item -Recurse $scriptsFolder\*.sh -Destination $wslTempPath -ErrorAction SilentlyContinue
+## Copy install-neovim.sh to /tmp
+Copy-Item -Recurse "$PSScriptRoot\..\linux\scripts\install-neovim.sh" -Destination $wslTempPath -ErrorAction SilentlyContinue
 wsl --cd "$scriptsFolder" -- sudo apt install -y dos2unix '&&' sudo chown '$USER' /tmp/*.sh '&&' dos2unix --allow-chown /tmp/*.sh '&&' chmod +x /tmp/*.sh
 Write-Host -ForegroundColor Green "Scripts copied"
 Write-Host ""
 
 ## Install ansible in WSL
-Write-Host -ForegroundColor Blue "Installing ansible"
+Write-Host -ForegroundColor Blue "Installing Ansible"
 wsl -- /tmp/install-ansible.sh
 if ($? -eq $False) {
-    Write-Host -ForegroundColor Red  "Failed to install ansible"
+    Write-Host -ForegroundColor Red  "Failed to install Ansible"
     exit 1
 }
 Write-Host -ForegroundColor Green "Ansible installed"
 Write-Host ""
+
+## TODO: Install neovim in WSL
+Write-Host -ForegroundColor Blue "Installing Neovim"
+wsl -- /tmp/install-neovim.sh
+if ($? -eq $False) {
+    Write-Host -ForegroundColor Red  "Failed to install Neovim"
+    exit 1
+}
+Write-Host -ForegroundColor Green "Neovim installed"
+Write-Host ""
+
 
 ## Enable WinRM
 ## https://docs.ansible.com/ansible/2.5/user_guide/windows_setup.html#winrm-setup
@@ -70,6 +83,6 @@ Write-Host ""
 # Reminder to remove listeners
 Write-Host -ForegroundColor Yellow "Don't forget to remove WinRM listeners when you're done"
 
-# Cleanup 
+# Cleanup
 Remove-Item $configAnsibleScriptPath -ErrorAction SilentlyContinue
 Remove-Item $wslTempPath\*.sh -ErrorAction SilentlyContinue
