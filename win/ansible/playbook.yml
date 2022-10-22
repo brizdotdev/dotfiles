@@ -13,6 +13,12 @@
       prompt: "Enter Email for Git"
       private: false
 
+  pre_tasks:
+    - name: Fail if DOTFILES_REPO_WIN env var isn't set
+      fail:
+        msg: "DOTFILES_REPO_WIN environment variable must be set"
+      when: lookup('env','DOTFILES_REPO_WIN') == ""
+
   roles:
   - baseApps
   - baseSettings
