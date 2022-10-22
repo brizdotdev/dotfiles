@@ -1,0 +1,77 @@
+
+---
+# Install dev applications
+
+- name: Install WinMerge
+  win_chocolatey:
+    name: winmerge
+    state: present
+
+- name: Install WinSCP
+  win_chocolatey:
+    name: winscp
+    state: present
+
+- name: Install gsudo
+  win_chocolatey:
+    name: gsudo
+    state: present
+
+- name: Install Neovim
+  win_chocolatey:
+    name: neovim
+    state: present
+
+- name: Install Alacritty
+  win_chocolatey:
+    name: alacritty
+    state: present
+
+- name: Install Insomnia
+  win_chocolatey:
+    name: insomnia-rest-api-client
+    state: present
+
+- name: Install Python3
+  win_chocolatey:
+    name: python3
+    state: present
+
+- name: Install NodeJS
+  win_chocolatey:
+    name: nodejs.install
+    state: present
+
+- name: Install ripgrep
+  win_chocolatey:
+    name: ripgrep
+    state: present
+
+- name: Install fzf
+  win_chocolatey:
+    name: fzf
+    state: present
+
+- name: Install zoxide
+  win_chocolatey:
+    name: zoxide
+    state: present
+
+- name: Install jq
+  win_chocolatey:
+    name: jq
+    state: present
+
+- name: Install lazygit
+  win_chocolatey:
+    name: lazygit
+    state: present
+
+- name: Install fd
+  win_chocolatey:
+    name: fd
+    state: present
+
+# TODO: Generate an SSH Key
+# TODO: Setup WSL
+# TODO: Setup Tmux
