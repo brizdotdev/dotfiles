@@ -1,0 +1,52 @@
+---
+# Install extra applications that are nice to have
+
+- name: Install OBS Studio
+  win_chocolatey:
+    name: obs-studio
+    state: present
+
+- name: Install LibreOffice
+  win_chocolatey:
+    name: libreoffice-fresh
+    state: present
+
+- name: Install Wireguard
+  win_chocolatey:
+    name: wireguard
+    state: present
+
+- name: Install Obsidian
+  win_chocolatey:
+    name: obsidian
+    state: present
+
+- name: Install Spotify
+  win_chocolatey:
+    name: spotify
+    state: present
+
+- name: Install WinDirStat
+  win_chocolatey:
+    name: windirstat
+    state: present
+
+- name: Install ScreenToGif
+  win_chocolatey:
+    name: screentogif
+    state: present
+
+- name: Install Lightshot
+  win_chocolatey:
+    name: lightshot
+    state: present
+
+- name: Install VLC
+  win_chocolatey:
+    name: vlc
+    state: present
+
+- name: Install ZoomIt
+  win_chocolatey:
+    name: zoomit
+    state: present
