@@ -93,6 +93,18 @@
 - name: Install Cascadia Code Nerd Font
   community.windows.win_scoop:
     name: CascadiaCode-NF
+
+- name: Install Hack Nerd Font
+  community.windows.win_scoop:
+    name: Hack-NF
+
+- name: Install Ubuntu Mono Nerd Font
+  community.windows.win_scoop:
+    name: Ubuntu-NF-Mono
+
+- name: Install Victor Mono Nerd Font
+  community.windows.win_scoop:
+    name: VictorMono-NF
 ###
 
 - name: Junction WindowsTerminal settings
