@@ -3,7 +3,7 @@
 	sslverify = true
 [core]
 	autocrlf = true
-	editor = vim
+	editor = nvim
 [push]
 	default = current
 [alias]
