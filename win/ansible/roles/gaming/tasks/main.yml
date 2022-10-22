@@ -1,0 +1,24 @@
+
+---
+# Install applications that on a gaming PC
+
+- name: Add the extras bucket
+  community.windows.win_scoop_bucket:
+    name: extras
+
+- name: Add the versions bucket
+  community.windows.win_scoop_bucket:
+    name: versions
+
+- name: Install TinyNvidiaUpdateChecker
+  community.windows.win_scoop:
+    name: tinynvidiaupdatechecker
+
+- name: Install Steam
+  community.windows.win_scoop:
+    name: steam
+
+- name: Install Discord
+  win_chocolatey:
+    name: discord.install
+    state: present
