@@ -38,9 +38,6 @@
     name: mpv
     state: present
 
-# TODO: Set mpv as default player
-# "$env:ProgramData\chocolatey\lib\mpv.install\tools\mpv-install.bat"
-
 - name: Set var for Windows path to dotfiles repo
   set_fact:
     dotfiles_repo_fullpath: "{{ lookup('env','DOTFILES_REPO_WIN') }}"
