@@ -45,13 +45,22 @@
   set_fact:
     dotfiles_repo_fullpath: "{{ lookup('env','DOTFILES_REPO_WIN') }}"
 
-
 - name: Junction PowerToys settings
   ansible.windows.win_powershell:
     script: |
       $source = "$env:LocalAppData\Microsoft\PowerToys"
       $target  = "{{ dotfiles_repo_fullpath }}\win\config\PowerToys"
-      New-Item -ItemType Junction -Path "$source" -Target "{{ dotfiles_repo_fullpath }}\win\config\PowerToys"
+      $type = "Junction"
+      $existing = Get-Item -Path $source -ErrorAction SilentlyContinue
+      if ($?) {
+        if ($existing.LinkType -eq $type)
+        {
+          $Ansible.Changed = $false
+          exit
+        }
+        Remove-Item -Path $source
+      }
+      New-Item -ItemType Junction -Path "$source" -Target "$target"
 
 - name: Install PowerToys
   win_chocolatey:
@@ -68,8 +77,17 @@
     script: |
       $source = "$env:UserProfile\Documents\PowerShell"
       $target = "{{ dotfiles_repo_fullpath }}\win\config\PowerShell"
-      $existing = Get-Item -Path $source
-      New-Item -ItemType Junction -Path "$source" -Target "$target"
+      $type = "Junction"
+      $existing = Get-Item -Path $source -ErrorAction SilentlyContinue
+      if ($?) {
+        if ($existing.LinkType -eq $type)
+        {
+          $Ansible.Changed = $false
+          exit
+        }
+        Remove-Item -Path $source
+      }
+      New-Item -ItemType $type -Path "$settings" -Target "$target"
 
 # Install curl from scoop. Mainly to make sure scoop is installed
 - name: Install curl
@@ -110,11 +128,19 @@
 - name: Junction WindowsTerminal settings
   ansible.windows.win_powershell:
     script: |
-      $settings = "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
-      if (Test-Path $settings) {
-          Remove-Item -Recurse $settings
+      $source = "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
+      $target = "{{ dotfiles_repo_fullpath }}\win\config\WindowsTerminal"
+      $type = "Junction"
+      $existing = Get-Item -Path $source -ErrorAction SilentlyContinue
+      if ($?) {
+        if ($existing.LinkType -eq $type)
+        {
+          $Ansible.Changed = $false
+          exit
+        }
+        Remove-Item -Path $source
       }
-      New-Item -ItemType Junction -Path "$settings" -Target "{{ dotfiles_repo_fullpath }}\win\config\WindowsTerminal"
+      New-Item -ItemType $type -Path "$settings" -Target "$target"
 
 # git config
 - name: Configure git user
@@ -143,6 +169,14 @@
     script: |
       $source = "$env:UserProfile\.gitconfig"
       $target = "{{ dotfiles_repo_fullpath }}\\common\\config\\git\\.gitconfig"
-      if (-Not (Test-Path $source)) {
-        New-Item -ItemType HardLink -Path "$source" -Target "$target"
+      $type = "HardLink"
+      $existing = Get-Item -Path $source -ErrorAction SilentlyContinue
+      if ($?) {
+        if ($existing.LinkType -eq $type)
+        {
+          $Ansible.Changed = $false
+          exit
+        }
+        Remove-Item -Path $source
       }
+      New-Item -ItemType $type -Path "$settings" -Target "$target"
