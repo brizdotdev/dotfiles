@@ -161,7 +161,7 @@
                 "experimental.retroTerminalEffect": false,
                 "font":
                 {
-                    "face": "Cascadia Code",
+                    "face": "JetBrains Mono NL"
                 },
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
                 "hidden": false,
@@ -188,7 +188,6 @@
                 },
                 "guid": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
                 "hidden": false,
-                "icon": "C:\\Users\\AkshayBrizmohun\\Pictures\\icons\\ubuntu.png",
                 "name": "Ubuntu",
                 "opacity": 90,
                 "source": "Windows.Terminal.Wsl",
@@ -215,54 +214,6 @@
                 "useAcrylic": true
             },
             {
-                "font":
-                {
-                    "face": "scientifica"
-                },
-                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
-                "hidden": false,
-                "name": "Command Prompt"
-            },
-            {
-                "guid": "{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
-                "hidden": false,
-                "name": "Azure Cloud Shell",
-                "source": "Windows.Terminal.Azure"
-            },
-            {
-                "colorScheme": "Blue Matrix",
-                "commandline": "cmd.exe /k \"C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/Tools/VsDevCmd.bat\"",
-                "guid": "{612775b3-64f0-59f9-98d4-23a0f2973186}",
-                "icon": "ms-appx:///ProfileIcons/{0caa0dad-35be-5f56-a8ff-afceeeaa6101}.png",
-                "name": "Developer CMD for VS 2019"
-            },
-            {
-                "colorScheme": "Breeze",
-                "commandline": "%PROGRAMFILES%/git/usr/bin/bash.exe -i -l",
-                "experimental.retroTerminalEffect": true,
-                "font":
-                {
-                    "face": "Hack"
-                },
-                "guid": "{00000000-0000-0000-ba54-000000000002}",
-                "icon": "%PROGRAMFILES%/Git/mingw64/share/git/git-for-windows.ico",
-                "name": "Git Bash",
-                "startingDirectory": "%USERPROFILE%",
-                "useAcrylic": false
-            },
-            {
-                "guid": "{f8dcd3e4-6161-5435-b650-5193a81f7cc8}",
-                "hidden": false,
-                "name": "Developer Command Prompt for VS 2019",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{1ec9c47c-d47e-5f7c-a683-7b730cb0bebe}",
-                "hidden": false,
-                "name": "Developer PowerShell for VS 2019",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
                 "colorScheme": "Chalk",
                 "font":
                 {
@@ -274,35 +225,11 @@
                 "source": "Windows.Terminal.Wsl"
             },
             {
-                "guid": "{413bc7cf-b865-5aca-80ca-7733b2331a36}",
-                "hidden": false,
-                "name": "Developer Command Prompt for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
                 "guid": "{808f07d0-dd6b-576b-9041-36d95c0e5cfe}",
                 "hidden": false,
                 "name": "Developer PowerShell for VS 2022",
                 "source": "Windows.Terminal.VisualStudio"
             },
-            {
-                "guid": "{8ab8e6f6-35c6-5b46-8419-3e1568105476}",
-                "hidden": false,
-                "name": "podman-machine-default",
-                "source": "Windows.Terminal.Wsl"
-            },
-            {
-                "colorScheme": "Galaxy",
-                "cursorHeight": 15,
-                "cursorShape": "bar",
-                "guid": "{aab79973-318f-43b6-a9bc-b4096493753f}",
-                "hidden": false,
-                "name": "Nushell",
-                "opacity": 80,
-                "source": "nu",
-                "startingDirectory": null,
-                "useAcrylic": true
-            }
         ]
     },
     "schemes":
