@@ -119,6 +119,7 @@ Set-Alias -Name "gut" -Value git
 Set-Alias -Name "gat" -Value git
 Set-Alias -Name "ex" -Value explorer
 Set-Alias -Name "expl" -Value explorer
+Set-Alias -Name "lg" -Value lazygit
 
 del alias:sl -Force
 del alias:rm -Force
