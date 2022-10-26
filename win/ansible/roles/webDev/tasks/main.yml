@@ -1,0 +1,47 @@
+
+---
+# Install web dev applications
+
+- name: Add the extras bucket
+  community.windows.win_scoop_bucket:
+    name: extras
+
+- name: Add the versions bucket
+  community.windows.win_scoop_bucket:
+    name: versions
+
+- name: Add the nonportable bucket
+  community.windows.win_scoop_bucket:
+    name: nonportable
+
+- name: Install Chrome beta
+  community.windows.win_scoop:
+    name: googlechrome-beta
+
+- name: Install Chrome Canary
+  community.windows.win_scoop:
+    name: googlechrome-canary
+
+- name: Install Chrome Dev
+  community.windows.win_scoop:
+    name: googlechrome-dev
+
+- name: Install Firefox Beta
+  community.windows.win_scoop:
+    name: firefox-beta
+
+- name: Install Firefox Developer
+  community.windows.win_scoop:
+    name: firefox-developer
+
+- name: Install Microsoft Edge Dev
+  community.windows.win_scoop:
+    name: microsoft-edge-dev-np
+
+- name: Install Microsoft Edge Beta
+  community.windows.win_scoop:
+    name: microsoft-edge-beta-np
+
+- name: Install Microsoft Edge Canary
+  community.windows.win_scoop:
+    name: microsoft-edge-canary-np
