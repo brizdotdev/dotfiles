@@ -87,12 +87,18 @@ When setting up on a new Windows machine, do the following:
     export DOTFILES_REPO_WIN=`wslpath -w $(pwd)`
     ```
 
-1. In WSL, Run the desired Ansible playbooks
+1. In WSL, Run the desired Ansible playbooks. The Windows Settings junction task will not work if run while Windows Terminal is open
 
     ```shell
     cd win/ansible
     ansible-playbook playbook.yml -i hosts --ask-pass -u {username}
     ```
+
+1. Set the following Settings
+    1. In Windows Update Settings > Turn on Receive Updates for other Microsoft products
+    1. Go over all Windows settings
+    1. (Optional) Run `.\win\utils\Remove-Win10-Bloatware.ps1`
+    1. Check Startup apps
 
 ## Troubleshooting
 
