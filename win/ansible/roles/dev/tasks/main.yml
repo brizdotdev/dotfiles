@@ -21,10 +21,14 @@
     name: neovim
     state: present
 
+# TODO: Configure Neovim
+
 - name: Install Alacritty
   win_chocolatey:
     name: alacritty
     state: present
+
+# TODO: Configure Alacritty
 
 - name: Install Insomnia
   win_chocolatey:
@@ -71,6 +75,7 @@
     name: fd
     state: present
 
+# TODO: Configure above apps
 # TODO: Generate an SSH Key
 # TODO: Setup WSL
 # TODO: Setup Tmux
