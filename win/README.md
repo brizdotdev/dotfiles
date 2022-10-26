@@ -87,7 +87,7 @@ When setting up on a new Windows machine, do the following:
     export DOTFILES_REPO_WIN=`wslpath -w $(pwd)`
     ```
 
-1. In WSL, Run the desired Ansible playbooks. The Windows Settings junction task will not work if run while Windows Terminal is open
+1. In WSL, Run the desired Ansible playbooks
 
     ```shell
     cd win/ansible
