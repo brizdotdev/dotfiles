@@ -1,4 +1,3 @@
-
 ---
 # Install dev applications
 
@@ -75,3 +74,4 @@
 # TODO: Generate an SSH Key
 # TODO: Setup WSL
 # TODO: Setup Tmux
+# TODO: Setup docker
