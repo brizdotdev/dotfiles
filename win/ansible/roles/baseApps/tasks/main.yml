@@ -176,4 +176,4 @@
         }
         Remove-Item -Path $source
       }
-      New-Item -ItemType $type -Path "$settings" -Target "$target"
+      New-Item -ItemType $type -Path "$source" -Target "$target"
