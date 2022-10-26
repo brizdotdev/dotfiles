@@ -84,7 +84,7 @@
         }
         Remove-Item -Path $source
       }
-      New-Item -ItemType $type -Path "$settings" -Target "$target"
+      New-Item -ItemType $type -Path "$source" -Target "$target"
 
 # Install curl from scoop. Mainly to make sure scoop is installed
 - name: Install curl
@@ -137,7 +137,7 @@
         }
         Remove-Item -Path $source
       }
-      New-Item -ItemType $type -Path "$settings" -Target "$target"
+      New-Item -ItemType $type -Path "$source" -Target "$target"
 
 # git config
 - name: Configure git user
