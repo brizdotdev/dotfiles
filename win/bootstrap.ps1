@@ -44,7 +44,7 @@ if ($? -eq $False) {
 Write-Host -ForegroundColor Green "Ansible installed"
 Write-Host ""
 
-## TODO: Install neovim in WSL
+## Install neovim in WSL
 Write-Host -ForegroundColor Blue "Installing Neovim"
 wsl -- /tmp/install-neovim.sh
 if ($? -eq $False) {
