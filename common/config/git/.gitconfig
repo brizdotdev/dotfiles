@@ -60,6 +60,6 @@
 	cmd = code --wait -m $LOCAL $REMOTE $BASE $MERGED
 
 ## Machine specific
-#[user]
-# name =
-# email =
+[user]
+ name = q
+ email = qq
