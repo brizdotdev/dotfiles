@@ -1,3 +1,4 @@
+#Requires -RunAsAdministrator
 Get-AppxPackage *ActiproSoftwareLLC* | Remove-AppxPackage ;
 Get-AppxPackage *AdobeSystemsIncorporated.AdobePhotoshopExpress* | Remove-AppxPackage ;
 Get-AppxPackage *AutodeskSketchBook* | Remove-AppxPackage ;
@@ -44,7 +45,6 @@ Get-AppxPackage *Todos* | Remove-AppxPackage ;
 Get-AppxPackage *Twitter* | Remove-AppxPackage ;
 Get-AppxPackage *Twitter* | Remove-AppxPackage ;
 Get-AppxPackage *Wunderlist* | Remove-AppxPackage ;
-Get-AppxPackage *Xbox* | Remove-AppxPackage ;
 Get-AppxPackage *XboxOneSmartGlass* | Remove-AppxPackage ;
 Get-AppxPackage *Zune* | Remove-AppxPackage ;
 Get-AppxPackage *bingsports* | Remove-AppxPackage ;
@@ -171,3 +171,5 @@ Get-AppxPackage king.com.BubbleWitch3Saga | Remove-AppxPackage ;
 Get-AppxPackage king.com.CandyCrushSaga | Remove-AppxPackage ;
 Get-AppxPackage king.com.CandyCrushSodaSaga | Remove-AppxPackage ;
 Get-AppxPackage microsoft.windowscommunicationsapps | Remove-AppxPackage ;
+Get-AppxPackage Clipchamp.Clipchamp | Remove-AppxPackage;
+Get-AppxPackage MicrosoftTeams | Remove-AppxPackage;
