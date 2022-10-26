@@ -81,13 +81,13 @@ When setting up on a new Windows machine, do the following:
     }
     ```
 
-1. Set the Windows path to the repo as an environment variable
+1. In WSL, Set the Windows path to the repo as an environment variable
 
     ```shell
     export DOTFILES_REPO_WIN=`wslpath -w $(pwd)`
     ```
 
-1. Run the desired Ansible playbooks from WSL
+1. In WSL, Run the desired Ansible playbooks
 
     ```shell
     cd win/ansible
