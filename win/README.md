@@ -47,7 +47,7 @@ When setting up on a new Windows machine, do the following:
     ```powershell
     cd $env:USERPROFILE
     mkdir repos
-    git clone {URL to repo}
+    git clone --recurse-submodules {URL to repo}
     cd dotfiles
     ```
 
