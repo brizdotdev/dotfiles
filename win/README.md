@@ -99,6 +99,7 @@ When setting up on a new Windows machine, do the following:
     1. Go over all Windows settings
     1. (Optional) Run `.\win\utils\Remove-Win10-Bloatware.ps1`
     1. Check Startup apps
+    1. Run script to set MPV as default player
 
 ## Troubleshooting
 
