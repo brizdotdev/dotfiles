@@ -28,7 +28,31 @@
     name: alacritty
     state: present
 
-# TODO: Configure Alacritty
+# TODO: Test
+- name: Remove linux import from Alacritty
+  community.windows.win_lineinfile:
+    regex: 'linux\.yml'
+    backrefs: yes
+    state: absent
+
+# TODO: Test
+- name: Junction Alacritty settings
+  ansible.windows.win_powershell:
+    script: |
+      $source = "$env:AppData\alacritty"
+      $target  = "{{ dotfiles_repo_fullpath }}\common\config\alacritty"
+      $type = "Junction"
+      $existing = Get-Item -Path $source -ErrorAction SilentlyContinue
+      if ($?) {
+        if ($existing.LinkType -eq $type)
+        {
+          $Ansible.Changed = $false
+          exit
+        }
+        Remove-Item -Path $source
+      }
+      New-Item -ItemType Junction -Path "$source" -Target "$target"
+
 
 - name: Install Insomnia
   win_chocolatey:
