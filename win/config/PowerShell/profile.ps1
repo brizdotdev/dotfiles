@@ -120,6 +120,7 @@ Set-Alias -Name "gat" -Value git
 Set-Alias -Name "ex" -Value explorer
 Set-Alias -Name "expl" -Value explorer
 Set-Alias -Name "lg" -Value lazygit
+Set-Alias -Name "t" -Value tmux
 
 del alias:sl -Force
 del alias:rm -Force
