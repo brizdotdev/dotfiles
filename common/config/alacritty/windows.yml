@@ -1,2 +1,5 @@
 shell:
   program: pwsh
+
+import:
+  - ~/AppData/Roaming/alacritty/alacritty-theme/themes/horizon-dark.yaml
