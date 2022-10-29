@@ -139,28 +139,6 @@
       }
       New-Item -ItemType $type -Path "$source" -Target "$target"
 
-# git config
-- name: Configure git user
-  community.windows.win_lineinfile:
-    regex: '^#\[user\]'
-    backrefs: yes
-    line: "[user]"
-    path: '{{ dotfiles_repo_fullpath }}\\common\\config\\git\\.gitconfig'
-
-- name: Configure git user.name
-  community.windows.win_lineinfile:
-    regex: '^# name ='
-    backrefs: yes
-    line: " name = {{ git_name }}"
-    path: "{{ dotfiles_repo_fullpath }}\\common\\config\\git\\.gitconfig"
-
-- name: Configure git user.email
-  community.windows.win_lineinfile:
-    regex: '^# email ='
-    backrefs: yes
-    line: " email = {{ git_email }}"
-    path: "{{ dotfiles_repo_fullpath }}\\common\\config\\git\\.gitconfig"
-
 - name: HardLink git config
   ansible.windows.win_powershell:
     script: |
@@ -177,3 +155,5 @@
         Remove-Item -Path $source
       }
       New-Item -ItemType $type -Path "$source" -Target "$target"
+
+# TODO: Create .gitconfig.local

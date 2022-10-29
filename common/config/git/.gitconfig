@@ -59,7 +59,6 @@
 [mergetool "vscode"]
 	cmd = code --wait -m $LOCAL $REMOTE $BASE $MERGED
 
-## Machine specific
-[user]
- name = q
- email = qq
+# Local config
+[include]
+	path = ~/.gitconfig.local
