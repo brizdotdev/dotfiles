@@ -11,7 +11,8 @@
 	s = status
 	stauts = status
 	st = status
-	p = push
+	p = pull
+	ps = push
 	cehckout = checkout
 	checkotu = checkout
 	checkuot = checkout
