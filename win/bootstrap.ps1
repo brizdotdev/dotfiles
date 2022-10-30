@@ -22,6 +22,13 @@ if ($? -eq $False) {
 Write-Host -ForegroundColor Green "WSL2 is installed"
 Write-Host ""
 
+## Copy WSL conf
+Write-Host -ForegroundColor Blue "Copying WSL conf"
+$wslConfPath = [IO.Path]::Combine("\\wsl$" , $distribution, "etc", "wsl.conf")
+Copy-Item -Recurse "$PSScriptRoot\..\linux\wsl\wsl.conf" -Destination $wslConfPath -ErrorAction SilentlyContinue
+wsl --shutdown
+Write-Host -ForegroundColor Green "WSL conf copied"
+
 ## Copy bash scripts into WSL tmp folder
 ## Because files in Windows are owned by root in WSL
 Write-Host -ForegroundColor Blue "Copying scripts to WSL /tmp"
