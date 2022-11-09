@@ -3,6 +3,7 @@
         "ms-vscode.powershell-preview",
         "redhat.ansible",
         "redhat.vscode-yaml",
-        "DavidAnson.vscode-markdownlint"
+        "davidanson.vscode-markdownlint",
+        "bungcip.better-toml"
     ]
 }
