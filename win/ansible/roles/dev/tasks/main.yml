@@ -94,6 +94,24 @@
     name: lazygit
     state: present
 
+- name: Configure lazygit
+  ansible.windows.win_powershell:
+    script: |
+      $source = "$env:AppData\lazygit\config.yml"
+      $target = "{{ dotfiles_repo_fullpath }}\common\config\lazygit\config.yml"
+      $type = "HardLink"
+      $existing = Get-Item -Path $source -ErrorAction SilentlyContinue
+      if ($?) {
+        if ($existing.LinkType -eq $type)
+        {
+          $Ansible.Changed = $false
+          exit
+        }
+        Remove-Item -Path $source
+      }
+      mkdir.exe -p $env:AppData\lazygit
+      New-Item -ItemType $type -Path "$source" -Target "$target"
+
 - name: Install fd
   win_chocolatey:
     name: fd
