@@ -139,3 +139,12 @@ Import-Module DockerCompletion
 if ($env:TERM_PROGRAM -eq "vscode") {
     Set-PSReadLineOption -EditMode Emacs
 }
+
+
+function Invoke-Starship-TransientFunction {
+    &starship module character
+  }
+
+Invoke-Expression (&starship init powershell)
+
+Enable-TransientPrompt
