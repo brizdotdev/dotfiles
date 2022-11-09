@@ -3,6 +3,7 @@ set ignorecase  " do case insensitive search
 set incsearch   " show incremental search results as you type
 set number relativenumber      " display hybrid line number (rel and abs)
 set noswapfile  " disable swap file
+set nocompatible    " disable vi compatibility
 
 " Y yanks to end of line. similar to C and D
 nnoremap Y y$
