@@ -56,6 +56,15 @@
     type: dword
     state: present
 
+- name: Show path in title bar
+  ansible.windows.win_regedit:
+    path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState
+    name: FullPath
+    data: 1
+    type: dword
+    state: present
+
+
 # https://learn.microsoft.com/en-us/windows/deployment/update/waas-restart
 - name: Disable automatic restart after updates outside of active hours
   ansible.windows.win_regedit:
