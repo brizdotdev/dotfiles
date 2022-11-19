@@ -8,10 +8,12 @@
 	default = current
 [alias]
 	a = add
+	c = commit
 	s = status
 	stauts = status
 	st = status
 	p = pull
+	pl = pull
 	ps = push
 	cehckout = checkout
 	checkotu = checkout
