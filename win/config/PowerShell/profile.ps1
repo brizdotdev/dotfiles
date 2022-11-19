@@ -121,6 +121,9 @@ Set-Alias -Name "ex" -Value explorer
 Set-Alias -Name "expl" -Value explorer
 Set-Alias -Name "lg" -Value lazygit
 Set-Alias -Name "t" -Value tmux
+Set-Alias -Name "dck" -Value docker
+Set-Alias -Name "dckt" -Value docker
+Set-Alias -Name "dn" -Value dotnet
 
 del alias:sl -Force
 del alias:rm -Force
@@ -132,6 +135,7 @@ del alias:sort -Force
 ################################################################################
 Import-Module posh-git
 Import-Module DockerCompletion
+Import-Module CompletionPredictor
 
 ################################################################################
 # Startup
@@ -140,6 +144,7 @@ if ($env:TERM_PROGRAM -eq "vscode") {
     Set-PSReadLineOption -EditMode Emacs
 }
 
+Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 
 function Invoke-Starship-TransientFunction {
     &starship module character
