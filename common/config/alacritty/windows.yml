@@ -3,3 +3,6 @@ shell:
 
 import:
   - ~/AppData/Roaming/alacritty/alacritty-theme/themes/horizon-dark.yaml
+
+window:
+  dynamic_title: false

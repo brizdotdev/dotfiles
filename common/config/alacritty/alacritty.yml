@@ -1,17 +1,5 @@
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
 
-# Import additional configuration files
-#
-# Imports are loaded in order, skipping all missing files, with the importing
-# file being loaded last. If a field is already present in a previous import, it
-# will be replaced.
-#
-# All imports must either be absolute paths starting with `/`, or paths relative
-# to the user's home directory starting with `~/`.
-import:
-  - ~/AppData/Roaming/alacritty/windows.yml
-  - ~/.config/alacritty/linux.yml
-
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
 # set by alacritty itself.
@@ -893,3 +881,15 @@ key_bindings:
 
   # Highlight window damage information.
   #highlight_damage: false
+ 
+# Import additional configuration files
+#
+# Imports are loaded in order, skipping all missing files, with the importing
+# file being loaded last. If a field is already present in a previous import, it
+# will be replaced.
+#
+# All imports must either be absolute paths starting with `/`, or paths relative
+# to the user's home directory starting with `~/`.
+import:
+  - ~/AppData/Roaming/alacritty/windows.yml
+  - ~/.config/alacritty/linux.yml
