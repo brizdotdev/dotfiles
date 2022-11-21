@@ -110,40 +110,35 @@
       }
       New-Item -ItemType $type -Path "$source" -Target "$target"
 
-# Install curl from scoop. Mainly to make sure scoop is installed
-- name: Install curl
-  community.windows.win_scoop:
-    name: curl
-
-### Install fonts. Windows Terminal config needs those
-- name: Add the nerd-fonts bucket
-  community.windows.win_scoop_bucket:
-    name: nerd-fonts
-    repo: https://github.com/matthewjberger/scoop-nerd-fonts
-
 - name: Install JetBrains Mono Nerd Font
-  community.windows.win_scoop:
-    name: JetBrains-Mono
+  win_chocolatey:
+    name: nerd-fonts-jetbrainsmono
+    state: present
 
 - name: Install Iosevka Nerd Font
-  community.windows.win_scoop:
-    name: Iosevka-NF
+  win_chocolatey:
+    name: nerd-fonts-iosevka
+    state: present
 
 - name: Install Cascadia Code Nerd Font
-  community.windows.win_scoop:
-    name: CascadiaCode-NF
+  win_chocolatey:
+    name: nerd-fonts-cascadiacode
+    state: present
 
 - name: Install Hack Nerd Font
-  community.windows.win_scoop:
-    name: Hack-NF
+  win_chocolatey:
+    name: nerdfont-hack
+    state: present
 
 - name: Install Ubuntu Mono Nerd Font
-  community.windows.win_scoop:
-    name: Ubuntu-NF-Mono
+  win_chocolatey:
+    name: nerd-fonts-ubuntumono
+    state: present
 
 - name: Install Victor Mono Nerd Font
-  community.windows.win_scoop:
-    name: VictorMono-NF
+  win_chocolatey:
+    name: nerd-fonts-victormono
+    state: present
 ###
 
 - name: Junction WindowsTerminal settings
