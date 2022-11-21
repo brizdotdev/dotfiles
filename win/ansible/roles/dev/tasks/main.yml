@@ -137,6 +137,47 @@
     name: docker-desktop
     state: present
 
+# dotnet SDKs
+- name: Install dotnet 3.1 SDK
+  win_chocolatey:
+    name: dotnetcore-sdk
+    state: present
+
+- name: Install dotnet 5 SDK
+  win_chocolatey:
+    name: dotnet-5.0-sdk
+    state: present
+
+- name: Install dotnet 6 SDK
+  win_chocolatey:
+    name: dotnet-6.0-sdk
+    state: present
+
+- name: Install dotnet 7 SDK
+  win_chocolatey:
+    name: dotnet-7.0-sdk
+    state: present
+
+- name: Install dotpeek
+  win_chocolatey:
+    name: dotpeek
+    state: present
+
+- name: Install SSMS
+  win_chocolatey:
+    name: sql-server-management-studio
+    state: present
+
+- name: Install SQL Server 2019 Express
+  ansible.windows.win_powershell:
+    script: |
+      winget install Microsoft.SQLServer.2019.Express
+
+- name: Install TablePlus
+  win_chocolatey:
+    name: tableplus
+    state: present
+
 # TODO: Configure above apps
 # TODO: Generate an SSH Key
 # TODO: Setup WSL
