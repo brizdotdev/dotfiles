@@ -62,6 +62,13 @@
     name: python3
     state: present
 
+- name: Remove dummy python exe
+  ansible.windows.win_powershell:
+    script: |
+      $source = "$env:LocalAppData\Microsoft\WindowsApps"
+      Remove-Item -Path "$source\python.exe" -Force
+      Remove-Item -Path "$source\python3.exe" -Force
+
 - name: Install NodeJS
   win_chocolatey:
     name: nodejs.install
