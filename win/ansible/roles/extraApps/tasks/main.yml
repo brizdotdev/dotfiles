@@ -50,3 +50,26 @@
   win_chocolatey:
     name: zoomit
     state: present
+
+- name: Install FancyWM
+  ansible.windows.win_powershell:
+    script: |
+      winget install 9P1741LKHQS9
+
+- name: Configure FancyWM
+  ansible.windows.win_powershell:
+    script: |
+      $source = "$env:LocalAppData\Packages\2203VeselinKaraganev.FancyWM_9x2ndwrcmyd2c\LocalCache\Roaming\FancyWM\settings.json"
+      $target = "{{ dotfiles_repo_fullpath }}\win\config\FancyWM\settings.json"
+      $type = "HardLink"
+      $existing = Get-Item -Path $source -ErrorAction SilentlyContinue
+      if ($?) {
+        if ($existing.LinkType -eq $type)
+        {
+          $Ansible.Changed = $false
+          exit
+        }
+        Remove-Item -Path $source
+      }
+      New-Item -ItemType $type -Path "$source" -Target "$target"
+
