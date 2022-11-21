@@ -28,7 +28,6 @@
     name: alacritty
     state: present
 
-# TODO: Test
 - name: Junction Alacritty settings
   ansible.windows.win_powershell:
     script: |
@@ -46,7 +45,6 @@
       }
       New-Item -ItemType Junction -Path "$source" -Target "$target"
 
-# TODO: Test
 - name: Remove linux import from Alacritty
   community.windows.win_lineinfile:
     regex: 'linux\.yml'
