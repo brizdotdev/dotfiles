@@ -47,9 +47,12 @@ When setting up on a new Windows machine, do the following:
     ```powershell
     cd $env:USERPROFILE
     mkdir repos
+    cd repos
     git clone --recurse-submodules {URL to repo}
     cd dotfiles
     ```
+
+    > Use `git submodule update --init --recursive` in the repo if the submodules didn't clone
 
 1. Open a new PowerShell window **as Administrator** in the dotfiles folder and run
 
