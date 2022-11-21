@@ -2,6 +2,11 @@
 ---
 # Install web dev applications
 
+# Install curl from scoop. Mainly to make sure scoop is installed
+- name: Install curl
+  community.windows.win_scoop:
+    name: curl
+
 - name: Add the extras bucket
   community.windows.win_scoop_bucket:
     name: extras
