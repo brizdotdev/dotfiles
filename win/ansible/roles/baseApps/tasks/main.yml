@@ -175,6 +175,11 @@
       }
       New-Item -ItemType $type -Path "$source" -Target "$target"
 
+- name: Install Delta
+  win_chocolatey:
+    name: delta
+    state: present
+
 # .gitconfig.local
 # TODO: Test
 - name: Configure git user
