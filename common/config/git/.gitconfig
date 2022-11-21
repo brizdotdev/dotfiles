@@ -15,6 +15,7 @@
 	p = pull
 	pl = pull
 	ps = push
+	ck = checkout
 	cehckout = checkout
 	checkotu = checkout
 	checkuot = checkout
