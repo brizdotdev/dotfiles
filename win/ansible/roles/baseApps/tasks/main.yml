@@ -124,6 +124,7 @@
     state: present
 ###
 
+# TODO: Fix
 - name: Junction WindowsTerminal settings
   ansible.windows.win_powershell:
     script: |
