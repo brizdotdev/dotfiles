@@ -73,3 +73,7 @@
       }
       New-Item -ItemType $type -Path "$source" -Target "$target"
 
+- name: Install RegionToShare
+  ansible.windows.win_powershell:
+    script: |
+      winget install 9N4066W2R5Q4
