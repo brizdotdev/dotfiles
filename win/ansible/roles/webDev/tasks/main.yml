@@ -2,51 +2,21 @@
 ---
 # Install web dev applications
 
-# Install curl from scoop. Mainly to make sure scoop is installed
-- name: Install curl
-  community.windows.win_scoop:
-    name: curl
+- name: Install all the Chromes (winget)
+  ansible.windows.win_powershell:
+    script: |
+      winget install Google.Chrome.Dev
+      winget install Google.Chrome.Beta
+      winget install Google.Chrome.Canary
 
-- name: Add the extras bucket
-  community.windows.win_scoop_bucket:
-    name: extras
+- name: Install all the Firefoxes (winget)
+  ansible.windows.win_powershell:
+    script: |
+      winget install Mozilla.Firefox.Beta
+      winget install Mozilla.Firefox.DeveloperEdition
 
-- name: Add the versions bucket
-  community.windows.win_scoop_bucket:
-    name: versions
-
-- name: Add the nonportable bucket
-  community.windows.win_scoop_bucket:
-    name: nonportable
-
-- name: Install Chrome beta
-  community.windows.win_scoop:
-    name: googlechrome-beta
-
-- name: Install Chrome Canary
-  community.windows.win_scoop:
-    name: googlechrome-canary
-
-- name: Install Chrome Dev
-  community.windows.win_scoop:
-    name: googlechrome-dev
-
-- name: Install Firefox Beta
-  community.windows.win_scoop:
-    name: firefox-beta
-
-- name: Install Firefox Developer
-  community.windows.win_scoop:
-    name: firefox-developer
-
-- name: Install Microsoft Edge Dev
-  community.windows.win_scoop:
-    name: microsoft-edge-dev-np
-
-- name: Install Microsoft Edge Beta
-  community.windows.win_scoop:
-    name: microsoft-edge-beta-np
-
-- name: Install Microsoft Edge Canary
-  community.windows.win_scoop:
-    name: microsoft-edge-canary-np
+- name: Install all the Edges (winget)
+  ansible.windows.win_powershell:
+    script: |
+      winget install Microsoft.Edge.Dev
+      winget install Microsoft.Edge.Beta
