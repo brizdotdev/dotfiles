@@ -21,10 +21,10 @@
     name: obsidian
     state: present
 
-- name: Install Spotify
-  win_chocolatey:
-    name: spotify
-    state: present
+# - name: Install Spotify
+#   win_chocolatey:
+#     name: spotify
+#     state: present
 
 - name: Install WinDirStat
   win_chocolatey:

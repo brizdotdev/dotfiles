@@ -39,7 +39,6 @@ Get-AppxPackage *PandoraMediaInc* | Remove-AppxPackage ;
 Get-AppxPackage *Royal Revolt* | Remove-AppxPackage ;
 Get-AppxPackage *Skype* | Remove-AppxPackage ;
 Get-AppxPackage *Speed Test* | Remove-AppxPackage ;
-Get-AppxPackage *Spotify* | Remove-AppxPackage ;
 Get-AppxPackage *Sway* | Remove-AppxPackage ;
 Get-AppxPackage *Todos* | Remove-AppxPackage ;
 Get-AppxPackage *Twitter* | Remove-AppxPackage ;
