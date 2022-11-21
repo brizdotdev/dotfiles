@@ -96,3 +96,56 @@
   ansible.windows.win_updates:
     category_names:  '*'
     reboot: no
+
+- name: Disable Hibernation
+  ansible.windows.win_powershell:
+    script: |
+      powercfg.exe /hibernate off
+
+# Privacy
+- name: Prevent apps from accessing Advertising ID
+  ansible.windows.win_regedit:
+    path: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo
+    name: Enabled
+    data: 0
+    type: dword
+    state: present
+
+- name: Remove Advertising ID
+  ansible.windows.win_regedit:
+    path: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo
+    name: Id
+    state: absent
+    delete_key: yes
+
+- name: Disable Application launch tracking
+  ansible.windows.win_regedit:
+    path: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    name: Start-TrackProgs
+    data: 0
+    state: present
+    type: dword
+
+- name: Disable Application launch tracking
+  ansible.windows.win_regedit:
+    path: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    name: Start-TrackProgs
+    data: 0
+    state: present
+    type: dword
+
+- name: Opt-out from websites from accessing language list
+  ansible.windows.win_regedit:
+    path: HKCU:\Control Panel\International\User Profile
+    name: "HttpAcceptLanguageOptOut"
+    data: 1
+    state: present
+    type: dword
+
+- name: Opt-out from websites from accessing language list
+  ansible.windows.win_regedit:
+    path: HKCU:\Control Panel\International\User Profile
+    name: "HttpAcceptLanguageOptOut"
+    data: 1
+    state: present
+    type: dword
