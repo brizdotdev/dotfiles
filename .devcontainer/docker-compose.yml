@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  dotfiles:
+    build:
+      context: ../
+      dockerfile: ./.devcontainer/Dockerfile
+    image: dotfiles-devcontainer
+    container_name: dotfiles-devcontainer
+    command: sleep infinity
