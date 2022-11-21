@@ -37,6 +37,7 @@ $wslTempPath = [IO.Path]::Combine("\\wsl$" , $distribution, "tmp")
 Copy-Item -Recurse $scriptsFolder\*.sh -Destination $wslTempPath -ErrorAction SilentlyContinue
 ## Copy install-neovim.sh to /tmp
 Copy-Item -Recurse "$PSScriptRoot\..\linux\scripts\install-neovim.sh" -Destination $wslTempPath -ErrorAction SilentlyContinue
+Copy-Item -Recurse "$PSScriptRoot\..\linux\scripts\install-ansible.sh" -Destination $wslTempPath -ErrorAction SilentlyContinue
 wsl --cd "$scriptsFolder" -- sudo apt install -y dos2unix '&&' sudo chown '$USER' /tmp/*.sh '&&' dos2unix --allow-chown /tmp/*.sh '&&' chmod +x /tmp/*.sh
 Write-Host -ForegroundColor Green "Scripts copied"
 Write-Host ""
