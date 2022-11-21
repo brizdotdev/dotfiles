@@ -164,27 +164,24 @@
     state: present
 
 # .gitconfig.local
-# TODO: Test
+- name: Create .gitconfig.local
+  ansible.windows.win_file:
+    path: "%UserProfile%\\.gitconfig.local"
+    state: touch
+
 - name: Configure git user
   community.windows.win_lineinfile:
-    backrefs: yes
-    regex: '^\[user\]'
     line: "[user]"
     path: "%UserProfile%\\.gitconfig.local"
-    create: true
 
 - name: Configure git user.name
   community.windows.win_lineinfile:
-    regex: '^name ='
-    backrefs: yes
+    regex: 'name'
     line: " name = {{ git_name }}"
     path: "%UserProfile%\\.gitconfig.local"
-    create: true
 
 - name: Configure git user.email
   community.windows.win_lineinfile:
-    regex: '^email ='
-    backrefs: yes
+    regex: 'email'
     line: " email = {{ git_email }}"
     path: "%UserProfile%\\.gitconfig.local"
-    create: true
