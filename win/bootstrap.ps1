@@ -10,7 +10,7 @@ wsl -l | Out-Null
 if ($? -eq $False) {
     ### WSL not installed. Install and reboot
     Write-Host -ForegroundColor Yellow "Setting up WSL2."
-    Write-Host -ForegroundColor Yellow "⚠️ This will restart your machine once done"
+    Write-Host -ForegroundColor Yellow "This will restart your machine once done"
     wsl --install -d $distribution
     if ($? -eq $False) {
         Write-Host -ForegroundColor Red  "Failed to setup WSL2"
