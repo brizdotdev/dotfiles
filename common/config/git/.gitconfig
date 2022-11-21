@@ -4,8 +4,17 @@
 [core]
 	autocrlf = true
 	editor = nvim
+	pager = delta
+[interactive]
+    diffFilter = delta --color-only
 [push]
 	default = current
+[delta]
+	features = decorations
+    navigate = true    # use n and N to move between diff sections
+    light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+	side-by-side = true
+	line-numbers = true
 [alias]
 	a = add
 	c = commit
@@ -51,12 +60,14 @@
 	directory = *
 [diff]
 	tool = neovim
+    colorMoved = default
 [difftool "neovim"]
 	cmd = nvim -d $LOCAL $REMOTE
 [difftool "vscode"]
 	cmd = code --wait --diff $LOCAL $REMOTE
 [merge]
 	tool = neovim
+    conflictstyle = diff3
 [mergetool]
 	keepBackup = false
 [mergetool "neovim"]
