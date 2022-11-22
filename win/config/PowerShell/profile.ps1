@@ -105,6 +105,11 @@ function tmux([string]$a) {
     wsl -- tmux -f /home/brizzz/.tmux-pwsh.conf $a
 }
 
+function fzf-vim()
+{
+    vim $(fzf)
+}
+
 ################################################################################
 # Aliases
 ################################################################################
@@ -136,20 +141,22 @@ del alias:sort -Force
 Import-Module posh-git
 Import-Module DockerCompletion
 Import-Module CompletionPredictor
+Import-Module PSFzf
 
 ################################################################################
 # Startup
 ################################################################################
-if ($env:TERM_PROGRAM -eq "vscode") {
-    Set-PSReadLineOption -EditMode Emacs
-}
+# if ($env:TERM_PROGRAM -eq "vscode") {
+#     Set-PSReadLineOption -EditMode Emacs
+# }
+
+$env:FZF_DEFAULT_OPTS = "--layout=reverse --multi --cycle"
 
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+Set-PsFzfOption -TabExpansion
 
 function Invoke-Starship-TransientFunction {
     &starship module character
   }
 
 Invoke-Expression (&starship init powershell)
-
-Enable-TransientPrompt
