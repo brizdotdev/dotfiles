@@ -89,6 +89,11 @@
     name: zoxide
     state: present
 
+- name: Install bat
+  win_chocolatey:
+    name: bat
+    state: present
+
 - name: Install jq
   win_chocolatey:
     name: jq
@@ -172,6 +177,8 @@
   ansible.windows.win_powershell:
     script: |
       winget install Microsoft.SQLServer.2019.Express
+
+# TODO: Add SQLBK to env var
 
 - name: Install TablePlus
   win_chocolatey:
