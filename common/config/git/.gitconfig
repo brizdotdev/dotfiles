@@ -17,6 +17,8 @@
 	line-numbers = true
 [alias]
 	a = add
+	b = branch
+	br = branch
 	c = commit
 	s = status
 	stauts = status
