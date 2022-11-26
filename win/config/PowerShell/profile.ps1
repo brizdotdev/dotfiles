@@ -113,6 +113,12 @@ function fzf-vim()
 ################################################################################
 # Aliases
 ################################################################################
+del alias:sl -Force
+del alias:rm -Force
+del alias:ls -Force
+del alias:sort -Force
+del alias:cat -Force
+
 Set-Alias -Name "clear" -Value Clear-Host -Option AllScope
 Set-Alias -Name "c" -Value Clear-Host -Option AllScope
 Set-Alias -Name "history" -Value Show-History -Option AllScope
@@ -129,11 +135,7 @@ Set-Alias -Name "t" -Value tmux
 Set-Alias -Name "dck" -Value docker
 Set-Alias -Name "dckt" -Value docker
 Set-Alias -Name "dn" -Value dotnet
-
-del alias:sl -Force
-del alias:rm -Force
-del alias:ls -Force
-del alias:sort -Force
+Set-Alias -Name "cat" -Value bat
 
 ################################################################################
 # Imports
