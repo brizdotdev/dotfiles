@@ -137,6 +137,8 @@ Set-Alias -Name "dck" -Value docker
 Set-Alias -Name "dckr" -Value docker
 Set-Alias -Name "dn" -Value dotnet
 Set-Alias -Name "cat" -Value bat
+Set-Alias -Name "z" -Value zoxide
+Set-Alias -Name "cd" -Value zoxide
 
 ################################################################################
 # Imports
@@ -163,6 +165,11 @@ $env:PAGER = "C:\Program Files\Git\usr\bin\less.exe"
 
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 Set-PsFzfOption -TabExpansion
+
+Invoke-Expression (& {
+    $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
+    (zoxide init --hook $hook powershell | Out-String)
+})
 
 function Invoke-Starship-TransientFunction {
     &starship module character
