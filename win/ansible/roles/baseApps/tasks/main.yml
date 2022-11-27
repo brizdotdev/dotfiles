@@ -33,6 +33,13 @@
     name: vscode
     state: present
 
+- name: Install Neovim
+  win_chocolatey:
+    name: neovim
+    state: present
+
+# TODO: Configure Neovim
+
 - name: Install mpv
   win_chocolatey:
     name: mpv

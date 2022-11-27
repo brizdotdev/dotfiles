@@ -16,13 +16,6 @@
     name: gsudo
     state: present
 
-- name: Install Neovim
-  win_chocolatey:
-    name: neovim
-    state: present
-
-# TODO: Configure Neovim
-
 - name: Install Alacritty
   win_chocolatey:
     name: alacritty
