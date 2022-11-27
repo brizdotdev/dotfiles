@@ -122,6 +122,7 @@ del alias:cat -Force
 Set-Alias -Name "clear" -Value Clear-Host -Option AllScope
 Set-Alias -Name "c" -Value Clear-Host -Option AllScope
 Set-Alias -Name "history" -Value Show-History -Option AllScope
+Set-Alias -Name "v" -Value nvim
 Set-Alias -Name "vi" -Value nvim
 Set-Alias -Name "vim" -Value nvim
 Set-Alias -Name "g" -Value git
@@ -133,7 +134,7 @@ Set-Alias -Name "expl" -Value explorer
 Set-Alias -Name "lg" -Value lazygit
 Set-Alias -Name "t" -Value tmux
 Set-Alias -Name "dck" -Value docker
-Set-Alias -Name "dckt" -Value docker
+Set-Alias -Name "dckr" -Value docker
 Set-Alias -Name "dn" -Value dotnet
 Set-Alias -Name "cat" -Value bat
 
