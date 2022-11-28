@@ -16,6 +16,10 @@
     name: gsudo
     state: present
 
+- name: Ensure that C:\tools\gsudo\Current is in the path
+  ansible.windows.win_path:
+    elements: C:\tools\gsudo\Current
+
 - name: Install Alacritty
   win_chocolatey:
     name: alacritty
@@ -172,6 +176,12 @@
       winget install Microsoft.SQLServer.2019.Express
 
 # TODO: Add SQLBK to env var
+# - name: Set an environment variable for the SQLBK folder
+#   ansible.windows.win_environment:
+#     name: REPOS
+#     value: TODO
+#     state: present
+#     level: user
 
 - name: Install TablePlus
   win_chocolatey:
