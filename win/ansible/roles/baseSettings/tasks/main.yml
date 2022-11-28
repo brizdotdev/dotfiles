@@ -1,6 +1,11 @@
 ---
 # Setup default Windows settings the way I like
 
+- name: Create repos directory if it doesn't exist
+  ansible.windows.win_file:
+    path: C:\Users\{{ ansible_user }}\repos
+    state: directory
+
 - name: Set an environment variable for the repos folder
   ansible.windows.win_environment:
     name: REPOS
