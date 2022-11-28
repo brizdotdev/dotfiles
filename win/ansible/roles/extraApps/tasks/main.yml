@@ -21,11 +21,6 @@
     name: obsidian
     state: present
 
-# - name: Install Spotify
-#   win_chocolatey:
-#     name: spotify
-#     state: present
-
 - name: Install WinDirStat
   win_chocolatey:
     name: windirstat
@@ -87,3 +82,8 @@
   ansible.windows.win_powershell:
     script: |
       winget install 9N4066W2R5Q4
+
+- name: Install Spotify
+  ansible.windows.win_powershell:
+    script: |
+      winget install --accept-package-agreements --accept-source-agreements 9NCBCSZSJRSB
