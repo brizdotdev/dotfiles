@@ -13,6 +13,13 @@
     state: present
     level: user
 
+- name: Set an environment variable for the hosts file
+  ansible.windows.win_environment:
+    name: HOSTS
+    value: C:\Windows\System32\drivers\etc\hosts
+    state: present
+    level: machine
+
 - name: Set Dark mode (apps)
   ansible.windows.win_regedit:
     path: HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize
