@@ -46,6 +46,11 @@
     name: vlc
     state: present
 
+- name: Install ffmpeg
+  win_chocolatey:
+    name: ffmpeg
+    state: present
+
 - name: Install ZoomIt
   win_chocolatey:
     name: zoomit
