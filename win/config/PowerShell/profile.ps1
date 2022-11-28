@@ -138,7 +138,6 @@ Set-Alias -Name "dckr" -Value docker
 Set-Alias -Name "dn" -Value dotnet
 Set-Alias -Name "cat" -Value bat
 Set-Alias -Name "z" -Value zoxide
-Set-Alias -Name "cd" -Value zoxide
 
 ################################################################################
 # Imports
