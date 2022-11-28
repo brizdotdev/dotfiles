@@ -1,6 +1,51 @@
 ---
 # Install dev applications
 
+- name: Install PowerShell Core
+  win_chocolatey:
+    name: powershell-core
+    state: present
+
+- name: Install Starship
+  win_chocolatey:
+    name: starship
+    state: present
+
+- name: Configure Starship
+  ansible.windows.win_powershell:
+    script: |
+      $source = "$env:UserProfile\.config\starship.toml"
+      $target = "{{ dotfiles_repo_fullpath }}\common\config\starship\starship.toml"
+      $type = "HardLink"
+      $existing = Get-Item -Path $source -ErrorAction SilentlyContinue
+      if ($?) {
+        if ($existing.LinkType -eq $type)
+        {
+          $Ansible.Changed = $false
+          exit
+        }
+        Remove-Item -Path $source
+      }
+      mkdir.exe -p $env:UserProfile\.config
+      New-Item -ItemType $type -Path "$source" -Target "$target"
+
+- name: Configure PowerShell Core
+  ansible.windows.win_powershell:
+    script: |
+      $source = "$env:UserProfile\Documents\PowerShell"
+      $target = "{{ dotfiles_repo_fullpath }}\win\config\PowerShell"
+      $type = "Junction"
+      $existing = Get-Item -Path $source -ErrorAction SilentlyContinue
+      if ($?) {
+        if ($existing.LinkType -eq $type)
+        {
+          $Ansible.Changed = $false
+          exit
+        }
+        Remove-Item -Path $source
+      }
+      New-Item -ItemType $type -Path "$source" -Target "$target"
+
 - name: Install WinMerge
   win_chocolatey:
     name: winmerge
