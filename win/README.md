@@ -101,6 +101,8 @@ When setting up on a new Windows machine, do the following:
     1. (Optional) Run `.\win\utils\Remove-Win10-Bloatware.ps1`
     1. Check Startup apps
     1. Run script to set MPV as default player
+    1. Restore PowerToys settings
+    1. (Temp) Fix Windows Terminal settings
 
 ## Troubleshooting
 
