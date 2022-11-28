@@ -170,19 +170,6 @@
     name: sql-server-management-studio
     state: present
 
-- name: Install SQL Server 2019 Express
-  ansible.windows.win_powershell:
-    script: |
-      winget install Microsoft.SQLServer.2019.Express
-
-# TODO: Add SQLBK to env var
-# - name: Set an environment variable for the SQLBK folder
-#   ansible.windows.win_environment:
-#     name: REPOS
-#     value: TODO
-#     state: present
-#     level: user
-
 - name: Install TablePlus
   win_chocolatey:
     name: tableplus

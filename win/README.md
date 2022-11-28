@@ -103,6 +103,13 @@ When setting up on a new Windows machine, do the following:
     1. Run script to set MPV as default player
     1. Restore PowerToys settings
     1. (Temp) Fix Windows Terminal settings
+    1. Install SQL Server
+
+        ```powershell
+       winget install Microsoft.SQLServer.2019.Express
+       ```
+
+    1. Add `SQLBK` to path
 
 ## Troubleshooting
 
