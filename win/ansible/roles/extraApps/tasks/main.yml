@@ -61,6 +61,11 @@
     script: |
       winget install 9P1741LKHQS9
 
+- name: Create FancyWM dir
+  ansible.windows.win_file:
+    path: "%LOCALAPPDATA%\\Packages\\2203VeselinKaraganev.FancyWM_9x2ndwrcmyd2c\\LocalCache\\Roaming\\FancyWM"
+    state: directory
+
 - name: Configure FancyWM
   ansible.windows.win_powershell:
     script: |
