@@ -129,8 +129,8 @@ symbol = " "
 format = '\[[$symbol$context]($style)\]'
 
 [dotnet]
-symbol = ''
-format = '\[[$symbol $tfm]($style)\]'
+format = '\[[$symbol]($style)\]'
+symbol = '.NET'
 
 [elixir]
 symbol = " "
@@ -159,6 +159,17 @@ commit_hash_length = 4
 
 [git_status]
 format = '([\[$all_status$ahead_behind\]]($style))'
+conflicted = "=${count} "
+up_to_date = ""
+untracked = "?${count} "
+stashed = "📦 "
+modified = "!${count} "
+staged = '[ $count](green) '
+renamed = "»${count} "
+deleted = "${count} "
+ahead = "[⇡${count}](green) "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+behind = "⇣${count} "
 
 [golang]
 symbol = " "
@@ -269,9 +280,11 @@ symbol = " "
 format = '\[[$symbol($version)]($style)\]'
 
 [shell]
-# TODO: Add indicator for various shells
 fish_indicator = ""
-powershell_indicator = "_"
+powershell_indicator = ""
+bash_indicator = ""
+zsh_indicator = ""
+unknown_indicator = ""
 disabled = false
 
 [spack]
