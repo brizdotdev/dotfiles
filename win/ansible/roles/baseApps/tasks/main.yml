@@ -23,6 +23,10 @@
     script: |
      SetDefaultBrowser.exe HKLM Firefox-308046B0AF4A39CB
 
+- name: Ensure Chocolatey bin is in path
+  ansible.windows.win_path:
+    elements: C:\ProgramData\chocolatey\bin
+
 - name: Install 7zip
   win_chocolatey:
     name: 7zip
