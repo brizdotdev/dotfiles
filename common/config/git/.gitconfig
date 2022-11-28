@@ -56,8 +56,7 @@
 [init]
 	defaultBranch = main
 [pull]
-	ff = only
-	rebase = false
+	rebase = true
 [safe]
 	directory = *
 [diff]
