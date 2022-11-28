@@ -97,11 +97,6 @@
     type: dword
     state: present
 
-- name: Apply Windows updates
-  ansible.windows.win_updates:
-    category_names:  '*'
-    reboot: no
-
 - name: Disable Hibernation
   ansible.windows.win_powershell:
     script: |
