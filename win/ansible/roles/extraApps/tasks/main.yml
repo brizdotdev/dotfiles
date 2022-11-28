@@ -54,7 +54,7 @@
 - name: Install FancyWM
   ansible.windows.win_powershell:
     script: |
-      winget install 9P1741LKHQS9
+      winget install --accept-package-agreements --accept-source-agreements 9P1741LKHQS9
 
 - name: Create FancyWM dir
   ansible.windows.win_file:
@@ -81,7 +81,7 @@
 - name: Install RegionToShare
   ansible.windows.win_powershell:
     script: |
-      winget install 9N4066W2R5Q4
+      winget install --accept-package-agreements --accept-source-agreements 9N4066W2R5Q4
 
 - name: Install Spotify
   ansible.windows.win_powershell:
