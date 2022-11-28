@@ -152,7 +152,6 @@ symbol = " "
 format = '\[[$symbol$branch]($style)\]'
 
 [git_commit]
-symbol = "ﰖ "
 tag_symbol = " "
 tag_disabled = false
 format = '[\($hash$tag\)]($style) '
