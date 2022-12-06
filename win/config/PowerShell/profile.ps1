@@ -17,7 +17,7 @@ function fullhd {
     Remove-Module ChangeScreenResolution
 }
 
-# Restore rewsolution to 3440x1440
+# Restore resolution to 3440x1440
 function ultrawide {
     Import-Module ChangeScreenResolution
     Set-ScreenResolution -Width 3440 -Height 1440
@@ -27,54 +27,6 @@ Set-Alias -Name "uw" -Value ultrawide -Option AllScope
 
 function Copy-Pwd {
     $(pwd).Path | clip.exe
-}
-
-function AWSLogin {
-    param (
-        [string]  $AWSProfile
-    )
-    process {
-        if (-Not [string]::IsNullOrEmpty($AWSProfile)) {
-            $env:AWS_PROFILE = $AWSProfile
-        }
-        else {
-            $env:AWS_PROFILE = 'default'
-        }
-        echo "Profile: $env:AWS_Profile"
-        $creds = aws-runas
-        if (-Not $?) {
-            echo "Failed to login"
-        }
-        $CredentialFileLocation = $env:USERPROFILE + "\.aws\credentials"
-        $accesskey = ""
-        $secret = ""
-        $profile = ""
-        $sessionToken = ""
-        ForEach ($line in $($creds -split "`r`n")) {
-            if ($line -match 'AWS_ACCESS_KEY_ID') {
-                $accesskey = $line -replace "^(.*?)="
-            }
-            if ($line -match 'AWS_SECRET_ACCESS_KEY') {
-                $secret = $line -replace "^(.*?)="
-            }
-            if ($line -match 'AWSRUNAS_PROFILE') {
-                $profile = $line -replace "^(.*?)="
-            }
-            if ($line -match 'AWS_SESSION_TOKEN') {
-                $sessionToken = $line -replace "^(.*?)="
-            }
-        }
-        Import-Module AWS.Tools.Common
-        $env:AWS_PROFILE = 'default'
-        Set-AWSCredential -AccessKey $accesskey -SecretKey $secret -SessionToken $sessionToken -StoreAs $ENV:AWS_PROFILE -ProfileLocation $CredentialFileLocation
-        if ($?) {
-            Write-Host  "Credentials successfully set"-ForegroundColor Green
-        }
-        else {
-            Write-Host "Error setting credentials"-ForegroundColor Red
-        }
-        Remove-Module AWS.Tools.Common
-    }
 }
 
 function ConnectPVPN {
