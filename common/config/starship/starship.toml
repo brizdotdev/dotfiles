@@ -146,7 +146,6 @@ format = '\[[$symbol($version)]($style)\]'
 [gcloud]
 format = '\[[$symbol$account(@$domain)(\($region\))]($style)\]'
 
-# TODO: Fix the git modules
 [git_branch]
 symbol = " "
 format = '\[[$symbol$branch]($style)\]'
@@ -158,9 +157,9 @@ format = '[\($hash$tag\)]($style) '
 commit_hash_length = 4
 
 [git_status]
-format = '([\[$all_status$ahead_behind\]]($style))'
+format = '\[[$all_status$ahead_behind]($style)\]'
 conflicted = "=${count} "
-up_to_date = ""
+up_to_date = "[](green)"
 untracked = "?${count} "
 stashed = "📦 "
 modified = "!${count} "
