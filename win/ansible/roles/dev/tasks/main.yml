@@ -184,6 +184,11 @@
     name: docker-desktop
     state: present
 
+- name: Install glab
+  ansible.windows.win_powershell:
+    script: |
+      winget install --accept-package-agreements --accept-source-agreements glab
+
 # - name: Install docker
 #   win_chocolatey:
 #     name: docker-desktop
