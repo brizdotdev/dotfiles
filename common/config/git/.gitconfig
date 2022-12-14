@@ -6,13 +6,13 @@
 	editor = nvim
 	pager = delta
 [interactive]
-    diffFilter = delta --color-only
+	diffFilter = delta --color-only
 [push]
 	default = current
 [delta]
 	features = decorations
-    navigate = true    # use n and N to move between diff sections
-    light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+	navigate = true    # use n and N to move between diff sections
+	light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
 	side-by-side = true
 	line-numbers = true
 [alias]
@@ -32,6 +32,9 @@
 	checkuot = checkout
 	chekcout = checkout
 	chcekout = checkout
+
+	# https://stackoverflow.com/a/24186641
+	clog = log --oneline --decorate --left-right --graph
 
 	# Graphs
 
