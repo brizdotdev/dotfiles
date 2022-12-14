@@ -184,6 +184,11 @@
     name: docker-desktop
     state: present
 
+# - name: Install docker
+#   win_chocolatey:
+#     name: docker-desktop
+#     state: present
+
 # dotnet SDKs
 - name: Install dotnet 3.1 SDK
   win_chocolatey:
