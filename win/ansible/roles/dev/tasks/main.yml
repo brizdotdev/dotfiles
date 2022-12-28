@@ -189,6 +189,11 @@
     script: |
       winget install --accept-package-agreements --accept-source-agreements glab
 
+- name: Install ag
+  win_chocolatey:
+    name: ag
+    state: present
+
 # - name: Install docker
 #   win_chocolatey:
 #     name: docker-desktop
