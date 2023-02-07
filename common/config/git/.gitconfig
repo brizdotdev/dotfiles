@@ -33,15 +33,15 @@
 	chekcout = checkout
 	chcekout = checkout
 
-	# https://stackoverflow.com/a/24186641
-	clog = log --oneline --decorate --left-right --graph
+	# Undo Commit; leaves files. Only for non-public commits
+    uncommit = reset --soft HEAD^
 
 	# Graphs
-
-	# https://stackoverflow.com/a/35075021
+	## https://stackoverflow.com/a/24186641
+	clog = log --oneline --decorate --left-right --graph
+	## https://stackoverflow.com/a/35075021
 	adog = "log --all --decorate --oneline --graph"
-
-	# https://stackoverflow.com/a/34467298
+	## https://stackoverflow.com/a/34467298
 	lg = lg1
 	lg1 = lg1-specific --all
 	lg2 = lg2-specific --all
