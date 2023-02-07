@@ -1,6 +1,8 @@
 ################################################################################
 # Utility Functions
 ################################################################################
+${function:~} = { Set-Location ~ }
+
 function Show-History {
     Get-Content (Get-PSReadlineOption).HistorySavePath
 }
@@ -29,30 +31,6 @@ function Copy-Pwd {
     $(pwd).Path | clip.exe
 }
 
-function ConnectPVPN {
-    PVPN.exe
-    if ($? -ne $true) {
-        Write-Host "Failed to connect to Get VPN Cookie"
-    }
-    $cookieFile = Join-Path -Path (Split-Path (Get-Command PVPN.exe).Source) -ChildPath "cookie.txt"
-    $cookie = Get-Content $cookieFile
-    Remove-Item $cookieFile
-    openconnect -q --servercert pin-sha256:1xhU6RCHvqQ94oP8/h1YBK8RjiSqy0QNbqzUQbz6l94= --cookie="$cookie" --script="C:\Program Files\OpenConnect\pearson-vpn-exclude-iit.js" $env:PVPN_VPNURL
-}
-Set-Alias -Name "pvpn" -Value ConnectPVPN
-
-function ConnectPVPNFT {
-    PVPN.exe
-    if ($? -ne $true) {
-        Write-Host "Failed to connect to Get VPN Cookie"
-    }
-    $cookieFile = Join-Path -Path (Split-Path (Get-Command PVPN.exe).Source) -ChildPath "cookie.txt"
-    $cookie = Get-Content $cookieFile
-    Remove-Item $cookieFile
-    openconnect -q --servercert pin-sha256:1xhU6RCHvqQ94oP8/h1YBK8RjiSqy0QNbqzUQbz6l94= --cookie="$cookie" $env:PVPN_VPNURL
-}
-Set-Alias -Name "pvpn-full" -Value ConnectPVPNFT
-
 function tmux([string]$a) {
     wsl -- tmux -f /home/brizzz/.tmux-pwsh.conf $a
 }
@@ -62,12 +40,52 @@ function fzf-vim()
     vim $(fzf)
 }
 
+## Exec profile.local.ps1 if it exists
+$LocalProfile = Join-Path $PSScriptRoot -ChildPath "profile.local.ps1"
+if (Test-Path $LocalProfile) {
+    & $LocalProfile
+}
+
 ################################################################################
 # Aliases
 ################################################################################
+# Correct PowerShell Aliases if tools are available (aliases win if set)
+# WGet: Use `wget.exe` if available
+if (Get-Command wget.exe -ErrorAction SilentlyContinue | Test-Path) {
+    rm alias:wget -ErrorAction SilentlyContinue
+  }
+
+  # Directory Listing: Use `ls.exe` if available
+  if (Get-Command ls.exe -ErrorAction SilentlyContinue | Test-Path) {
+      rm alias:ls -ErrorAction SilentlyContinue
+      # Set `ls` to call `ls.exe` and always use --color
+      ${function:ls} = { ls.exe --color @args }
+      # List all files in long format
+      ${function:l} = { ls -lF @args }
+      # List all files in long format, including hidden files
+      ${function:la} = { ls -laF @args }
+      # List only directories
+      ${function:lsd} = { Get-ChildItem -Directory -Force @args }
+  } else {
+      # List all files, including hidden files
+      ${function:la} = { ls -Force @args }
+      # List only directories
+      ${function:lsd} = { Get-ChildItem -Directory -Force @args }
+  }
+
+  # curl: Use `curl.exe` if available
+  if (Get-Command curl.exe -ErrorAction SilentlyContinue | Test-Path) {
+      rm alias:curl -ErrorAction SilentlyContinue
+      # Set `ls` to call `ls.exe` and always use --color
+      ${function:curl} = { curl.exe @args }
+      # Gzip-enabled `curl`
+      ${function:gurl} = { curl --compressed @args }
+  } else {
+      # Gzip-enabled `curl`
+      ${function:gurl} = { curl -TransferEncoding GZip }
+  }
 del alias:sl -Force
 del alias:rm -Force
-del alias:ls -Force
 del alias:sort -Force
 del alias:cat -Force
 
