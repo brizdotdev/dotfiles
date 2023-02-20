@@ -1,4 +1,0 @@
-#!/bin/bash
-gksudo netctl start "$1"
-killall i3-nagbar
-unsplash &

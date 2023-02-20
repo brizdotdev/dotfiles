@@ -1,0 +1,9 @@
+[submodule "linux/scripts/pretty/pokemon-colorscripts"]
+	path = linux/scripts/pretty/pokemon-colorscripts
+	url = https://gitlab.com/phoneybadger/pokemon-colorscripts.git
+[submodule "common/config/alacritty/alacritty-theme"]
+	path = common/config/alacritty/alacritty-theme
+	url = https://github.com/eendroroy/alacritty-theme
+[submodule "common/config/alacritty/catpuccin"]
+	path = common/config/alacritty/catpuccin
+	url = https://github.com/catppuccin/alacritty

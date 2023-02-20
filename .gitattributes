@@ -1,0 +1,16 @@
+*.sh      text eol=lf
+*.yml      text eol=lf
+*.yaml      text eol=lf
+*.conf      text eol=lf
+
+# Basic .gitattributes for a PowerShell repo.
+# https://github.com/alexkaratarakis/gitattributes/blob/master/PowerShell.gitattributes
+*.ini      text eol=crlf
+*.ps1      text eol=crlf
+*.ps1x     text eol=crlf
+*.psm1     text eol=crlf
+*.psd1     text eol=crlf
+*.ps1xml   text eol=crlf
+*.pssc     text eol=crlf
+*.psrc     text eol=crlf
+*.cdxml    text eol=crlf

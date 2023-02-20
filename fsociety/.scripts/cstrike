@@ -1,3 +1,0 @@
-#!/bin/bash
-cd /home/brizzz/.wine/drive_c/Games/Counter-Strike/
-wine hl.exe -game cstrike

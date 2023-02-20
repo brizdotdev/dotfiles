@@ -1,9 +1,0 @@
-#!/bin/bash
-if [[ "$1" == "unlock" ]]; then
-  systemctl suspend
-else
-  lock-screen &
-  sleep 1s
-  systemctl suspend
-fi
-

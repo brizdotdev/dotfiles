@@ -1,0 +1,11 @@
+settings-telemetry.json
+update_state.json
+UpdateState.json
+last_version_run.json
+UpdateLogs/
+**/*Logs*/**
+**/ModuleInterface/
+**/Cache/
+UserSelectedRecord*
+*ImageCache*
+*QueryHistory*

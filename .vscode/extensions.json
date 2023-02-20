@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "ms-vscode.powershell-preview",
+        "redhat.ansible",
+        "redhat.vscode-yaml",
+        "davidanson.vscode-markdownlint",
+        "bungcip.better-toml"
+    ]
+}

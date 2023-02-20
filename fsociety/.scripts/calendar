@@ -1,8 +1,0 @@
-#!/bin/bash
-app='--app=https://calendar.google.com'
-if [[ "$1" == "tab" ]]
-then
-  app='https://calendar.google.com'
-fi
-
-exec google-chrome-stable $app

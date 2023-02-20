@@ -1,2 +1,0 @@
-#!/bin/bash
-sudo dhcpcd `ip link | grep enp0.*: -o | sed 's/.$//'`
