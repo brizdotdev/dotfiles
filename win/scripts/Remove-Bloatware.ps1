@@ -1,4 +1,5 @@
 #Requires -RunAsAdministrator
+Write-Host -ForegroundColor Blue "Removing bloatware"
 Get-AppxPackage *ActiproSoftwareLLC* | Remove-AppxPackage ;
 Get-AppxPackage *AdobeSystemsIncorporated.AdobePhotoshopExpress* | Remove-AppxPackage ;
 Get-AppxPackage *AutodeskSketchBook* | Remove-AppxPackage ;
@@ -172,3 +173,7 @@ Get-AppxPackage king.com.CandyCrushSodaSaga | Remove-AppxPackage ;
 Get-AppxPackage microsoft.windowscommunicationsapps | Remove-AppxPackage ;
 Get-AppxPackage Clipchamp.Clipchamp | Remove-AppxPackage;
 Get-AppxPackage MicrosoftTeams | Remove-AppxPackage;
+# Uninstall Windows Media Player
+Disable-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" -NoRestart -WarningAction SilentlyContinue | Out-Null
+Write-Host -ForegroundColor Green "Done removing bloatware"
+exit 0
