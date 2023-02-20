@@ -5,6 +5,7 @@
 
 # Basic .gitattributes for a PowerShell repo.
 # https://github.com/alexkaratarakis/gitattributes/blob/master/PowerShell.gitattributes
+*.ini      text eol=crlf
 *.ps1      text eol=crlf
 *.ps1x     text eol=crlf
 *.psm1     text eol=crlf
