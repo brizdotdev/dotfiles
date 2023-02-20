@@ -6,6 +6,12 @@ ${function:~} = { Set-Location ~ }
 function Show-History {
     Get-Content (Get-PSReadlineOption).HistorySavePath
 }
+Set-Alias -Name "history" -Value Show-History -Option AllScope
+
+function Reload-Path {
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+}
+Set-Alias -Name "refreshpath" -Value Reload-Path -Option AllScope
 
 function which($command) {
     Get-Command -Name $command -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
@@ -91,7 +97,6 @@ del alias:cat -Force
 
 Set-Alias -Name "clear" -Value Clear-Host -Option AllScope
 Set-Alias -Name "c" -Value Clear-Host -Option AllScope
-Set-Alias -Name "history" -Value Show-History -Option AllScope
 Set-Alias -Name "v" -Value nvim
 Set-Alias -Name "vi" -Value nvim
 Set-Alias -Name "vim" -Value nvim
