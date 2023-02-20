@@ -42,6 +42,10 @@ Write-Host -ForegroundColor Green "Git installed"
 
 Write-Host -ForegroundColor Blue "Cloning dotfiles"
 $dotfilesPath = Join-Path -Path $HOME -ChildPath ".dotfiles"
+if (Test-Path -Path $dotfilesPath) {
+    Write-Host -ForegroundColor Yellow "Dotfiles folder already exists"
+    exit 0
+}
 git clone --recurse-submodules "https://github.com/$GitHubUsername/$GitHubRepoName" $dotfilesPath
 if ($? -eq $False) {
     Write-Host -ForegroundColor Red  "Failed to clone dotfiles"
