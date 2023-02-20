@@ -4,10 +4,10 @@
 ################################################################################
 
 # Helper functions
-$HelperPath = Join-Path -Path $PSScriptRoot -ChildPath "scripts" -ChildPath "helpers"
-foreach ($DotfilesHelper in $HelperPath) {
-  . $DotfilesHelper;
-};
+$HelperPath = Join-Path -Path $PSScriptRoot -ChildPath "scripts\helpers"
+Get-ChildItem -Path $HelperPath -Filter "*.ps1" | ForEach-Object {
+    . $_.FullName
+}
 
 $InstallDevTools = YesNoPrompt "Install apps and tools for development?"
 $InstallWebDev = YesNoPrompt "Install apps and tools for web development?"
@@ -15,7 +15,7 @@ $InstallWSL = YesNoPrompt "Install WSL?"
 $InstallExtras = YesNoPrompt "Install extras?"
 
 # Set dotfiles env var to the path of the dotfiles repo
-$ParentPath = (Get-Item -Path $PSScriptRoot).Parent
+$ParentPath = ((Get-Item -Path $PSScriptRoot).Parent).FullName
 [Environment]::SetEnvironmentVariable("DOTFILES", $ParentPath, "User")
 $env:DOTFILES = $ParentPath
 
