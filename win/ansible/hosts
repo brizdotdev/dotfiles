@@ -1,6 +1,0 @@
-[winbox]
-{IP}
-
-[winbox:vars]
-ansible_connection=winrm
-ansible_winrm_server_cert_validation=ignore
