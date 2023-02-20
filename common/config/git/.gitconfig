@@ -1,20 +1,3 @@
-# Generic
-[http]
-	sslverify = true
-[core]
-	autocrlf = true
-	editor = nvim
-	pager = delta
-[interactive]
-	diffFilter = delta --color-only
-[push]
-	default = current
-[delta]
-	features = decorations
-	navigate = true    # use n and N to move between diff sections
-	light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
-	side-by-side = true
-	line-numbers = true
 [alias]
 	a = add
 	b = branch
@@ -33,8 +16,11 @@
 	chekcout = checkout
 	chcekout = checkout
 
+	# List aliases.
+	aliases = config --get-regexp alias
+
 	# Undo Commit; leaves files. Only for non-public commits
-    uncommit = reset --soft HEAD^
+	uncommit = reset --soft HEAD^
 
 	# Graphs
 	## https://stackoverflow.com/a/24186641
@@ -50,34 +36,68 @@
 	lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
 	lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
 
+[branch]
+	# Show most recently changed branches first.
+	sort = -committerdate
 [color]
 	ui = always
-[fetch]
-	prune = true
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+[core]
+	autocrlf = input
+	editor = nvim
+	pager = delta
 [credential]
 	helper = manager
-[init]
-	defaultBranch = main
-[pull]
-	rebase = true
-[safe]
-	directory = *
+[delta]
+	features = decorations
+	navigate = true    # use n and N to move between diff sections
+	light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+	side-by-side = true
+	line-numbers = true
 [diff]
 	tool = neovim
-    colorMoved = default
+	colorMoved = default
 [difftool "neovim"]
 	cmd = nvim -d $LOCAL $REMOTE
 [difftool "vscode"]
 	cmd = code --wait --diff $LOCAL $REMOTE
+[fetch]
+	prune = true
+[help]
+	# Automatically correct and execute mistyped commands.
+	autoCorrect = 1
+[http]
+	sslverify = true
+[init]
+	defaultBranch = main
+[interactive]
+	diffFilter = delta --color-only
 [merge]
 	tool = neovim
-    conflictstyle = diff3
+	conflictstyle = diff3
 [mergetool]
 	keepBackup = false
 [mergetool "neovim"]
 	cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [mergetool "vscode"]
 	cmd = code --wait -m $LOCAL $REMOTE $BASE $MERGED
+[pull]
+	rebase = true
+[push]
+	# https://git-scm.com/docs/git-config#git-config-pushdefault
+	default = current
+[rebase]
+  autoStash = true
+[safe]
+	directory = *
+
 
 # Local config
 [include]
