@@ -33,7 +33,14 @@ EnableFSMonitor=Disabled
 $gitConfig | Out-File -FilePath "$env:TEMP\git.ini" -Encoding ASCII
 
 Write-Host -ForegroundColor Blue "Installing Git"
-winget install Git.Git --silent --accept-source-agreements --accept-package-agreements --override "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NOCANCEL /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /SP- /LOG /LOADINF=$env:TEMP\git.inf"
+git --version | Out-Null
+if ($? -eq $True) {
+    Write-Host -ForegroundColor Yellow "Git already installed"
+}
+else
+{
+    winget install Git.Git --silent --accept-source-agreements --accept-package-agreements --override "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NOCANCEL /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /SP- /LOG /LOADINF=$env:TEMP\git.inf"
+}
 if ($? -eq $False) {
     Write-Host -ForegroundColor Red  "Failed to install Git"
     exit 1
