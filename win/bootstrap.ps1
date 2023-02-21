@@ -40,12 +40,13 @@ if ($? -eq $True) {
 else
 {
     winget install Git.Git --silent --accept-source-agreements --accept-package-agreements --override "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NOCANCEL /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /SP- /LOG /LOADINF=$env:TEMP\git.inf"
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+    Write-Host -ForegroundColor Green "Git installed"
 }
 if ($? -eq $False) {
     Write-Host -ForegroundColor Red  "Failed to install Git"
     exit 1
 }
-Write-Host -ForegroundColor Green "Git installed"
 
 Write-Host -ForegroundColor Blue "Cloning dotfiles"
 $dotfilesPath = Join-Path -Path $HOME -ChildPath ".dotfiles"
