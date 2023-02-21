@@ -130,16 +130,17 @@ $env:HOSTS = "C:\Windows\System32\drivers\etc\hosts"
 $env:PAGER = "C:\Program Files\Git\usr\bin\less.exe"
 
 ################################################################################
-# Startup
+# PSReadLine
 ################################################################################
-# if ($env:TERM_PROGRAM -eq "vscode") {
-#     Set-PSReadLineOption -EditMode Emacs
-# }
-
-
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 Set-PsFzfOption -TabExpansion
+Set-PSReadLineOption -EditMode Vi
+Set-PSReadLineKeyHandler -Key Alt+Enter -Function AcceptNextSuggestionWord
+Set-PSReadLineKeyHandler -Key F2 -Function SwitchPredictionView
 
+################################################################################
+# Startup
+################################################################################
 Invoke-Expression (& {
     $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
     (zoxide init --hook $hook powershell | Out-String)
