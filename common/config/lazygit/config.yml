@@ -187,8 +187,8 @@ keybinding:
     markCommitAsFixup: 'f'
     createFixupCommit: 'F' # create fixup commit for this commit
     squashAboveCommits: 'S'
-    moveDownCommit: '<c-j>' # move commit down one
-    moveUpCommit: '<c-k>' # move commit up one
+    moveDownCommit: '<c-d>' # move commit down one - Changed from <c-j> to <c-d> to avoid conflict with vscode focus group
+    moveUpCommit: '<c-u>' # move commit up one - Changed from <c-k> to <c-u> to avoid conflict with vscode focus group
     amendToCommit: 'A'
     pickCommit: 'p' # pick commit (when mid-rebase)
     revertCommit: 't'
