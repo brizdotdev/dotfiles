@@ -13,6 +13,7 @@ $InstallDevTools = YesNoPrompt "Install apps and tools for development?"
 $InstallWebDev = YesNoPrompt "Install apps and tools for web development?"
 $InstallWSL = YesNoPrompt "Install WSL?"
 $InstallExtras = YesNoPrompt "Install extras?"
+$RemoveBloatware = YesNoPrompt "Remove bloatware?"
 
 # Set dotfiles env var to the path of the dotfiles repo
 $ParentPath = ((Get-Item -Path $PSScriptRoot).Parent).FullName
@@ -56,6 +57,14 @@ if ($InstallWebDev -eq $True) {
 # Install Extras
 if ($InstallExtras -eq $True) {
     & "$PSScriptRoot\scripts\Install-Extras.ps1"
+    if ($? -eq $False) {
+        exit 1
+    }
+}
+
+# Remove Bloatware
+if ($RemoveBloatware -eq $True) {
+    & "$PSScriptRoot\scripts\Remove-Bloatware.ps1"
     if ($? -eq $False) {
         exit 1
     }
