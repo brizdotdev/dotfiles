@@ -17,6 +17,13 @@ $InstallWebDev = YesNoPrompt "Install apps and tools for web development?"
 $InstallExtras = YesNoPrompt "Install extras?"
 $InstallWSL = YesNoPrompt "Install WSL?"
 $RemoveBloatware = YesNoPrompt "Remove bloatware?"
+do {
+    $browserChoice = Read-Host -Prompt "Which browser do you want to set as default? (firefox, chrome, none): "
+}
+while ($browserChoice -ne "firefox" -and $browserChoice -ne "chrome" -and $browserChoice -ne "none")
+$GitUserName = Read-Host -Prompt "Enter your Git user name: "
+$GitUserEmail = Read-Host -Prompt "Enter your Git user email: "
+
 Write-Host ""
 
 # Set dotfiles env var to the path of the dotfiles repo
@@ -44,7 +51,7 @@ if ($ConfigureWindows -eq $True) {
 
 # Install Base
 if ($InstallBase -eq $True) {
-    & "$PSScriptRoot\scripts\Install-Base.ps1"
+    & "$PSScriptRoot\scripts\Install-Base.ps1" $browserChoice $GitUserName $GitUserEmail
     if ($? -eq $False) {
         exit 1
     }

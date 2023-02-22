@@ -2,6 +2,14 @@
 ################################################################################
 # Install basic apps and fonts
 ################################################################################
+param(
+	[Parameter(Mandatory)]
+	[string]$BrowserChoice,
+	[Parameter(Mandatory)]
+	[string]$GitUserName,
+	[Parameter(Mandatory)]
+	[string]$GitUserEmail
+)
 
 # Browsers
 Write-Host -ForegroundColor Blue "Installing browsers"
@@ -9,16 +17,12 @@ winget install --silent Google.Chrome
 winget install --silent Mozilla.Firefox
 Write-Host -ForegroundColor Blue "Setting default browser"
 choco install -y setdefaultbrowser
-do {
-    $browserChoice = Read-Host -Prompt "Which browser do you want to set as default? (firefox, chrome, none): "
-}
-while ($browserChoice -ne "firefox" -and $browserChoice -ne "chrome" -and $browserChoice -ne "none")
-if ($browserChoice -eq "firefox") {
+if ($BrowserChoice -eq "firefox") {
     SetDefaultBrowser.exe HKLM Firefox-308046B0AF4A39CB
-} elseif ($browserChoice -eq "chrome") {
+} elseif ($BrowserChoice -eq "chrome") {
     SetDefaultBrowser.exe chrome
 }
-Write-Host -ForegroundColor Green "Default browser set to $browserChoice"
+Write-Host -ForegroundColor Green "Default browser set to $BrowserChoice"
 Write-Host -ForegroundColor Green "Browsers installed"
 Write-Host ""
 
@@ -64,8 +68,6 @@ if (Test-Path -Path "$env:USERPROFILE\.gitconfig") {
 		Remove-Item -Path "$env:USERPROFILE\.gitconfig" -Force
 }
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.gitconfig" -Target "$env:DOTFILES\common\config\git\.gitconfig"
-$GitUserName = Read-Host -Prompt "Enter your Git user name "
-$GitUserEmail = Read-Host -Prompt "Enter your Git user email "
 if (Test-Path -Path "$env:USERPROFILE\.gitconfig.local") {
 		Remove-Item -Path "$env:USERPROFILE\.gitconfig.local" -Force
 }
@@ -73,7 +75,7 @@ if (Test-Path -Path "$env:USERPROFILE\.gitconfig.local") {
 [user]
 	name = $GitUserName
 	email = $GitUserEmail
-"@ | Out-File -Encoding "utf8NoBOM" -FilePath "$($ENV:USERPROFILE)\.gitconfig.local"
+"@ | Out-File -Encoding "utf8" -FilePath "$($ENV:USERPROFILE)\.gitconfig.local"
 # TODO: Enable signing with SSH key (https://github.com/Okeanos/dotfiles-windows/blob/8cba8eda06ee01bc5a174f61656a7bc7cb798e4d/bootstrap.ps1#L62-L89)
 ## Set pager
 $env:PAGER = "less"
