@@ -30,8 +30,6 @@ EnablePseudoConsoleSupport=Disabled
 EnableFSMonitor=Disabled
 "@
 
-$gitConfig | Out-File -FilePath "$env:TEMP\git.ini" -Encoding ASCII
-
 Write-Host -ForegroundColor Blue "Installing Git"
 git --version | Out-Null
 if ($? -eq $True) {
@@ -39,8 +37,11 @@ if ($? -eq $True) {
 }
 else
 {
-    winget install Git.Git --silent --accept-source-agreements --accept-package-agreements --override "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NOCANCEL /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /SP- /LOG /LOADINF=$env:TEMP\git.inf"
+    pushd $env:TEMP
+    $gitConfig | Out-File -FilePath "git.ini" -Encoding ASCII
+    winget install Git.Git --silent --accept-source-agreements --accept-package-agreements --override "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NOCANCEL /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /SP- /LOG /LOADINF=git.ini"
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+    popd
     Write-Host -ForegroundColor Green "Git installed"
 }
 if ($? -eq $False) {
