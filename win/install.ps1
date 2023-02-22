@@ -94,6 +94,7 @@ if ($InstallExtras -eq $True) {
     Write-Host ""
 }
 
+Read-Host
 # Generate SSH key
 Write-Host -ForegroundColor Blue "Generating SSH Key"
 ssh-keygen -t ed25519
