@@ -95,13 +95,14 @@ winget install --silent Starship.Starship
 choco install -y zoxide
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 refreshenv
-pwsh -c "Install-Module -Name posh-git -Scope CurrentUser -Force"
-pwsh -c "Install-Module -Name Terminal-Icons -Scope CurrentUser -Force"
-pwsh -c "Install-Module -Name DockerCompletion -Scope CurrentUser -Force"
-pwsh -c "Install-Module -Name PSFzf -Scope CurrentUser -Force"
-pwsh -c "Install-Module -Name PSReadLine -Scope CurrentUser -AllowPrerelease -Force"
-pwsh -c "Install-Module -Name CompletionPredictor -Scope CurrentUser -AllowPrerelease -Force"
-pwsh -c "Install-Module -Name ChangeScreenResolution -Scope CurrentUser -Force"
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+pwsh.exe -c "Install-Module -Name posh-git -Scope CurrentUser -Force"
+pwsh.exe -c "Install-Module -Name Terminal-Icons -Scope CurrentUser -Force"
+pwsh.exe -c "Install-Module -Name DockerCompletion -Scope CurrentUser -Force"
+pwsh.exe -c "Install-Module -Name PSFzf -Scope CurrentUser -Force"
+pwsh.exe -c "Install-Module -Name PSReadLine -Scope CurrentUser -AllowPrerelease -Force"
+pwsh.exe -c "Install-Module -Name CompletionPredictor -Scope CurrentUser -AllowPrerelease -Force"
+pwsh.exe -c "Install-Module -Name ChangeScreenResolution -Scope CurrentUser -Force"
 # Symlink profile.ps1
 $PowerShellFolder = "$env:USERPROFILE\Documents\PowerShell"
 mkdir.exe -p $PowerShellFolder
