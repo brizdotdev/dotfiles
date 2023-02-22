@@ -107,7 +107,7 @@ LinkFiles "$env:DOTFILES\win\config\PowerShell" $PowerShellFolder
 # Symlink Starship config
 $StarshipFolder = "$env:USERPROFILE\.config\"
 mkdir.exe -p $StarshipFolder
-New-Item -ItemType SymbolicLink -Path "$StarshipFolder\starship.toml" -Target "$env:DOTFILES\common\starship\starship.toml"
+New-Item -ItemType SymbolicLink -Path "$StarshipFolder\starship.toml" -Target "$env:DOTFILES\common\config\starship\starship.toml"
 Write-Host -ForegroundColor Green "PowerShell installed"
 Write-Host ""
 
