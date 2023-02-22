@@ -126,8 +126,6 @@ Import-Module PSFzf
 # Env
 ################################################################################
 $env:FZF_DEFAULT_OPTS = "--layout=reverse --multi --cycle"
-$env:HOSTS = "C:\Windows\System32\drivers\etc\hosts"
-$env:PAGER = "C:\Program Files\Git\usr\bin\less.exe"
 
 ################################################################################
 # PSReadLine
