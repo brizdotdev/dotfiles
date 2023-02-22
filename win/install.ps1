@@ -25,18 +25,21 @@ $env:DOTFILES = $ParentPath
 if ($? -eq $False) {
     exit 1
 }
-
-# Install Base
-& "$PSScriptRoot\scripts\Install-Base.ps1"
-if ($? -eq $False) {
-    exit 1
-}
+Write-Host ""
 
 # Configure Windows
 & "$PSScriptRoot\scripts\Configure-Windows.ps1"
 if ($? -eq $False) {
     exit 1
 }
+Write-Host ""
+
+# Install Base
+& "$PSScriptRoot\scripts\Install-Base.ps1"
+if ($? -eq $False) {
+    exit 1
+}
+Write-Host ""
 
 # Install Dev
 if ($InstallDevTools -eq $True) {
@@ -44,6 +47,7 @@ if ($InstallDevTools -eq $True) {
     if ($? -eq $False) {
         exit 1
     }
+    Write-Host ""
 }
 
 # Install web dev
@@ -52,6 +56,7 @@ if ($InstallWebDev -eq $True) {
     if ($? -eq $False) {
         exit 1
     }
+    Write-Host ""
 }
 
 # Install Extras
@@ -60,6 +65,7 @@ if ($InstallExtras -eq $True) {
     if ($? -eq $False) {
         exit 1
     }
+    Write-Host ""
 }
 
 # Remove Bloatware
@@ -68,6 +74,7 @@ if ($RemoveBloatware -eq $True) {
     if ($? -eq $False) {
         exit 1
     }
+    Write-Host ""
 }
 
 # TODO: Install WSL

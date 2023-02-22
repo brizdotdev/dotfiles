@@ -20,6 +20,8 @@ if ($browserChoice -eq "firefox") {
 }
 Write-Host -ForegroundColor Green "Default browser set to $browserChoice"
 Write-Host -ForegroundColor Green "Browsers installed"
+Write-Host ""
+
 
 # Utils
 Write-Host -ForegroundColor Blue "Installing utils"
@@ -53,11 +55,13 @@ foreach ($app in @(
 	winget install --id $app --silent --source msstore --accept-package-agreements --accept-source-agreements
 }
 Write-Host -ForegroundColor Green "Utils installed"
+Write-Host ""
 
 # Fonts
 Write-Host -ForegroundColor Blue "Installing fonts"
 choco install -y nerd-fonts-jetbrainsmono nerd-fonts-iosevka nerd-fonts-cascadiacode nerdfont-hack nerd-fonts-ubuntumono nerd-fonts-victormono
 Write-Host -ForegroundColor Green "Fonts installed"
+Write-Host ""
 
 # Git config
 Write-Host -ForegroundColor Blue "Configuring Git"
@@ -80,6 +84,7 @@ Remove-Item -Path "$env:USERPROFILE\.gitconfig.local" -Force
 $env:PAGER = "less"
 [Environment]::SetEnvironmentVariable("PAGER", "less", "User")
 Write-Host -ForegroundColor Green "Git configured"
+Write-Host ""
 
 # Install and configure PowerShell
 Write-Host -ForegroundColor Blue "Installing PowerShell"
@@ -104,6 +109,7 @@ $StarshipFolder = "$env:USERPROFILE\.config\"
 mkdir.exe -p $StarshipFolder
 New-Item -ItemType SymbolicLink -Path "$StarshipFolder\starship.toml" -Target "$env:DOTFILES\common\starship\starship.toml"
 Write-Host -ForegroundColor Green "PowerShell installed"
+Write-Host ""
 
 # Variables
 # Ensure that Unix tools have a consistent and predictable HOME directory; important if a network drive is used as pseudo-home
