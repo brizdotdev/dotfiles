@@ -76,18 +76,19 @@ if ($InstallWebDev -eq $True) {
     Write-Host ""
 }
 
-# Install Extras
-if ($InstallExtras -eq $True) {
-    & "$PSScriptRoot\scripts\Install-Extras.ps1"
+# Remove Bloatware
+if ($RemoveBloatware -eq $True) {
+    & "$PSScriptRoot\scripts\Remove-Bloatware.ps1"
     if ($? -eq $False) {
         exit 1
     }
     Write-Host ""
 }
 
-# Remove Bloatware
-if ($RemoveBloatware -eq $True) {
-    & "$PSScriptRoot\scripts\Remove-Bloatware.ps1"
+
+# Install Extras
+if ($InstallExtras -eq $True) {
+    & "$PSScriptRoot\scripts\Install-Extras.ps1"
     if ($? -eq $False) {
         exit 1
     }
