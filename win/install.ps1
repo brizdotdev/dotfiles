@@ -15,7 +15,6 @@ $InstallBase = YesNoPrompt "Install base apps and fonts?"
 $InstallDevTools = YesNoPrompt "Install apps and tools for development?"
 $InstallWebDev = YesNoPrompt "Install apps and tools for web development?"
 $InstallExtras = YesNoPrompt "Install extras?"
-$InstallWSL = YesNoPrompt "Install WSL?"
 $RemoveBloatware = YesNoPrompt "Remove bloatware?"
 do {
     $browserChoice = Read-Host -Prompt "Which browser do you want to set as default? (firefox, chrome, none): "
@@ -94,14 +93,6 @@ if ($InstallExtras -eq $True) {
     }
     Write-Host ""
 }
-
-# TODO: Install WSL
-# if ($InstallWSL -eq $True) {
-#     & "$PSScriptRoot\scripts\Install-WSL.ps1"
-#     if ($? -eq $False) {
-#         exit 1
-#     }
-# }
 
 # Generate SSH key
 Write-Host -ForegroundColor Blue "Generating SSH Key"
