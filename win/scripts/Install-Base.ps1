@@ -32,6 +32,7 @@ winget install --silent VideoLAN.VLC
 winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
 ## Windows Terminal
 winget install --silent Microsoft.WindowsTerminal
+## TODO: Fix
 $WindowsTerminalConfigFolder = "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
 if (!(Test-Path $WindowsTerminalConfigFolder)) {
 		mkdir.exe -p $WindowsTerminalConfigFolder
@@ -70,7 +71,7 @@ choco install -y delta
 if (Test-Path -Path "$env:USERPROFILE\.gitconfig") {
 		Remove-Item -Path "$env:USERPROFILE\.gitconfig" -Force
 }
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.gitconfig" -Target "$env:DOTFILES\common\git\.gitconfig"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.gitconfig" -Target "$env:DOTFILES\common\config\git\.gitconfig"
 $GitUserName = Read-Host -Prompt "Enter your Git user name "
 $GitUserEmail = Read-Host -Prompt "Enter your Git user email "
 if (Test-Path -Path "$env:USERPROFILE\.gitconfig.local") {
