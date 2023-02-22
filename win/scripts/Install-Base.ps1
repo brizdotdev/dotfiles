@@ -71,9 +71,11 @@ if (Test-Path -Path "$env:USERPROFILE\.gitconfig") {
 		Remove-Item -Path "$env:USERPROFILE\.gitconfig" -Force
 }
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.gitconfig" -Target "$env:DOTFILES\common\git\.gitconfig"
-$GitUserName = Read-Host -Prompt "Enter your Git user name ";
-$GitUserEmail = Read-Host -Prompt "Enter your Git user email ";
-Remove-Item -Path "$env:USERPROFILE\.gitconfig.local" -Force
+$GitUserName = Read-Host -Prompt "Enter your Git user name "
+$GitUserEmail = Read-Host -Prompt "Enter your Git user email "
+if (Test-Path -Path "$env:USERPROFILE\.gitconfig.local") {
+		Remove-Item -Path "$env:USERPROFILE\.gitconfig.local" -Force
+}
 @"
 [user]
 	name = $GitUserName
