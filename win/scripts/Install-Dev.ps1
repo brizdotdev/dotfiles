@@ -20,7 +20,7 @@ $LazyGitConfigPath = "$env:AppData\lazygit"
 mkdir.exe -p $LazyGitConfigPath
 $LazyGitConfigFile = Join-Path -Path $LazyGitConfigPath -ChildPath "config.yml"
 if (!(Test-Path -Path $LazyGitConfigFile)) {
-    New-Item -ItemType SymbolicLink -Path "$LazyGitConfigFile" -Target "$env:DOTFILES\common\lazygit\config.yml"
+    New-Item -ItemType SymbolicLink -Path "$LazyGitConfigFile" -Target "$env:DOTFILES\common\config\lazygit\config.yml"
 }
 
 # Useful GUI tools
