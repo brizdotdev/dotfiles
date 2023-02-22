@@ -9,11 +9,10 @@ winget install --silent Google.Chrome
 winget install --silent Mozilla.Firefox
 Write-Host -ForegroundColor Blue "Setting default browser"
 choco install -y setdefaultbrowser
-$browserChoice = Read-Host -Prompt "Which browser do you want to set as default? (firefox, chrome): "
 do {
-    $browserChoice = Read-Host -Prompt "Invalid browser choice. Please choose firefox or chrome: "
+    $browserChoice = Read-Host -Prompt "Which browser do you want to set as default? (firefox, chrome, none): "
 }
-while ($browserChoice -ne "firefox" -and $browserChoice -ne "chrome")
+while ($browserChoice -ne "firefox" -and $browserChoice -ne "chrome" -and $browserChoice -ne "none")
 if ($browserChoice -eq "firefox") {
     SetDefaultBrowser.exe HKLM Firefox-308046B0AF4A39CB
 } elseif ($browserChoice -eq "chrome") {
