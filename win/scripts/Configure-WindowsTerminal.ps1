@@ -14,3 +14,7 @@ if (Test-Path $WindowsTerminalConfigFile) {
     Remove-Item $WindowsTerminalConfigFile
 }
 New-Item -ItemType SymbolicLink -Path "$WindowsTerminalConfigFile" -Target "$env:DOTFILES\win\config\WindowsTerminal\settings.json"
+
+Write-Host -ForegroundColor Green "Done configuring Windows Terminal"
+Write-Host -ForegroundColor Green "You may need to restart for the changes to take effect"
+exit 0
