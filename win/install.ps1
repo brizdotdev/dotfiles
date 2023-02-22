@@ -101,5 +101,5 @@ Write-Host -ForegroundColor Green "SSH Key generated"
 Write-Host
 
 Write-Host -ForegroundColor Green "Done! 😄"
-Write-Host -ForegroundColor Green "You can run the following manually: $ENV:DOTFILES\win\scripts\Configure-WindowsTerminal.ps1 $ENV:DOTFILES\win\scripts\Install-WSL.ps1"
+Write-Host -ForegroundColor Green "You can run the following manually: $ENV:DOTFILES\win\scripts\Configure-WindowsTerminal.ps1 $ENV:DOTFILES\win\scripts\Install-WSL.ps1""
 Read-Host
