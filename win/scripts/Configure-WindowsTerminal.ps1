@@ -9,4 +9,8 @@ $WindowsTerminalConfigFolder = "$env:LocalAppData\Packages\Microsoft.WindowsTerm
 if (!(Test-Path $WindowsTerminalConfigFolder)) {
 		mkdir.exe -p $WindowsTerminalConfigFolder
 }
-New-Item -ItemType SymbolicLink -Path "$WindowsTerminalConfigFolder\settings.json" -Target "$env:DOTFILES\win\config\WindowsTerminal\settings.json"
+$WindowsTerminalConfigFile = Join-Path -Path $WindowsTerminalConfigFolder -ChildPath "settings.json"
+if (Test-Path $WindowsTerminalConfigFile) {
+    Remove-Item $WindowsTerminalConfigFile
+}
+New-Item -ItemType SymbolicLink -Path "$WindowsTerminalConfigFile" -Target "$env:DOTFILES\win\config\WindowsTerminal\settings.json"
