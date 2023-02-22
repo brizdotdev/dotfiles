@@ -30,14 +30,6 @@ winget install --silent Microsoft.PowerToys
 winget install --silent gerardog.gsudo
 winget install --silent VideoLAN.VLC
 winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
-## Windows Terminal
-winget install --silent Microsoft.WindowsTerminal
-## TODO: Fix
-$WindowsTerminalConfigFolder = "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
-if (!(Test-Path $WindowsTerminalConfigFolder)) {
-		mkdir.exe -p $WindowsTerminalConfigFolder
-}
-New-Item -ItemType SymbolicLink -Path "$WindowsTerminalConfigFolder\settings.json" -Target "$env:DOTFILES\win\config\WindowsTerminal\settings.json"
 ## Neovim
 winget install --silent Neovim.Neovim
 $env:EDITOR = "nvim"
