@@ -137,6 +137,9 @@ Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Persona
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\DWM" "ColorPrevalence" 0
 
 # Update: Disable automatic restart after updates outside of active hours
+if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate")) {
+    New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate" -Type Folder | Out-Null
+}
 Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate" "SetActiveHours" 0
 
 # Update: Disable automatic reboot after install: Enable: 1, Disable: 0
