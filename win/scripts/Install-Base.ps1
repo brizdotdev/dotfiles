@@ -104,6 +104,7 @@ pwsh.exe -c "Install-Module -Name PSFzf -Scope CurrentUser -Force"
 pwsh.exe -c "Install-Module -Name PSReadLine -Scope CurrentUser -AllowPrerelease -Force"
 pwsh.exe -c "Install-Module -Name CompletionPredictor -Scope CurrentUser -AllowPrerelease -Force"
 pwsh.exe -c "Install-Module -Name ChangeScreenResolution -Scope CurrentUser -Force"
+pwsh.exe -c "Install-Module -Name VirtualDesktop -Scope CurrentUser -Force"
 # Symlink profile.ps1
 $PowerShellFolder = "$env:USERPROFILE\Documents\PowerShell"
 mkdir.exe -p $PowerShellFolder
