@@ -9,11 +9,15 @@ Get-ChildItem -Path $HelperPath -Filter "*.ps1" | ForEach-Object {
     . $_.FullName
 }
 
+$InstallChocolatey = YesNoPrompt "Install Chocolatey?"
+$ConfigureWindows = YesNoPrompt "Configure Windows?"
+$InstallBase = YesNoPrompt "Install base apps and fonts?"
 $InstallDevTools = YesNoPrompt "Install apps and tools for development?"
 $InstallWebDev = YesNoPrompt "Install apps and tools for web development?"
-$InstallWSL = YesNoPrompt "Install WSL?"
 $InstallExtras = YesNoPrompt "Install extras?"
+$InstallWSL = YesNoPrompt "Install WSL?"
 $RemoveBloatware = YesNoPrompt "Remove bloatware?"
+Write-Host ""
 
 # Set dotfiles env var to the path of the dotfiles repo
 $ParentPath = ((Get-Item -Path $PSScriptRoot).Parent).FullName
@@ -21,25 +25,31 @@ $ParentPath = ((Get-Item -Path $PSScriptRoot).Parent).FullName
 $env:DOTFILES = $ParentPath
 
 # Install Chocolatey
-& "$PSScriptRoot\scripts\Install-Chocolatey.ps1"
-if ($? -eq $False) {
-    exit 1
+if ($InstallChocolatey -eq $True) {
+    & "$PSScriptRoot\scripts\Install-Chocolatey.ps1"
+    if ($? -eq $False) {
+        exit 1
+    }
+    Write-Host ""
 }
-Write-Host ""
 
 # Configure Windows
-& "$PSScriptRoot\scripts\Configure-Windows.ps1"
-if ($? -eq $False) {
-    exit 1
+if ($ConfigureWindows -eq $True) {
+    & "$PSScriptRoot\scripts\Configure-Windows.ps1"
+    if ($? -eq $False) {
+        exit 1
+    }
+    Write-Host ""
 }
-Write-Host ""
 
 # Install Base
-& "$PSScriptRoot\scripts\Install-Base.ps1"
-if ($? -eq $False) {
-    exit 1
+if ($InstallBase -eq $True) {
+    & "$PSScriptRoot\scripts\Install-Base.ps1"
+    if ($? -eq $False) {
+        exit 1
+    }
+    Write-Host ""
 }
-Write-Host ""
 
 # Install Dev
 if ($InstallDevTools -eq $True) {
