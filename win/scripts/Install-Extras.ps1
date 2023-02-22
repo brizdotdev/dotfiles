@@ -4,59 +4,62 @@ foreach ($DotfilesHelper in $HelperPath) {
 };
 
 Write-Host -ForegroundColor Blue "Installing Extras"
+Write-Host -ForegroundColor Blue ""
 
-$ans = YesNoPrompt "Install OBS Studio?"
-if ($ans -eq $True) {
+$OBS = YesNoPrompt "Install OBS Studio?"
+$Spotify = YesNoPrompt "Install Spotify?"
+$LibreOffice = YesNoPrompt "Install LibreOffice?"
+$WireGuard = YesNoPrompt "Install WireGuard?"
+$Obsidian = YesNoPrompt "Install Obsidian?"
+$WinDirStat = YesNoPrompt "Install WinDirStat?"
+$ScreenToGif = YesNoPrompt "Install ScreenToGif?"
+$FFMPEG = YesNoPrompt "Install ffmpeg?"
+$LightShot = YesNoPrompt "Install LightShot?"
+$ZoomIt = YesNoPrompt "Install ZoomIt?"
+$FancyWM = YesNoPrompt "Install FancyWM?"
+$RegionToShare = YesNoPrompt "Install RegionToShare?"
+
+if ($OBS -eq $True) {
     winget install --silent OBSProject.OBSStudio
 }
 
-$ans = YesNoPrompt "Install Spotify?"
-if ($ans -eq $True) {
+if ($Spotify -eq $True) {
     winget install --silent 9NCBCSZSJRSB
 }
 
-$ans = YesNoPrompt "Install LibreOffice?"
-if ($ans -eq $True) {
+if ($LibreOffice -eq $True) {
     winget install --silent TheDocumentFoundation.LibreOffice
 }
 
-$ans = YesNoPrompt "Install WireGuard?"
-if ($ans -eq $True) {
+if ($WireGuard -eq $True) {
     winget install --silent WireGuard.WireGuard
 }
 
-$ans = YesNoPrompt "Install Obsidian?"
-if ($ans -eq $True) {
+if ($Obsidian -eq $True) {
     winget install --silent Obsidian.Obsidian
 }
 
-$ans = YesNoPrompt "Install WinDirStat?"
-if ($ans -eq $True) {
+if ($WinDirStat -eq $True) {
     winget install --silent WinDirStat.WinDirStat
 }
 
-$ans = YesNoPrompt "Install ScreenToGif?"
-if ($ans -eq $True) {
+if ($ScreenToGif -eq $True) {
     winget install --silent NickeManarin.ScreenToGif
 }
 
-$ans = YesNoPrompt "Install ffmpeg?"
-if ($ans -eq $True) {
+if ($FFMPEG -eq $True) {
     choco install -y ffmpeg
 }
 
-$ans = YesNoPrompt "Install LightShot?"
-if ($ans -eq $True) {
+if ($LightShot -eq $True) {
     winget install --silent Skillbrains.Lightshot
 }
 
-$ans = YesNoPrompt "Install ZoomIt?"
-if ($ans -eq $True) {
+if ($ZoomIt -eq $True) {
     choco install -y zoomit
 }
 
-$ans = YesNoPrompt "Install FancyWM?"
-if ($ans -eq $True) {
+if ($FancyWM -eq $True) {
     winget install --silent --accept-package-agreements --accept-source-agreements 9P1741LKHQS9
     $FancyWMConfigFolder = "$env:LOCALAPPDATA\Packages\2203VeselinKaraganev.FancyWM_9x2ndwrcmyd2c\LocalCache\Roaming\FancyWM"
     mkdir.exe -p $FancyWMConfigFolder
@@ -68,8 +71,7 @@ if ($ans -eq $True) {
     New-Item -ItemType SymbolicLink -Path $FancyWMConfigPath -Target "$env:DOTFILES\win\config\FancyWM\settings.json"
 }
 
-$ans = YesNoPrompt "Install RegionToShare?"
-if ($ans -eq $True) {
+if ($RegionToShare -eq $True) {
     winget install --accept-package-agreements --accept-source-agreements 9N4066W2R5Q4
 }
 
