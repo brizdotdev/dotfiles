@@ -92,6 +92,7 @@ Write-Host ""
 Write-Host -ForegroundColor Blue "Installing PowerShell"
 winget install --silent Microsoft.PowerShell
 winget install --silent Starship.Starship
+Install-PackageProvider -Name NuGet -Scope AllUsers -Force
 choco install -y zoxide
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 refreshenv
