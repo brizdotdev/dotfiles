@@ -11,6 +11,12 @@ param(
 	[string]$GitUserEmail
 )
 
+# Helper functions
+$HelperPath = Join-Path -Path $PSScriptRoot -ChildPath "helpers"
+Get-ChildItem -Path $HelperPath -Filter "*.ps1" | ForEach-Object {
+    . $_.FullName
+}
+
 # Browsers
 Write-Host -ForegroundColor Blue "Installing browsers"
 winget install --silent Google.Chrome
@@ -81,34 +87,6 @@ if (Test-Path -Path "$env:USERPROFILE\.gitconfig.local") {
 $env:PAGER = "less"
 [Environment]::SetEnvironmentVariable("PAGER", "less", "User")
 Write-Host -ForegroundColor Green "Git configured"
-Write-Host ""
-
-# Install and configure PowerShell
-Write-Host -ForegroundColor Blue "Installing PowerShell"
-winget install --silent Microsoft.PowerShell
-winget install --silent Starship.Starship
-Install-PackageProvider -Name NuGet -Scope AllUsers -Force
-choco install -y zoxide
-Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
-refreshenv
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-pwsh.exe -c "Install-Module -Name posh-git -Scope CurrentUser -Force"
-pwsh.exe -c "Install-Module -Name Terminal-Icons -Scope CurrentUser -Force"
-pwsh.exe -c "Install-Module -Name DockerCompletion -Scope CurrentUser -Force"
-pwsh.exe -c "Install-Module -Name PSFzf -Scope CurrentUser -Force"
-pwsh.exe -c "Install-Module -Name PSReadLine -Scope CurrentUser -AllowPrerelease -Force"
-pwsh.exe -c "Install-Module -Name CompletionPredictor -Scope CurrentUser -AllowPrerelease -Force"
-pwsh.exe -c "Install-Module -Name ChangeScreenResolution -Scope CurrentUser -Force"
-pwsh.exe -c "Install-Module -Name VirtualDesktop -Scope CurrentUser -Force"
-# Symlink profile.ps1
-$PowerShellFolder = "$env:USERPROFILE\Documents\PowerShell"
-mkdir.exe -p $PowerShellFolder
-LinkFiles "$env:DOTFILES\win\config\PowerShell" $PowerShellFolder
-# Symlink Starship config
-$StarshipFolder = "$env:USERPROFILE\.config\"
-mkdir.exe -p $StarshipFolder
-New-Item -ItemType SymbolicLink -Path "$StarshipFolder\starship.toml" -Target "$env:DOTFILES\common\config\starship\starship.toml"
-Write-Host -ForegroundColor Green "PowerShell installed"
 Write-Host ""
 
 # Variables

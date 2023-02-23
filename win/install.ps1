@@ -16,6 +16,7 @@ $InstallDevTools = YesNoPrompt "Install apps and tools for development?"
 $InstallWebDev = YesNoPrompt "Install apps and tools for web development?"
 $InstallExtras = YesNoPrompt "Install extras?"
 $RemoveBloatware = YesNoPrompt "Remove bloatware?"
+$GenSSHKey = YesNoPrompt "Generate SSH Key?"
 do {
     $browserChoice = Read-Host -Prompt "Which browser do you want to set as default? (firefox, chrome, none): "
 }
@@ -28,12 +29,14 @@ Write-Host ""
 # Set dotfiles env var to the path of the dotfiles repo
 $ParentPath = ((Get-Item -Path $PSScriptRoot).Parent).FullName
 [Environment]::SetEnvironmentVariable("DOTFILES", $ParentPath, "User")
-$env:DOTFILES = $ParentPath
+$env:DOTFILES = [Environment]::GetEnvironmentVariable("DOTFILES", "User")
 
 # Install Chocolatey
 if ($InstallChocolatey -eq $True) {
     & "$PSScriptRoot\scripts\Install-Chocolatey.ps1"
     if ($? -eq $False) {
+        Write-Host -ForegroundColor Red "Chocolatey installation failed"
+        Read-Host
         exit 1
     }
     Write-Host ""
@@ -43,6 +46,8 @@ if ($InstallChocolatey -eq $True) {
 if ($ConfigureWindows -eq $True) {
     & "$PSScriptRoot\scripts\Configure-Windows.ps1"
     if ($? -eq $False) {
+        Write-Host -ForegroundColor Red "Windows configuration failed"
+        Read-Host
         exit 1
     }
     Write-Host ""
@@ -52,6 +57,8 @@ if ($ConfigureWindows -eq $True) {
 if ($InstallBase -eq $True) {
     & "$PSScriptRoot\scripts\Install-Base.ps1" $browserChoice $GitUserName $GitUserEmail
     if ($? -eq $False) {
+        Write-Host -ForegroundColor Red "Base installation failed"
+        Read-Host
         exit 1
     }
     Write-Host ""
@@ -61,6 +68,8 @@ if ($InstallBase -eq $True) {
 if ($InstallDevTools -eq $True) {
     & "$PSScriptRoot\scripts\Install-Dev.ps1"
     if ($? -eq $False) {
+        Write-Host -ForegroundColor Red "Dev installation failed"
+        Read-Host
         exit 1
     }
     Write-Host ""
@@ -70,6 +79,8 @@ if ($InstallDevTools -eq $True) {
 if ($InstallWebDev -eq $True) {
     & "$PSScriptRoot\scripts\Install-Web-Dev.ps1"
     if ($? -eq $False) {
+        Write-Host -ForegroundColor Red "Web Dev installation failed"
+        Read-Host
         exit 1
     }
     Write-Host ""
@@ -79,6 +90,8 @@ if ($InstallWebDev -eq $True) {
 if ($RemoveBloatware -eq $True) {
     & "$PSScriptRoot\scripts\Remove-Bloatware.ps1"
     if ($? -eq $False) {
+        Write-Host -ForegroundColor Red "Bloatware removal failed"
+        Read-Host
         exit 1
     }
     Write-Host ""
@@ -89,18 +102,23 @@ if ($RemoveBloatware -eq $True) {
 if ($InstallExtras -eq $True) {
     & "$PSScriptRoot\scripts\Install-Extras.ps1"
     if ($? -eq $False) {
+        Write-Host -ForegroundColor Red "Extras installation failed"
+        Read-Host
         exit 1
     }
     Write-Host ""
 }
 
-Read-Host
-# Generate SSH key
-Write-Host -ForegroundColor Blue "Generating SSH Key"
-ssh-keygen -t ed25519
-Write-Host -ForegroundColor Green "SSH Key generated"
-Write-Host
+# Generate SSH Key
+if ($GenSSHKey -eq $True) {
+    & "$PSScriptRoot\scripts\Generate-SSHKey.ps1"
+    if ($? -eq $False) {
+        Write-Host -ForegroundColor Red "SSH Key generation failed"
+        Read-Host
+        exit 1
+    }
+    Write-Host ""
+}
 
 Write-Host -ForegroundColor Green "Done! 😄"
-Write-Host -ForegroundColor Green "You can run the following manually: $ENV:DOTFILES\win\scripts\Configure-WindowsTerminal.ps1 $ENV:DOTFILES\win\scripts\Install-WSL.ps1""
 Read-Host
