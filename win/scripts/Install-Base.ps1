@@ -91,8 +91,8 @@ Write-Host ""
 
 # Variables
 # Ensure that Unix tools have a consistent and predictable HOME directory; important if a network drive is used as pseudo-home
-[Environment]::SetEnvironmentVariable("HOME", "%UserProfile%", 'User')
+[Environment]::SetEnvironmentVariable("HOME", "$env:USERPROFILE", 'User')
 # Ensure that Unix tools have a consistent and predictable USER variable available; important for SSH for example
-[Environment]::SetEnvironmentVariable("USER", "$Env:UserName", 'User')
+[Environment]::SetEnvironmentVariable("USER", "$env:USERNAME", 'User')
 
 exit 0
