@@ -1,7 +1,9 @@
+# Helper functions
 $HelperPath = Join-Path -Path $PSScriptRoot -ChildPath "helpers"
-foreach ($DotfilesHelper in $HelperPath) {
-  . $DotfilesHelper;
-};
+Get-ChildItem -Path $HelperPath -Filter "*.ps1" | ForEach-Object {
+    . $_.FullName
+}
+
 
 Write-Host -ForegroundColor Blue "Installing Extras"
 Write-Host -ForegroundColor Blue ""
