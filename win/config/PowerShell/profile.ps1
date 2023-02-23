@@ -121,6 +121,7 @@ Import-Module posh-git
 Import-Module DockerCompletion
 Import-Module CompletionPredictor
 Import-Module PSFzf
+Import-Module 'C:\Program Files (x86)\gsudo\gsudoModule.psd1'
 
 ################################################################################
 # Env
