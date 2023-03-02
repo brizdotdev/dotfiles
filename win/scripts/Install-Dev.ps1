@@ -20,6 +20,8 @@ choco install -y zoxide fzf
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 refreshenv
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+[Environment]::SetEnvironmentVariable("POWERSHELL_TELEMETRY_OPTOUT", "1", 'User')
+[Environment]::SetEnvironmentVariable("POWERSHELL_UPDATECHECK_OPTOUT", "1", 'User')
 pwsh.exe -c "Install-Module -Name posh-git -Scope CurrentUser -Force"
 pwsh.exe -c "Install-Module -Name Terminal-Icons -Scope CurrentUser -Force"
 pwsh.exe -c "Install-Module -Name DockerCompletion -Scope CurrentUser -Force"
