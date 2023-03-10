@@ -97,4 +97,6 @@ Write-Host ""
 # Ensure that Unix tools have a consistent and predictable USER variable available; important for SSH for example
 [Environment]::SetEnvironmentVariable("USER", "$env:USERNAME", 'User')
 
+# TODO: Install custom cursor
+
 exit 0
