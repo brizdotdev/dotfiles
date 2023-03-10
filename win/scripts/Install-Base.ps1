@@ -36,6 +36,8 @@ Write-Host ""
 # Utils
 Write-Host -ForegroundColor Blue "Installing utils"
 winget install --silent 7zip.7zip
+$7zipPath = "C:\Program Files\7-Zip"
+[Environment]::SetEnvironmentVariable("PATH", "$env:Path;$7zipPath", "User")
 winget install --silent Microsoft.PowerToys
 winget install --silent gerardog.gsudo
 winget install --silent VideoLAN.VLC
