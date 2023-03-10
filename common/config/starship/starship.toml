@@ -1,9 +1,9 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# TODO: Add OS
 command_timeout = 1500
 
 format = """
+$os\
 $shell\
 $username\
 $hostname\
@@ -240,6 +240,35 @@ format = '\[[$symbol($version)(\($switch_indicator$switch_name\))]($style)\]'
 [openstack]
 format = '\[[$symbol$cloud(\($project\))]($style)\]'
 
+[os]
+format = '\[[$symbol]($style)\]'
+disabled = false
+
+[os.symbols]
+Alpine = ""
+Amazon = ""
+Android = ""
+Arch = ""
+CentOS = ""
+Debian = ""
+Fedora = ""
+FreeBSD = ""
+Gentoo = ""
+Linux = ""
+Macos = ""
+Manjaro = ""
+Mint = ""
+NixOS = ""
+openSUSE = ""
+Pop = ""
+Raspbian = ""
+Redhat = ""
+RedHatEnterprise = ""
+SUSE = ""
+Ubuntu = ""
+Unknown = ""
+Windows = ""
+
 [package]
 symbol = " "
 format = '\[[$symbol$version]($style)\]'
@@ -288,6 +317,7 @@ bash_indicator = ""
 zsh_indicator = ""
 unknown_indicator = ""
 disabled = false
+format = '\[[$indicator]($style)\]'
 
 [spack]
 symbol = "🅢 "
