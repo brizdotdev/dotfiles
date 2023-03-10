@@ -1,7 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 # TODO: Add OS
-# TODO: Fix command timeout
+command_timeout = 1500
 
 format = """
 $shell\
