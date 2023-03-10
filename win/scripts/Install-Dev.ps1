@@ -31,6 +31,7 @@ pwsh.exe -c "Install-Module -Name CompletionPredictor -Scope CurrentUser -AllowP
 pwsh.exe -c "Install-Module -Name ChangeScreenResolution -Scope CurrentUser -Force"
 pwsh.exe -c "Install-Module -Name VirtualDesktop -Scope CurrentUser -Force"
 # Symlink profile.ps1
+touch.exe $PROFILE
 $PowerShellFolder = pwsh.exe -NoLogo -NonInteractive -NoProfile -c '$(Get-Item -Path "$PROFILE").Directory.FullName'
 Write-Host "Powershell folder: $PowerShellFolder"
 mkdir.exe -p $PowerShellFolder
