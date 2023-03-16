@@ -70,7 +70,7 @@ Write-Host ""
 
 # Git config
 Write-Host -ForegroundColor Blue "Configuring Git"
-choco install -y delta
+winget install --silent dandavison.delta
 ## Symlink .gitconfig
 if (Test-Path -Path "$env:USERPROFILE\.gitconfig") {
 		Remove-Item -Path "$env:USERPROFILE\.gitconfig" -Force
