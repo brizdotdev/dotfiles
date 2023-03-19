@@ -109,7 +109,7 @@ curl.exe -L -O  https://github.com/ful1e5/Bibata_Cursor/releases/latest/download
 mkdir.exe Bibata
 Expand-Archive -Path Bibata-Modern-Classic-Windows.zip -DestinationPath .\Bibata
 Get-ChildItem -Path .\Bibata | ForEach-Object {
-	Start-Process ".\Bibata\$_\install.inf" -Verb "Install"
+	Start-Process "$_\install.inf" -Verb "Install"
 }
 Write-Host -ForegroundColor Cyan "Change your cursor theme"
 control.exe /name Microsoft.Mouse
