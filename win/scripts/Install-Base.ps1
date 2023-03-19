@@ -102,6 +102,19 @@ Write-Host ""
 # Ensure that Unix tools have a consistent and predictable USER variable available; important for SSH for example
 [Environment]::SetEnvironmentVariable("USER", "$env:USERNAME", 'User')
 
-# TODO: Install custom cursor
+# Install custom cursor
+Write-Host -ForegroundColor Blue "Installing custom cursor"
+pushd $env:TEMP
+curl.exe -L -O  https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/Bibata-Modern-Classic-Windows.zip
+mkdir.exe Bibata
+Expand-Archive -Path Bibata-Modern-Classic-Windows.zip -DestinationPath .\Bibata
+Get-ChildItem -Path .\Bibata | ForEach-Object {
+	Start-Process ".\Bibata\$_\install.inf" -Verb "Install"
+}
+Write-Host -ForegroundColor Cyan "Change your cursor theme"
+control.exe /name Microsoft.Mouse
+Write-Host -ForegroundColor Green "Custom cursor installed"
+popd
+
 
 exit 0
