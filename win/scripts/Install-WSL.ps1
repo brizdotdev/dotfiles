@@ -43,3 +43,4 @@ Write-Host -ForegroundColor Green "WSL conf copied"
 # Write-Host ""
 
 # TODO: Setup WSL
+# TODO: Setup nix package manager and home-manager
