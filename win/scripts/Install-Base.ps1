@@ -88,6 +88,11 @@ if (Test-Path -Path "$env:USERPROFILE\.gitconfig.local") {
 ## Set pager
 $env:PAGER = "less"
 [Environment]::SetEnvironmentVariable("PAGER", "less", "User")
+## Symlink .vimrc
+if (Test-Path -Path "$env:USERPROFILE\.vimrc") {
+		Remove-Item -Path "$env:USERPROFILE\.vimrc" -Force
+}
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.vimrc" -Target "$env:DOTFILES\common\config\vim\.vimrc"
 Write-Host -ForegroundColor Green "Git configured"
 Write-Host ""
 
