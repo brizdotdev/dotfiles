@@ -141,6 +141,11 @@ Set-PSReadLineKeyHandler -Key F2 -Function SwitchPredictionView
 ################################################################################
 # Startup
 ################################################################################
+
+# Set encoding to UTF-8
+$OutputEncoding = [System.Console]::OutputEncoding = [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
+$PSDefaultParameterValues['*:Encoding'] = 'utf8'
+
 Invoke-Expression (& {
     $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
     (zoxide init --hook $hook powershell | Out-String)
