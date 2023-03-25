@@ -38,6 +38,7 @@ Write-Host -ForegroundColor Blue "Installing utils"
 winget install --silent 7zip.7zip
 $7zipPath = "C:\Program Files\7-Zip"
 [Environment]::SetEnvironmentVariable("PATH", "$env:Path;$7zipPath", "User")
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 winget install --silent Microsoft.PowerToys
 winget install --silent gerardog.gsudo
 winget install --silent VideoLAN.VLC
@@ -46,6 +47,10 @@ winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetas
 winget install --silent Neovim.Neovim
 $env:EDITOR = "nvim"
 [Environment]::SetEnvironmentVariable("EDITOR", "nvim", "User")
+winget install --silent Yubico.YubikeyManager
+$ykPath = "C:\Program Files\Yubico\YubiKey Manager"
+[Environment]::SetEnvironmentVariable("PATH", "$env:Path;$ykPath", "User")
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
 # MS Store Apps
 foreach ($app in @(
