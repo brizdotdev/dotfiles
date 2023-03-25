@@ -4,6 +4,10 @@
   "actions":
   [
       {
+            "command": "paste",
+            "keys": "ctrl+v"
+        },
+        {
           "command":
           {
               "action": "moveFocus",
@@ -12,24 +16,24 @@
           "keys": "ctrl+k"
       },
       {
-          "command": "paste",
-          "keys": "ctrl+v"
+          "command":
+          {
+              "action": "moveFocus",
+                "direction": "left"
+          },
+            "keys": "ctrl+h"
       },
       {
           "command":
           {
               "action": "moveFocus",
-              "direction": "right"
+                "direction": "right"
           },
-          "keys": "ctrl+l"
-      },
-      {
-          "command":
-          {
-              "action": "moveFocus",
-              "direction": "left"
-          },
-          "keys": "ctrl+h"
+            "keys": "ctrl+l"
+        },
+        {
+            "command": "find",
+            "keys": "ctrl+/"
       },
       {
           "command":
@@ -39,10 +43,6 @@
               "singleLine": false
           },
           "keys": "ctrl+c"
-      },
-      {
-          "command": "find",
-          "keys": "ctrl+/"
       },
       {
           "command":
@@ -75,6 +75,10 @@
       {
           "command": "unbound",
           "keys": "alt+k"
+        },
+        {
+            "command": "unbound",
+            "keys": "alt+enter"
       }
   ],
   "alwaysShowTabs": false,
