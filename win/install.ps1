@@ -16,7 +16,6 @@ $InstallDevTools = YesNoPrompt "Install apps and tools for development?"
 $InstallWebDev = YesNoPrompt "Install apps and tools for web development?"
 $InstallExtras = YesNoPrompt "Install extras?"
 $RemoveBloatware = YesNoPrompt "Remove bloatware?"
-$GenSSHKey = YesNoPrompt "Generate SSH Key?"
 do {
     $browserChoice = Read-Host -Prompt "Which browser do you want to set as default? (firefox, chrome, none): "
 }
@@ -24,6 +23,7 @@ while ($browserChoice -ne "firefox" -and $browserChoice -ne "chrome" -and $brows
 $GitUserName = Read-Host -Prompt "Enter your Git user name: "
 $GitUserEmail = Read-Host -Prompt "Enter your Git user email: "
 $GitConfigureSigning = YesNoPrompt "Configure Commit Signing?"
+$ImportSSHKey = YesNoPrompt "Import SSH Key from Yubikey?"
 
 Write-Host ""
 
@@ -110,11 +110,11 @@ if ($InstallExtras -eq $True) {
     Write-Host ""
 }
 
-# Generate SSH Key
-if ($GenSSHKey -eq $True) {
-    & "$PSScriptRoot\scripts\Generate-SSHKey.ps1"
+# Import SSH Key
+if ($ImportSSHKey -eq $True) {
+    & "$PSScriptRoot\scripts\Import-SSHKey.ps1"
     if ($? -eq $False) {
-        Write-Host -ForegroundColor Red "SSH Key generation failed"
+        Write-Host -ForegroundColor Red "SSH Key import failed"
         Read-Host
         exit 1
     }

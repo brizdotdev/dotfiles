@@ -49,9 +49,6 @@ winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetas
 winget install --silent Neovim.Neovim
 $env:EDITOR = "nvim"
 [Environment]::SetEnvironmentVariable("EDITOR", "nvim", "User")
-winget install --silent Yubico.YubikeyManager
-$ykPath = "C:\Program Files\Yubico\YubiKey Manager"
-[Environment]::SetEnvironmentVariable("PATH", "$env:Path;$ykPath", "User")
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 
 # MS Store Apps
