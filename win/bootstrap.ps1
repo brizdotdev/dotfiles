@@ -17,17 +17,17 @@ EditorOption=VIM
 CustomEditorPath=
 DefaultBranchOption=main
 PathOption=CmdTools
-SSHOption=OpenSSH
+SSHOption=ExternalOpenSSH
 TortoiseOption=false
-CURLOption=OpenSSL
+CURLOption=WinSSL
 CRLFOption=CRLFAlways
-BashTerminalOption=MinTTY
+BashTerminalOption=ConHost
 GitPullBehaviorOption=Rebase
 UseCredentialManager=Enabled
 PerformanceTweaksFSCache=Enabled
 EnableSymlinks=Enabled
 EnablePseudoConsoleSupport=Disabled
-EnableFSMonitor=Disabled
+EnableFSMonitor=Enabled
 "@
 
 Write-Host -ForegroundColor Blue "Installing Git"
