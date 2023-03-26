@@ -23,6 +23,7 @@ do {
 while ($browserChoice -ne "firefox" -and $browserChoice -ne "chrome" -and $browserChoice -ne "none")
 $GitUserName = Read-Host -Prompt "Enter your Git user name: "
 $GitUserEmail = Read-Host -Prompt "Enter your Git user email: "
+$GitConfigureSigning = YesNoPrompt "Configure Commit Signing?"
 
 Write-Host ""
 
@@ -55,7 +56,7 @@ if ($ConfigureWindows -eq $True) {
 
 # Install Base
 if ($InstallBase -eq $True) {
-    & "$PSScriptRoot\scripts\Install-Base.ps1" $browserChoice $GitUserName $GitUserEmail
+    & "$PSScriptRoot\scripts\Install-Base.ps1" $browserChoice $GitUserName $GitUserEmail $GitConfigureSigning
     if ($? -eq $False) {
         Write-Host -ForegroundColor Red "Base installation failed"
         Read-Host

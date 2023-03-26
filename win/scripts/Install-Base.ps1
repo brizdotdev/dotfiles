@@ -8,7 +8,9 @@ param(
 	[Parameter(Mandatory)]
 	[string]$GitUserName,
 	[Parameter(Mandatory)]
-	[string]$GitUserEmail
+	[string]$GitUserEmail,
+	[Parameter(Mandatory)]
+	[string]$GitConfigureSigning
 )
 
 # Helper functions
@@ -76,6 +78,8 @@ Write-Host ""
 # Git config
 Write-Host -ForegroundColor Blue "Configuring Git"
 winget install --silent dandavison.delta
+winget install --silent GnuPG.Gpg4win
+winget install --silent Microsoft.OpenSSH.Beta
 ## Symlink .gitconfig
 if (Test-Path -Path "$env:USERPROFILE\.gitconfig") {
 		Remove-Item -Path "$env:USERPROFILE\.gitconfig" -Force
@@ -89,7 +93,16 @@ if (Test-Path -Path "$env:USERPROFILE\.gitconfig.local") {
 	name = $GitUserName
 	email = $GitUserEmail
 "@ | Out-File -Encoding "utf8" -FilePath "$($ENV:USERPROFILE)\.gitconfig.local"
-# TODO: Enable signing with SSH key (https://github.com/Okeanos/dotfiles-windows/blob/8cba8eda06ee01bc5a174f61656a7bc7cb798e4d/bootstrap.ps1#L62-L89)
+if ($GitConfigureSigning -eq $True) {
+@"
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
+[user]
+	signingkey = ~/.ssh/id_ed25519_sk_rk_Default
+"@ | Out-File -Encoding "utf8" -FilePath "$($ENV:USERPROFILE)\.gitconfig.local" -Append
+}
 ## Set pager
 $env:PAGER = "less"
 [Environment]::SetEnvironmentVariable("PAGER", "less", "User")
