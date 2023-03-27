@@ -45,11 +45,17 @@ winget install --silent Microsoft.PowerToys
 winget install --silent gerardog.gsudo
 winget install --silent VideoLAN.VLC
 winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
+
 ## Neovim
 winget install --silent Neovim.Neovim
 $env:EDITOR = "nvim"
 [Environment]::SetEnvironmentVariable("EDITOR", "nvim", "User")
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+$nvimConfigPath = Join-Path -Path $env:LOCALAPPDATA -ChildPath "nvim"
+if (Test-Path -Path $nvimConfigPath) {
+	Remove-Item -Path $nvimConfigPath -Force
+}
+New-Item -ItemType SymbolicLink -Path $nvimConfigPath -Target "$env:DOTFILES\common\config\nvim"
 
 # MS Store Apps
 foreach ($app in @(
