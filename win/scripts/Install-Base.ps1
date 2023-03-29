@@ -124,6 +124,7 @@ Write-Host ""
 [Environment]::SetEnvironmentVariable("USER", "$env:USERNAME", 'User')
 
 # Install custom cursor
+## TODO: Test/Fix this
 Write-Host -ForegroundColor Blue "Installing custom cursor"
 pushd $env:TEMP
 curl.exe -L -O  https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/Bibata-Modern-Classic-Windows.zip
