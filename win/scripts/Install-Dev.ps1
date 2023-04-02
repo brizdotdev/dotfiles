@@ -100,8 +100,12 @@ winget install --silent Microsoft.SQLServerManagementStudio
 
 # Langs
 winget install --silent OpenJS.NodeJS
-Remove-Item -Path "$LocalWindowsApps\python.exe" -Force
-Remove-Item -Path "$LocalWindowsApps\python3.exe" -Force
+if (Test-Path -Path "$LocalWindowsApps\python.exe") {
+		Remove-Item -Path "$LocalWindowsApps\python.exe" -Force
+}
+if (Test-Path -Path "$LocalWindowsApps\python3.exe") {
+		Remove-Item -Path "$LocalWindowsApps\python3.exe" -Force
+}
 winget install --silent Python.Python.3.11 --override '/passive PrependPath=1'
 
 # Repos folder
