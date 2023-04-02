@@ -126,14 +126,15 @@ Write-Host ""
 [Environment]::SetEnvironmentVariable("USER", "$env:USERNAME", 'User')
 
 # Install custom cursor
-## TODO: Test/Fix this
 Write-Host -ForegroundColor Blue "Installing custom cursor"
 pushd $env:TEMP
 curl.exe -L -O  https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/Bibata-Modern-Classic-Windows.zip
 mkdir.exe Bibata
 Expand-Archive -Path Bibata-Modern-Classic-Windows.zip -DestinationPath .\Bibata
-Get-ChildItem -Path .\Bibata | ForEach-Object {
-	Start-Process "$_\install.inf" -Verb "Install"
+$cursors = Get-ChildItem -Path .\Bibata
+foreach ($cursor in $cursors) {
+	$installPath = Join-Path -Path $cursor.FullName -ChildPath "install.inf"
+	Start-Process "$installPath" -Verb "Install"
 }
 Write-Host -ForegroundColor Cyan "Change your cursor theme"
 control.exe /name Microsoft.Mouse
