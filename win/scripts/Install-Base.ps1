@@ -23,6 +23,8 @@ Get-ChildItem -Path $HelperPath -Filter "*.ps1" | ForEach-Object {
 Write-Host -ForegroundColor Blue "Installing browsers"
 winget install --silent Google.Chrome
 winget install --silent Mozilla.Firefox
+winget install --silent LibreWolf.LibreWolf
+# TODO: Configure LibreWolf settings and extensions
 Write-Host -ForegroundColor Blue "Setting default browser"
 choco install -y setdefaultbrowser
 if ($BrowserChoice -eq "firefox") {
