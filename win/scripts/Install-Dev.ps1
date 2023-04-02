@@ -16,7 +16,8 @@ Write-Host -ForegroundColor Blue "Installing PowerShell"
 winget install --silent Microsoft.PowerShell
 winget install --silent Starship.Starship
 Install-PackageProvider -Name NuGet -Scope AllUsers -Force -ErrorAction SilentlyContinue
-choco install -y zoxide fzf
+winget install --silent ajeetdsouza.zoxide
+winget install --silent junegunn.fzf
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 refreshenv
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
@@ -60,7 +61,13 @@ winget install --silent stedolan.jq
 winget install --silent MikeFarah.yq
 winget install --silent JFLarvoire.Ag
 winget install --silent glab
-choco install -y ripgrep fzf bat lazygit fd lf glow dust duf xsv sd-cli
+winget install --silent junegunn.fzf
+winget install --silent BurntSushi.ripgrep.MSVC
+winget install --silent JesseDuffield.lazygit
+winget install --silent sharkdp.fd
+winget install --silent gokcehan.lf
+winget install --silent muesli.duf
+choco install -y bat glow dust xsv sd-cli
 # Install fx
 pushd $LocalWindowsApps
 curl.exe -L -o fx.exe https://github.com/antonmedv/fx/releases/latest/download/fx_windows_amd64.exe
