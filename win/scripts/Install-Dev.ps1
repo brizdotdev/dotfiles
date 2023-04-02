@@ -33,7 +33,7 @@ pwsh.exe -c "Install-Module -Name ChangeScreenResolution -Scope CurrentUser -For
 pwsh.exe -c "Install-Module -Name VirtualDesktop -Scope CurrentUser -Force"
 # Symlink profile.ps1
 touch.exe $PROFILE
-$PowerShellFolder = pwsh.exe -NoLogo -NonInteractive -NoProfile -c '$(Get-Item -Path "$PROFILE").Directory.FullName'
+$PowerShellFolder = pwsh.exe -NoLogo -NonInteractive -NoProfile -c 'New-Item -Path $PROFILE -ItemType "file" -Force; $(Get-Item -Path "$PROFILE").Directory.FullName'
 Write-Host "Powershell folder: $PowerShellFolder"
 mkdir.exe -p $PowerShellFolder
 $PowerShellDotfilesFolder = "$env:DOTFILES\win\config\PowerShell"
