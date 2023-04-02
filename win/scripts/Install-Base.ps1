@@ -47,6 +47,8 @@ winget install --silent Microsoft.PowerToys
 winget install --silent gerardog.gsudo
 winget install --silent VideoLAN.VLC
 winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
+winget install --silent Bitwarden.Bitwarden
+winget install --silent Bitwarden.CLI
 
 ## Neovim
 winget install --silent Neovim.Neovim
