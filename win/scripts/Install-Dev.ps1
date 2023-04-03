@@ -16,7 +16,8 @@ Write-Host -ForegroundColor Blue "Installing PowerShell"
 winget install --silent Microsoft.PowerShell
 winget install --silent Starship.Starship
 Install-PackageProvider -Name NuGet -Scope AllUsers -Force -ErrorAction SilentlyContinue
-choco install -y zoxide fzf
+winget install --silent ajeetdsouza.zoxide
+winget install --silent junegunn.fzf
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 refreshenv
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
@@ -32,7 +33,7 @@ pwsh.exe -c "Install-Module -Name ChangeScreenResolution -Scope CurrentUser -For
 pwsh.exe -c "Install-Module -Name VirtualDesktop -Scope CurrentUser -Force"
 # Symlink profile.ps1
 touch.exe $PROFILE
-$PowerShellFolder = pwsh.exe -NoLogo -NonInteractive -NoProfile -c '$(Get-Item -Path "$PROFILE").Directory.FullName'
+$PowerShellFolder = pwsh.exe -NoLogo -NonInteractive -NoProfile -c 'New-Item -Path $PROFILE -ItemType "file" -Force; $(Get-Item -Path "$PROFILE").Directory.FullName'
 Write-Host "Powershell folder: $PowerShellFolder"
 mkdir.exe -p $PowerShellFolder
 $PowerShellDotfilesFolder = "$env:DOTFILES\win\config\PowerShell"
@@ -60,7 +61,14 @@ winget install --silent stedolan.jq
 winget install --silent MikeFarah.yq
 winget install --silent JFLarvoire.Ag
 winget install --silent glab
-choco install -y ripgrep fzf bat lazygit fd lf glow dust duf xsv sd-cli
+winget install --silent junegunn.fzf
+winget install --silent BurntSushi.ripgrep.MSVC
+winget install --silent JesseDuffield.lazygit
+winget install --silent sharkdp.fd
+winget install --silent sharkdp.bat
+winget install --silent gokcehan.lf
+winget install --silent muesli.duf
+choco install -y glow dust xsv sd-cli
 # Install fx
 pushd $LocalWindowsApps
 curl.exe -L -o fx.exe https://github.com/antonmedv/fx/releases/latest/download/fx_windows_amd64.exe
@@ -93,8 +101,12 @@ winget install --silent Microsoft.SQLServerManagementStudio
 
 # Langs
 winget install --silent OpenJS.NodeJS
-Remove-Item -Path "$LocalWindowsApps\python.exe" -Force
-Remove-Item -Path "$LocalWindowsApps\python3.exe" -Force
+if (Test-Path -Path "$LocalWindowsApps\python.exe") {
+		Remove-Item -Path "$LocalWindowsApps\python.exe" -Force
+}
+if (Test-Path -Path "$LocalWindowsApps\python3.exe") {
+		Remove-Item -Path "$LocalWindowsApps\python3.exe" -Force
+}
 winget install --silent Python.Python.3.11 --override '/passive PrependPath=1'
 
 # Repos folder

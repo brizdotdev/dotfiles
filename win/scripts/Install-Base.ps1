@@ -23,6 +23,8 @@ Get-ChildItem -Path $HelperPath -Filter "*.ps1" | ForEach-Object {
 Write-Host -ForegroundColor Blue "Installing browsers"
 winget install --silent Google.Chrome
 winget install --silent Mozilla.Firefox
+winget install --silent LibreWolf.LibreWolf
+# TODO: Configure LibreWolf settings and extensions
 Write-Host -ForegroundColor Blue "Setting default browser"
 choco install -y setdefaultbrowser
 if ($BrowserChoice -eq "firefox") {
@@ -45,11 +47,19 @@ winget install --silent Microsoft.PowerToys
 winget install --silent gerardog.gsudo
 winget install --silent VideoLAN.VLC
 winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
+winget install --silent Bitwarden.Bitwarden
+winget install --silent Bitwarden.CLI
+
 ## Neovim
 winget install --silent Neovim.Neovim
 $env:EDITOR = "nvim"
 [Environment]::SetEnvironmentVariable("EDITOR", "nvim", "User")
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+$nvimConfigPath = Join-Path -Path $env:LOCALAPPDATA -ChildPath "nvim"
+if (Test-Path -Path $nvimConfigPath) {
+	Remove-Item -Path $nvimConfigPath -Force
+}
+New-Item -ItemType SymbolicLink -Path $nvimConfigPath -Target "$env:DOTFILES\common\config\nvim"
 
 # MS Store Apps
 foreach ($app in @(
@@ -123,8 +133,10 @@ pushd $env:TEMP
 curl.exe -L -O  https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/Bibata-Modern-Classic-Windows.zip
 mkdir.exe Bibata
 Expand-Archive -Path Bibata-Modern-Classic-Windows.zip -DestinationPath .\Bibata
-Get-ChildItem -Path .\Bibata | ForEach-Object {
-	Start-Process "$_\install.inf" -Verb "Install"
+$cursors = Get-ChildItem -Path .\Bibata
+foreach ($cursor in $cursors) {
+	$installPath = Join-Path -Path $cursor.FullName -ChildPath "install.inf"
+	Start-Process "$installPath" -Verb "Install"
 }
 Write-Host -ForegroundColor Cyan "Change your cursor theme"
 control.exe /name Microsoft.Mouse

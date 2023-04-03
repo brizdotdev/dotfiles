@@ -50,7 +50,7 @@ if ($ScreenToGif -eq $True) {
 }
 
 if ($FFMPEG -eq $True) {
-    choco install -y ffmpeg
+    winget install --silent Gyan.FFmpeg
 }
 
 if ($LightShot -eq $True) {

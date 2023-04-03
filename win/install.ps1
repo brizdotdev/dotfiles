@@ -121,5 +121,5 @@ if ($ImportSSHKey -eq $True) {
     Write-Host ""
 }
 
-Write-Host -ForegroundColor Green "Done! 😄"
+Write-Host -ForegroundColor Green "Done!"
 Read-Host
