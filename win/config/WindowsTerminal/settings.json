@@ -4,6 +4,14 @@
   "actions":
   [
       {
+          "command":
+          {
+              "action": "moveFocus",
+              "direction": "up"
+          },
+          "keys": "ctrl+k"
+      },
+      {
             "command": "paste",
             "keys": "ctrl+v"
         },
@@ -11,9 +19,9 @@
           "command":
           {
               "action": "moveFocus",
-              "direction": "up"
+                "direction": "right"
           },
-          "keys": "ctrl+k"
+            "keys": "ctrl+l"
       },
       {
           "command":
@@ -26,18 +34,6 @@
       {
           "command":
           {
-              "action": "moveFocus",
-                "direction": "right"
-          },
-            "keys": "ctrl+l"
-        },
-        {
-            "command": "find",
-            "keys": "ctrl+/"
-      },
-      {
-          "command":
-          {
               "action": "copy",
               "copyFormatting": "none",
               "singleLine": false
@@ -45,6 +41,10 @@
           "keys": "ctrl+c"
       },
       {
+            "command": "find",
+            "keys": "ctrl+/"
+        },
+        {
           "command":
           {
               "action": "moveFocus",
@@ -975,5 +975,6 @@
   "trimBlockSelection": true,
   "trimPaste": true,
   "useAcrylicInTabRow": true,
-  "windowingBehavior": "useExisting"
+    "windowingBehavior": "useExisting",
+    "newTabPosition": "afterLastTab"
 }
