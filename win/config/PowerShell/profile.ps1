@@ -121,12 +121,6 @@ Set-Alias -Name "mkdir" -Value mkdir.exe
 Import-Module posh-git
 Import-Module DockerCompletion
 Import-Module CompletionPredictor
-Import-Module PSFzf
-if (Test-Path "C:\Program Files\gsudo\Current\gsudoModule.psd1") {
-    Import-Module 'C:\Program Files\gsudo\Current\gsudoModule.psd1'
-} else {
-    Import-Module 'C:\Program Files (x86)\gsudo\gsudoModule.psd1'
-}
 
 ################################################################################
 # Env
