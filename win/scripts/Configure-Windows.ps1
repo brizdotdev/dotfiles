@@ -180,4 +180,9 @@ Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advan
 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name TaskbarDa -Value 0
 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name TaskbarMn -Value 0
 
+# Set clock to 24-hour format
+Set-ItemProperty "HKCU:\Control Panel\International" -Name iTime -Value 1
+Set-ItemProperty "HKCU:\Control Panel\International" -Name sShortTime -Value "HH:mm"
+Set-ItemProperty "HKCU:\Control Panel\International" -Name sTimeFormat -Value "HH:mm:ss"
+
 Write-Host -ForegroundColor Green "Windows configured"
