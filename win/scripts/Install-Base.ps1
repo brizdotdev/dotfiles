@@ -131,7 +131,10 @@ Write-Host ""
 Write-Host -ForegroundColor Blue "Installing custom cursor"
 pushd $env:TEMP
 curl.exe -L -O  https://github.com/ful1e5/Bibata_Cursor/releases/latest/download/Bibata-Modern-Classic-Windows.zip
-mkdir.exe Bibata
+if (Test-Path -Path Bibata) {
+	Remove-Item -Path Bibata -Force -Recurse
+}
+mkdir.exe -p Bibata
 Expand-Archive -Path Bibata-Modern-Classic-Windows.zip -DestinationPath .\Bibata
 $cursors = Get-ChildItem -Path .\Bibata
 foreach ($cursor in $cursors) {
