@@ -121,5 +121,8 @@ if ($ImportSSHKey -eq $True) {
     Write-Host ""
 }
 
+
+& "$PSScriptRoot\scripts\Backup-Path.ps1"
+
 Write-Host -ForegroundColor Green "Done!"
 Read-Host
