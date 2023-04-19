@@ -68,7 +68,7 @@ winget install --silent sharkdp.fd
 winget install --silent sharkdp.bat
 winget install --silent gokcehan.lf
 winget install --silent muesli.duf
-choco install -y glow dust xsv sd-cli
+choco install -y glow xsv sd-cli
 # Install fx
 pushd $LocalWindowsApps
 curl.exe -L -o fx.exe https://github.com/antonmedv/fx/releases/latest/download/fx_windows_amd64.exe
