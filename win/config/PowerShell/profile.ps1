@@ -141,7 +141,6 @@ Set-PSReadLineKeyHandler -Key F2 -Function SwitchPredictionView
 ################################################################################
 
 # Set encoding to UTF-8
-$OutputEncoding = [System.Console]::OutputEncoding = [System.Console]::InputEncoding = [System.Text.Encoding]::UTF8
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
 Invoke-Expression (& {
