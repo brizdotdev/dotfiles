@@ -12,6 +12,15 @@ Get-ChildItem -Path $HelperPath -Filter "*.ps1" | ForEach-Object {
 $InstallChocolatey = YesNoPrompt "Install Chocolatey?"
 $ConfigureWindows = YesNoPrompt "Configure Windows?"
 $InstallBase = YesNoPrompt "Install base apps and fonts?"
+$InstallFirefoxExtensions = $False
+$InstallLibrewolfExtensions = $False
+$InstallChromeExtensions = $False
+if ($InstallBase -eq $True)
+{
+    $InstallFirefoxExtensions = YesNoPrompt "Install Firefox extensions?"
+    $InstallLibrewolfExtensions = YesNoPrompt "Install Librewolf extensions?"
+    $InstallChromeExtensions = YesNoPrompt "Install Chrome extensions?"
+}
 $InstallDevTools = YesNoPrompt "Install apps and tools for development?"
 $InstallWebDev = YesNoPrompt "Install apps and tools for web development?"
 $InstallExtras = YesNoPrompt "Install extras?"
@@ -56,7 +65,7 @@ if ($ConfigureWindows -eq $True) {
 
 # Install Base
 if ($InstallBase -eq $True) {
-    & "$PSScriptRoot\scripts\Install-Base.ps1" $browserChoice $GitUserName $GitUserEmail $GitConfigureSigning
+    & "$PSScriptRoot\scripts\Install-Base.ps1" $browserChoice $InstallFirefoxExtensions $InstallLibrewolfExtensions $InstallChromeExtensions $GitUserName $GitUserEmail $GitConfigureSigning
     if ($? -eq $False) {
         Write-Host -ForegroundColor Red "Base installation failed"
         Read-Host

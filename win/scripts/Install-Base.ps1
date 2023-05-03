@@ -6,6 +6,12 @@ param(
 	[Parameter(Mandatory)]
 	[string]$BrowserChoice,
 	[Parameter(Mandatory)]
+	[string]$InstallFirefoxExtensions,
+	[Parameter(Mandatory)]
+	[string]$InstallLibrewolfExtensions,
+	[Parameter(Mandatory)]
+	[string]$InstallChromeExtensions,
+	[Parameter(Mandatory)]
 	[string]$GitUserName,
 	[Parameter(Mandatory)]
 	[string]$GitUserEmail,
@@ -22,9 +28,34 @@ Get-ChildItem -Path $HelperPath -Filter "*.ps1" | ForEach-Object {
 # Browsers
 Write-Host -ForegroundColor Blue "Installing browsers"
 winget install --silent Google.Chrome
+$ChromeExtensions = Get-Content -Path "$env:DOTFILES/common/config/chrome/extensions.txt"
+# Strip out empty lines and comments
+$ChromeExtensions = $ChromeExtensions | Where-Object { $_ -notmatch "^\s*$" -and $_ -notmatch "^#" }
+if ($InstallChromeExtensions -eq $True)
+{
+	$ChromeExtensions | ForEach-Object {
+		& "C:\Program Files\Google\Chrome\Application\chrome.exe" $_
+	}
+}
+
 winget install --silent Mozilla.Firefox
+$FirefoxExtensions = Get-Content -Path "$env:DOTFILES/common/config/firefox/extensions.txt"
+# Strip out empty lines and comments
+$FirefoxExtensions = $FirefoxExtensions | Where-Object { $_ -notmatch "^\s*$" -and $_ -notmatch "^#" }
+if ($InstallFirefoxExtensions -eq $True)
+{
+	$FirefoxExtensions | ForEach-Object {
+		& "C:\Program Files\Mozilla Firefox\firefox.exe" -new-tab $_
+	}
+}
+
 winget install --silent LibreWolf.LibreWolf
-# TODO: Configure LibreWolf settings and extensions
+if ($InstallLibrewolfExtensions -eq $True)
+{
+	$FirefoxExtensions | ForEach-Object {
+		& "C:\Program Files\LibreWolf\libreWolf.exe" -new-tab $_
+	}
+}
 Write-Host -ForegroundColor Blue "Setting default browser"
 choco install -y setdefaultbrowser
 if ($BrowserChoice -eq "firefox") {

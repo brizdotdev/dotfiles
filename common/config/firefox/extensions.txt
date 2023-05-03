@@ -1,0 +1,11 @@
+https://addons.mozilla.org/en-US/firefox/addon/betterttv/
+https://addons.mozilla.org/en-US/firefox/addon/bitwarden-password-manager/
+https://addons.mozilla.org/en-US/firefox/addon/facebook-container/
+https://addons.mozilla.org/en-US/firefox/addon/multi-account-containers/
+https://addons.mozilla.org/en-US/firefox/addon/old-reddit-redirect/
+https://addons.mozilla.org/en-US/firefox/addon/privacy-badger17/
+https://addons.mozilla.org/en-US/firefox/addon/reddit-enhancement-suite/
+https://addons.mozilla.org/en-US/firefox/addon/sponsorblock/
+https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/
+https://addons.mozilla.org/en-US/firefox/addon/vimium-ff/
+https://addons.mozilla.org/en-US/firefox/addon/windowed/
