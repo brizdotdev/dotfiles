@@ -133,6 +133,17 @@ $env:FZF_DEFAULT_OPTS = "--layout=reverse --multi --cycle"
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 Set-PsFzfOption -TabExpansion
 Set-PSReadLineOption -EditMode Vi
+$OnViModeChange = [scriptblock]{
+    if ($args[0] -eq 'Command') {
+        # Set the cursor to a blinking block.
+        Write-Host -NoNewLine "`e[2 q"
+    }
+    else {
+        # Set the cursor to a blinking line.
+        Write-Host -NoNewLine "`e[5 q"
+    }
+}
+Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $OnViModeChange
 Set-PSReadLineKeyHandler -Key Alt+Enter -Function AcceptNextSuggestionWord
 Set-PSReadLineKeyHandler -Key F2 -Function SwitchPredictionView
 
