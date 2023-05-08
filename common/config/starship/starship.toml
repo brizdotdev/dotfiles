@@ -162,13 +162,13 @@ commit_hash_length = 4
 [git_status]
 format = '\[[$all_status$ahead_behind]($style)\]'
 conflicted = "=${count} "
-up_to_date = "[](green)"
+up_to_date = "[](green)"
 untracked = "?${count} "
 stashed = "📦 "
 modified = "!${count} "
 staged = '[ $count](green) '
 renamed = "»${count} "
-deleted = "${count} "
+deleted = "󰆴${count} "
 ahead = "[⇡${count}](green) "
 diverged = "⇕⇡${ahead_count}⇣${behind_count} "
 behind = "⇣${count} "
