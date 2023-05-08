@@ -94,6 +94,7 @@ del alias:sl -Force
 del alias:rm -Force
 del alias:sort -Force
 del alias:cat -Force
+del alias:mv -Force
 
 Set-Alias -Name "clear" -Value Clear-Host -Option AllScope
 Set-Alias -Name "c" -Value Clear-Host -Option AllScope
