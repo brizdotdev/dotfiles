@@ -11,7 +11,6 @@ Set-Alias -Name "history" -Value Show-History -Option AllScope
 function Reload-Path {
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 }
-Set-Alias -Name "refreshpath" -Value Reload-Path -Option AllScope
 
 function which($command) {
     Get-Command -Name $command -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
@@ -70,14 +69,11 @@ if (Get-Command ls.exe -ErrorAction SilentlyContinue | Test-Path) {
     ${function:l} = { ls -lF @args }
     # List all files in long format, including hidden files
     ${function:la} = { ls -laF @args }
-    # List only directories
-    ${function:lsd} = { Get-ChildItem -Directory -Force @args }
 } else {
     # List all files, including hidden files
     ${function:la} = { ls -Force @args }
-    # List only directories
-    ${function:lsd} = { Get-ChildItem -Directory -Force @args }
 }
+${function:lsd} = { Get-ChildItem -Directory -Force @args }
 
 # curl: Use `curl.exe` if available
 if (Get-Command curl.exe -ErrorAction SilentlyContinue | Test-Path) {
