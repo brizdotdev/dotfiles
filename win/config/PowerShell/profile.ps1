@@ -116,6 +116,7 @@ Set-Alias -Name "mkdir" -Value mkdir.exe
 # Imports
 ################################################################################
 Import-Module posh-git
+$GitPromptSettings.EnableFileStatus = $false
 Import-Module DockerCompletion
 Import-Module CompletionPredictor
 
