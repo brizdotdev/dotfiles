@@ -3,18 +3,19 @@
 	b = branch
 	br = branch
 	c = commit
-	s = status
-	stauts = status
-	st = status
-	p = pull
-	pl = pull
-	ps = push
-	ck = checkout
 	cehckout = checkout
+	chcekout = checkout
 	checkotu = checkout
 	checkuot = checkout
 	chekcout = checkout
-	chcekout = checkout
+	ck = checkout
+	p = pull
+	pl = pull
+	ps = push
+	s = status
+	st = status
+	stauts = status
+	sw = switch
 
 	# List aliases.
 	aliases = config --get-regexp alias
