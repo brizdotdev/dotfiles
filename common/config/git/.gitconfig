@@ -12,6 +12,7 @@
 	p = pull
 	pl = pull
 	ps = push
+	pf = push --force-with-lease
 	s = status
 	st = status
 	stauts = status
