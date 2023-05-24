@@ -77,9 +77,13 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";
 winget install --silent Microsoft.PowerToys
 winget install --silent gerardog.gsudo
 winget install --silent VideoLAN.VLC
-winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
 winget install --silent Bitwarden.Bitwarden
 winget install --silent Bitwarden.CLI
+
+## VSCode
+winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+code --install-extension vscodevim.vim
 
 ## Neovim
 winget install --silent Neovim.Neovim
