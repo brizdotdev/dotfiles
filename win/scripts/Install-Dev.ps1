@@ -44,6 +44,7 @@ Get-ChildItem -Path $PowerShellFolder | ForEach-Object {
 	}
 }
 LinkFiles $PowerShellDotfilesFolder "$PowerShellFolder"
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.pwsh_history" -Target "$env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt"
 # Symlink Starship config
 $StarshipFolder = "$env:USERPROFILE\.config\"
 $StarshipFile = "$StarshipFolder\starship.toml"
