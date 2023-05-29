@@ -60,7 +60,6 @@ Write-Host ""
 # CLI tools
 winget install --silent stedolan.jq
 winget install --silent MikeFarah.yq
-winget install --silent JFLarvoire.Ag
 winget install --silent glab
 winget install --silent junegunn.fzf
 winget install --silent BurntSushi.ripgrep.MSVC
