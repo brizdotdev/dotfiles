@@ -152,13 +152,10 @@ Set-PSReadLineKeyHandler -Key F2 -Function SwitchPredictionView
 # Set encoding to UTF-8
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
-Invoke-Expression (& {
-    $hook = if ($PSVersionTable.PSVersion.Major -lt 6) { 'prompt' } else { 'pwd' }
-    (zoxide init --hook $hook powershell | Out-String)
-})
-
 function Invoke-Starship-TransientFunction {
     &starship module character
   }
 
 Invoke-Expression (&starship init powershell)
+
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
