@@ -100,6 +100,12 @@
 [safe]
 	directory = *
 
+# Selectively load specific config depending on remote
+# https://gist.github.com/bgauduch/06a8c4ec2fec8fef6354afe94358c89e
+# https://blog.gitguardian.com/8-easy-steps-to-set-up-multiple-git-accounts/
+# https://git-scm.com/docs/git-config#_conditional_includes
+# [includeIf "hasconfig:remote.*.url:git@github.com:*/**"]
+#     path = .gitconfig.github
 
 # Local config
 [include]
