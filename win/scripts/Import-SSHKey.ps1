@@ -13,7 +13,9 @@ winget install --silent GnuPG.Gpg4win
 winget install --silent Microsoft.OpenSSH.Beta
 winget install --silent Yubico.YubikeyManager
 $ykPath = "C:\Program Files\Yubico\YubiKey Manager"
-[Environment]::SetEnvironmentVariable("PATH", "$env:Path;$ykPath", "User")
+if ($env:PATH -notlike "*$ykPath*") {
+    [Environment]::SetEnvironmentVariable("PATH", "$env:Path;$ykPath", "User")
+}
 Reload-Path
 
 if (-not (Test-Path -Path $sshDir)) {

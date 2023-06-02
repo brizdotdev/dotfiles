@@ -72,7 +72,9 @@ Write-Host ""
 Write-Host -ForegroundColor Blue "Installing utils"
 winget install --silent 7zip.7zip
 $7zipPath = "C:\Program Files\7-Zip"
-[Environment]::SetEnvironmentVariable("PATH", "$env:Path;$7zipPath", "User")
+if ($env:PATH -notlike "*$7zipPath*") {
+		[Environment]::SetEnvironmentVariable("PATH", "$env:Path;$7zipPath", "User")
+}
 Reload-Path
 winget install --silent Microsoft.PowerToys
 winget install --silent gerardog.gsudo
