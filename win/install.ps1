@@ -41,6 +41,9 @@ $ParentPath = ((Get-Item -Path $PSScriptRoot).Parent).FullName
 [Environment]::SetEnvironmentVariable("DOTFILES", $ParentPath, "User")
 $env:DOTFILES = [Environment]::GetEnvironmentVariable("DOTFILES", "User")
 
+# TODO: Refactor all the scripts to use winget configure
+# TODO: https://learn.microsoft.com/en-us/windows/package-manager/configuration/
+
 # Install Chocolatey
 if ($InstallChocolatey -eq $True) {
     & "$PSScriptRoot\scripts\Install-Chocolatey.ps1"
@@ -107,7 +110,6 @@ if ($RemoveBloatware -eq $True) {
     Write-Host ""
 }
 
-
 # Install Extras
 if ($InstallExtras -eq $True) {
     & "$PSScriptRoot\scripts\Install-Extras.ps1"
@@ -129,7 +131,6 @@ if ($ImportSSHKey -eq $True) {
     }
     Write-Host ""
 }
-
 
 & "$PSScriptRoot\scripts\Backup-Path.ps1"
 

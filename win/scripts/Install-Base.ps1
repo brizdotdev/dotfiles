@@ -188,5 +188,4 @@ control.exe /name Microsoft.Mouse
 Write-Host -ForegroundColor Green "Custom cursor installed"
 popd
 
-
 exit 0

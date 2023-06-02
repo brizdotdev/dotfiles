@@ -99,7 +99,9 @@ winget install --silent TablePlus.TablePlus
 winget install --silent Microsoft.SQLServerManagementStudio
 
 # Langs
+## Node
 winget install --silent OpenJS.NodeJS
+## Python
 if (Test-Path -Path "$LocalWindowsApps\python.exe") {
 		Remove-Item -Path "$LocalWindowsApps\python.exe" -Force
 }
@@ -109,6 +111,8 @@ if (Test-Path -Path "$LocalWindowsApps\python3.exe") {
 winget install --silent Python.Python.3.11 --override '/passive PrependPath=1'
 
 # Repos folder
+# TODO: Set this up in a Dev Drive
+# TODO: https://learn.microsoft.com/en-us/windows/dev-drive/
 $ReposFolder = "$env:USERPROFILE\Repos"
 if (!(Test-Path -Path $ReposFolder)) {
     New-Item -ItemType Directory -Path $ReposFolder
