@@ -19,8 +19,7 @@ Install-PackageProvider -Name NuGet -Scope AllUsers -Force -ErrorAction Silently
 winget install --silent ajeetdsouza.zoxide
 winget install --silent junegunn.fzf
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
-refreshenv
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+Reload-Path
 [Environment]::SetEnvironmentVariable("POWERSHELL_TELEMETRY_OPTOUT", "1", 'User')
 [Environment]::SetEnvironmentVariable("POWERSHELL_UPDATECHECK_OPTOUT", "1", 'User')
 pwsh.exe -c "Install-Module -Name posh-git -Scope CurrentUser -Force"

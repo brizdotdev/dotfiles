@@ -73,7 +73,7 @@ Write-Host -ForegroundColor Blue "Installing utils"
 winget install --silent 7zip.7zip
 $7zipPath = "C:\Program Files\7-Zip"
 [Environment]::SetEnvironmentVariable("PATH", "$env:Path;$7zipPath", "User")
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+Reload-Path
 winget install --silent Microsoft.PowerToys
 winget install --silent gerardog.gsudo
 winget install --silent VideoLAN.VLC
@@ -82,14 +82,14 @@ winget install --silent Bitwarden.CLI
 
 ## VSCode
 winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+Reload-Path
 code --install-extension vscodevim.vim
 
 ## Neovim
 winget install --silent Neovim.Neovim
 $env:EDITOR = "nvim"
 [Environment]::SetEnvironmentVariable("EDITOR", "nvim", "User")
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+Reload-Path
 $nvimConfigPath = Join-Path -Path $env:LOCALAPPDATA -ChildPath "nvim"
 if (Test-Path -Path $nvimConfigPath) {
 	Remove-Item -Path $nvimConfigPath -Force

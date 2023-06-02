@@ -1,6 +1,12 @@
 #Requires -RunAsAdministrator
 Write-Host -ForegroundColor Blue "Importing SSH Key from Yubikey"
 
+# Helper functions
+$HelperPath = Join-Path -Path $PSScriptRoot -ChildPath "helpers"
+Get-ChildItem -Path $HelperPath -Filter "*.ps1" | ForEach-Object {
+    . $_.FullName
+}
+
 $sshDir = "$env:USERPROFILE\.ssh"
 
 winget install --silent GnuPG.Gpg4win
@@ -8,7 +14,7 @@ winget install --silent Microsoft.OpenSSH.Beta
 winget install --silent Yubico.YubikeyManager
 $ykPath = "C:\Program Files\Yubico\YubiKey Manager"
 [Environment]::SetEnvironmentVariable("PATH", "$env:Path;$ykPath", "User")
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+Reload-Path
 
 if (-not (Test-Path -Path $sshDir)) {
   New-Item -ItemType Directory -Path $sshDir
