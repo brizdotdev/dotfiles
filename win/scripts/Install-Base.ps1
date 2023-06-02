@@ -50,6 +50,9 @@ if ($InstallFirefoxExtensions -eq $True)
 }
 
 winget install --silent LibreWolf.LibreWolf
+$FirefoxExtensions = Get-Content -Path "$env:DOTFILES/common/config/firefox/extensions.txt"
+# Strip out empty lines and comments
+$FirefoxExtensions = $FirefoxExtensions | Where-Object { $_ -notmatch "^\s*$" -and $_ -notmatch "^#" }
 if ($InstallLibrewolfExtensions -eq $True)
 {
 	$FirefoxExtensions | ForEach-Object {
@@ -62,6 +65,8 @@ if ($BrowserChoice -eq "firefox") {
     SetDefaultBrowser.exe HKLM Firefox-308046B0AF4A39CB
 } elseif ($BrowserChoice -eq "chrome") {
     SetDefaultBrowser.exe chrome
+} elseif ($BrowserChoice -eq "librewolf") {
+		SetDefaultBrowser.exe HKLM LibreWolf
 }
 Write-Host -ForegroundColor Green "Default browser set to $BrowserChoice"
 Write-Host -ForegroundColor Green "Browsers installed"
