@@ -10,5 +10,6 @@
             "comments": false,
             "strings": true
         }
-    }
+    },
+    "git.autofetch": false,
 }
