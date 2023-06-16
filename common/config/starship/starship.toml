@@ -81,7 +81,7 @@ $container\
 $character"""
 
 [character]
-error_symbol = "[](bold red)"
+error_symbol = "[](bold red)"
 
 [aws]
 symbol = "  "
