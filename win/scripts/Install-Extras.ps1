@@ -18,7 +18,6 @@ $ScreenToGif = YesNoPrompt "Install ScreenToGif?"
 $FFMPEG = YesNoPrompt "Install ffmpeg?"
 $LightShot = YesNoPrompt "Install LightShot?"
 $ZoomIt = YesNoPrompt "Install ZoomIt?"
-$FancyWM = YesNoPrompt "Install FancyWM?"
 $RegionToShare = YesNoPrompt "Install RegionToShare?"
 
 if ($OBS -eq $True) {
@@ -59,18 +58,6 @@ if ($LightShot -eq $True) {
 
 if ($ZoomIt -eq $True) {
     choco install -y zoomit
-}
-
-if ($FancyWM -eq $True) {
-    winget install --silent --accept-package-agreements --accept-source-agreements 9P1741LKHQS9
-    $FancyWMConfigFolder = "$env:LOCALAPPDATA\Packages\2203VeselinKaraganev.FancyWM_9x2ndwrcmyd2c\LocalCache\Roaming\FancyWM"
-    mkdir.exe -p $FancyWMConfigFolder
-    $FancyWMConfigPath = Join-Path -Path $FancyWMConfigFolder -ChildPath "settings.json"
-    if (Test-Path $FancyWMConfigPath)
-    {
-        Remove-Item -Path $FancyWMConfigPath -Force
-    }
-    New-Item -ItemType SymbolicLink -Path $FancyWMConfigPath -Target "$env:DOTFILES\win\config\FancyWM\settings.json"
 }
 
 if ($RegionToShare -eq $True) {
