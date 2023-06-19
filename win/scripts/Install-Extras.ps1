@@ -19,6 +19,7 @@ $FFMPEG = YesNoPrompt "Install ffmpeg?"
 $LightShot = YesNoPrompt "Install LightShot?"
 $ZoomIt = YesNoPrompt "Install ZoomIt?"
 $RegionToShare = YesNoPrompt "Install RegionToShare?"
+$TwinkleTray = YesNoPrompt "Install TwinkleTray?"
 
 if ($OBS -eq $True) {
     winget install --silent OBSProject.OBSStudio
@@ -62,6 +63,11 @@ if ($ZoomIt -eq $True) {
 
 if ($RegionToShare -eq $True) {
     winget install --accept-package-agreements --accept-source-agreements 9N4066W2R5Q4
+}
+
+if ($TwinkleTray -eq $True)
+{
+    winget install --accept-package-agreements --accept-source-agreements xanderfrangos.twinkletray
 }
 
 Write-Host -ForegroundColor Green "Done installing extras"
