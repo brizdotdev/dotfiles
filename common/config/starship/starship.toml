@@ -72,12 +72,11 @@ $crystal\
 $custom\
 $sudo\
 $cmd_duration\
-$line_break\
+$container\
 $jobs\
 $battery\
 $time\
 $status\
-$container\
 $character"""
 
 [character]
@@ -105,11 +104,16 @@ format = '\[[$symbol($version)]($style)\]'
 format = '\[[$symbol($version)]($style)\]'
 
 [cmd_duration]
-format = '\[[⏱ $duration]($style)\]'
+format = '\[[ $duration]($style)\]'
 
 [conda]
 symbol = " "
 format = '\[[$symbol$environment]($style)\]'
+
+[container]
+symbol = " "
+style = "blue"
+format = '\[[$symbol$name]($style)\]'
 
 [crystal]
 format = '\[[$symbol($version)]($style)\]'
@@ -164,7 +168,7 @@ format = '\[[$all_status$ahead_behind]($style)\]'
 conflicted = "=${count} "
 up_to_date = "[](green)"
 untracked = "?${count} "
-stashed = "📦 "
+stashed = " "
 modified = "!${count} "
 staged = '[ $count](green) '
 renamed = "»${count} "
