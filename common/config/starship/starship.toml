@@ -88,6 +88,11 @@ symbol = "  "
 disabled = true
 format = '\[[$symbol($profile)(\($region\))(\[$duration\])]($style)\]'
 
+[azure]
+symbol = " "
+disabled = false
+format = '\[[$symbol($subscription)]($style)\]'
+
 [buf]
 symbol = " "
 
