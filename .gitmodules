@@ -7,3 +7,6 @@
 [submodule "common/config/alacritty/catpuccin"]
 	path = common/config/alacritty/catpuccin
 	url = https://github.com/catppuccin/alacritty
+[submodule "linux/config/tmux/tpm"]
+	path = linux/config/tmux/tpm
+	url = https://github.com/tmux-plugins/tpm.git
