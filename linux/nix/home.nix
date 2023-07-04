@@ -120,5 +120,3 @@
     vimdiffAlias = true;
   };
 }
-
-# TODO: Setup config files (e.g Lazygit, starship, etc)
