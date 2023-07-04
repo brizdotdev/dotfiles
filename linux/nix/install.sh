@@ -41,6 +41,11 @@ install_dependencies
 
 NIX_SH="$HOME/.nix-profile/etc/profile.d/nix.sh"
 
+# Ensure submodules are initialized
+pushd $HOME/.dotfiles
+git submodule update --init --recursive
+popd
+
 # Install nix
 if [ ! -e "$NIX_SH" ]; then
   echo -e "\033[32m Installing nix \033[0m"
