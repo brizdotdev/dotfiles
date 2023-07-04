@@ -28,7 +28,6 @@
     pkgs.less
     pkgs.gnused
     pkgs.gnugrep
-    # pkgs.neovim
     pkgs.starship
     pkgs.zoxide
     pkgs.jq
@@ -83,6 +82,10 @@
     ".bashrc".source = "${config.home.homeDirectory}/.dotfiles/linux/config/bash/bashrc";
     ".config/lazygit/config.yml".source = "${config.home.homeDirectory}/.dotfiles/common/config/lazygit/config.yml";
     ".config/nvim".source = "${config.home.homeDirectory}/.dotfiles/common/config/nvim";
+    ".config/starship.toml".source = "${config.home.homeDirectory}/.dotfiles/common/config/starship/starship.toml";
+    ".vimrc".source = "${config.home.homeDirectory}/.dotfiles/common/config/vim/.vimrc";
+    ".tmux.conf".source = "${config.home.homeDirectory}/.dotfiles/linux/config/tmux/.tmux.conf";
+    ".tmux/plugins/tpm".source = "${config.home.homeDirectory}/.dotfiles/linux/config/tmux/tpm";
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
