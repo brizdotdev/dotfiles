@@ -88,9 +88,6 @@ winget install --silent WinSCP.WinSCP
 winget install --silent Insomnia.Insomnia
 
 # dotnet
-winget install --silent Microsoft.DotNet.SDK.3_1
-winget install --silent Microsoft.DotNet.SDK.5
-winget install --silent Microsoft.DotNet.SDK.6
 winget install --silent Microsoft.DotNet.SDK.7
 winget install --silent Microsoft.DotNet.SDK.Preview
 
