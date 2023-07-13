@@ -43,6 +43,7 @@
     pkgs.duf
     pkgs.fx
     pkgs.tmux
+    pkgs.croc
 
     # Basic CLI Utils
     pkgs.p7zip
