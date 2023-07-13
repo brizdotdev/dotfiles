@@ -67,6 +67,7 @@ winget install --silent sharkdp.fd
 winget install --silent sharkdp.bat
 winget install --silent gokcehan.lf
 winget install --silent muesli.duf
+winget install --silent schollz.croc
 choco install -y glow xsv sd-cli
 # Install fx
 pushd $LocalWindowsApps
