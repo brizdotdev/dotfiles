@@ -80,6 +80,7 @@
     # # the Nix store. Activating the configuration will then make '~/.screenrc' a
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
+    ".gitconfig".source = "${config.home.homeDirectory}/.dotfiles/common/config/git/.gitconfig";
     ".bashrc".source = "${config.home.homeDirectory}/.dotfiles/linux/config/bash/bashrc";
     ".config/lazygit/config.yml".source = "${config.home.homeDirectory}/.dotfiles/common/config/lazygit/config.yml";
     ".config/nvim".source = "${config.home.homeDirectory}/.dotfiles/common/config/nvim";
