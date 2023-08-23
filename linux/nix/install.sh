@@ -55,8 +55,8 @@ fi
 chmod +x "$NIX_SH"
 . "$NIX_SH"
 
+# Install home-manager
 if ! command -v home-manager &> /dev/null; then
-  # Install home-manager
   echo -e "\033[32m Installing home-manager \033[0m"
   nix-channel --add https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz home-manager
   nix-channel --update
@@ -75,12 +75,14 @@ sed -i "s+{{HOME_PATH}}+$HOME+g" "$HOME_MANAGER_SOURCE"
 ln -s "$HOME_MANAGER_SOURCE" "$HOME_MANAGER_TARGET"
 home-manager switch -b bak
 
+source ~/.bashrc
+
 # Prompt whether to configure git
 read -p "Configure git? (y/n) " -n 1 -r configGit
 if [[ $configGit =~ ^[Yy]$ ]]
 then
   echo -e "\033[32m Configuring git \033[0m"
-  ln -s "$HOME/.dotfiles/linux/config/git/.gitconfig" "$HOME/.gitconfig"
+  ln -s "$HOME/.dotfiles/common/config/git/.gitconfig" "$HOME/.gitconfig"
   read -p "Enter git user.name: " gitName
   read -p "Enter git user.email: " gitEmail
   read -p "Configure git commit signing? (y/n) " -n 1 -r configGitSigning
@@ -96,6 +98,5 @@ then
     echo "[user]" >> "$HOME/.gitconfig.local"
     echo "  signingKey = signingkey = ~/.ssh/id_ed25519_sk_rk_Default" >> "$HOME/.gitconfig.local"
   fi
+  nvim "$HOME/.gitconfig.local"
 fi
-
-source ~/.bashrc
