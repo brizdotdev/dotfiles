@@ -1,17 +1,7 @@
-FROM mcr.microsoft.com/devcontainers/base:bullseye
-
-RUN apt update && apt install -y vim git curl tmux jq sudo
+FROM mcr.microsoft.com/devcontainers/base:bookworm
 
 # Install PowerShell
-RUN apt update && apt install -y curl gnupg apt-transport-https \
-    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-bullseye-prod bullseye main" > /etc/apt/sources.list.d/microsoft.list' \
-    && apt update && apt install -y powershell
+RUN curl -L https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -o /tmp/packages-microsoft-prod.deb \
+    && dpkg -i /tmp/packages-microsoft-prod.deb
 
-# Install NeoVim
-COPY linux/scripts/install-neovim.sh /tmp/install-neovim.sh
-RUN chmod +x /tmp/install-neovim.sh && /tmp/install-neovim.sh
-
-# Install Ansible
-COPY linux/scripts/install-ansible.sh /tmp/install-ansible.sh
-RUN chmod +x /tmp/install-ansible.sh && /tmp/install-ansible.sh
+RUN apt update && apt update && apt install -y powershell
