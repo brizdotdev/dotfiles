@@ -24,7 +24,7 @@
     pkgs.git
     pkgs.fzf
     pkgs.delta
-    pkgs.exa
+    pkgs.eza
     pkgs.less
     pkgs.gnused
     pkgs.gnugrep
