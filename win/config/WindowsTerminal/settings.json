@@ -89,6 +89,12 @@
     "largePasteWarning": false,
     "launchMode": "default",
     "multiLinePasteWarning": false,
+    "newTabMenu": 
+    [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
     "newTabPosition": "afterLastTab",
     "profiles": 
     {
