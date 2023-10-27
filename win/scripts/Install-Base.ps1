@@ -120,7 +120,7 @@ Write-Host ""
 
 # Fonts
 Write-Host -ForegroundColor Blue "Installing fonts"
-choco install -y nerd-fonts-jetbrainsmono nerd-fonts-iosevka nerd-fonts-cascadiacode nerdfont-hack nerd-fonts-ubuntumono nerd-fonts-victormono
+choco install -y nerd-fonts-jetbrainsmono nerd-fonts-iosevka nerd-fonts-cascadiacode nerdfont-hack nerd-fonts-ubuntumono nerd-fonts-victormono nerd-fonts-proggyclean nerd-fonts-terminus nerd-fonts-lekton nerd-fonts-spacemono
 Write-Host -ForegroundColor Green "Fonts installed"
 Write-Host ""
 
