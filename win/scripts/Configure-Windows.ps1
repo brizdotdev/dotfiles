@@ -185,6 +185,8 @@ Set-ItemProperty "HKCU:\Control Panel\International" -Name iTime -Value 1
 Set-ItemProperty "HKCU:\Control Panel\International" -Name sShortTime -Value "HH:mm"
 Set-ItemProperty "HKCU:\Control Panel\International" -Name sTimeFormat -Value "HH:mm:ss"
 
+Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1
+
 # TODO: Disable animations
 # TODO: Enable Windows sudo (https://learn.microsoft.com/en-us/windows/sudo/)
 
