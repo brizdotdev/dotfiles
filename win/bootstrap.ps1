@@ -39,17 +39,9 @@ if ($wingetVersion -eq $null) {
 $wingetVersion = $wingetVersion -replace '^v'
 if ([version]$wingetVersion -lt [version]"1.6.0")
 {
-    Write-Host -ForegroundColor Red "Winget version $wingetVersion is too old. Downloading latest release..."
-    $wingetReleases = "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
-    $response = Invoke-RestMethod -Uri $wingetReleases
-    $latestRelease = $response[0].assets | Where-Object { $_.name -match "msixbundle" }[0]
-    if ($latestRelease -eq $null) {
-        Write-Host -ForegroundColor Red "Failed to find latest release"
-        exit 1
-    }
-    pushd "$env:USERPROFILE\Downloads"
-    Invoke-WebRequest -Uri $latestRelease.browser_download_url -OutFile $latestRelease.name
-    Start-Process -Wait -FilePath $latestRelease.name
+    Write-Host -ForegroundColor Red "Winget version $wingetVersion is too old. Update to the latest version and run the script again"
+    Start-Process "ms-windows-store://pdp/?ProductId=9nblggh4nns1"
+    exit 1
 }
 Write-Host -ForegroundColor Green "Winget installed"
 
