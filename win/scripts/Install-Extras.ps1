@@ -58,7 +58,7 @@ if ($LightShot -eq $True) {
 }
 
 if ($ZoomIt -eq $True) {
-    choco install -y zoomit
+    winget install --silent Microsoft.Sysinternals.ZoomIt
 }
 
 if ($RegionToShare -eq $True) {
