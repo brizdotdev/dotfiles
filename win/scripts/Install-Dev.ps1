@@ -59,7 +59,8 @@ Write-Host ""
 # CLI tools
 winget install --silent stedolan.jq
 winget install --silent MikeFarah.yq
-winget install --silent glab
+winget install --silent GLab.GLab
+winget install --silent GitHub.cli
 winget install --silent junegunn.fzf
 winget install --silent BurntSushi.ripgrep.MSVC
 winget install --silent JesseDuffield.lazygit
