@@ -25,11 +25,14 @@ Set-ItemProperty "HKCU:\Control Panel\International\User Profile" "HttpAcceptLan
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" "SubscribedContent-338393Enabled" 0
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" "SubscribedContent-338394Enabled" 0
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" "SubscribedContent-338396Enabled" 0
-Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name SubscribedContent-353694Enabled -Value 0
-Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name SubscribedContent-353696Enabled -Value 0
+Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" "SubscribedContent-353694Enabled" 0
+Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" "SubscribedContent-353696Enabled" 0
 
 # General: Disable tips and suggestions for welcome and what's new: Enable: 1, Disable: 0
-Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" "SubscribedContent-310093Enabled" 0
+Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" "SilentInstalledAppsEnabled" 0
+
+# General: Disable auto installing suggested apps: Enable: 1, Disable: 0
+Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" "SubscribedContent-338388Enabled" 0
 
 # General: Disable tips and suggestions when I use windows: Enable: 1, Disable: 0
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" "SubscribedContent-338389Enabled" 0
@@ -157,6 +160,11 @@ Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Narrator\NoRoam" "WinEnterLaunchEnabl
 # Disable showing what can be snapped next to a window: Enable: 1, Disable: 0
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "SnapAssist" 0
 
+# Hide "Recently used files" in Quick access in Windows Explorer
+Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "Start_TrackDocs" 0
+Set-ItemProperty "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer" "ShowFrequent" 0
+
+
 # Enable Developer Mode
 # Create AppModelUnlock if it doesn't exist, required for enabling Developer Mode
 $RegistryKeyPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock"
@@ -188,6 +196,8 @@ Set-ItemProperty "HKCU:\Control Panel\International" -Name sTimeFormat -Value "H
 Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1
 
 # TODO: Disable animations
+Set-ItemProperty "HKCU:\Control Panel\Desktop\WindowMetrics" "MinAnimate" 0
+
 # TODO: Enable Windows sudo (https://learn.microsoft.com/en-us/windows/sudo/)
 
 Write-Host -ForegroundColor Green "Windows configured"
