@@ -97,7 +97,6 @@ winget install --silent Microsoft.DotNet.SDK.Preview
 
 # DB
 winget install --silent TablePlus.TablePlus
-winget install --silent Microsoft.SQLServerManagementStudio
 
 # Langs
 ## Node
