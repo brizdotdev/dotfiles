@@ -92,7 +92,7 @@ winget install --silent WinSCP.WinSCP
 winget install --silent Insomnia.Insomnia
 
 # dotnet
-winget install --silent Microsoft.DotNet.SDK.7
+winget install --silent Microsoft.DotNet.SDK.8
 winget install --silent Microsoft.DotNet.SDK.Preview
 
 # DB
