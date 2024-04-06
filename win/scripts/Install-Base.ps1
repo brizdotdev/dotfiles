@@ -84,6 +84,7 @@ Reload-Path
 winget install --silent Microsoft.PowerToys
 winget install --silent gerardog.gsudo
 winget install --silent VideoLAN.VLC
+winget install --silent CodecGuide.K-LiteCodecPack.Full
 winget install --silent Bitwarden.Bitwarden
 winget install --silent Bitwarden.CLI
 
