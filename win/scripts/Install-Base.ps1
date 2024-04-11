@@ -87,6 +87,7 @@ winget install --silent VideoLAN.VLC
 winget install --silent CodecGuide.K-LiteCodecPack.Full
 winget install --silent Bitwarden.Bitwarden
 winget install --silent Bitwarden.CLI
+winget install --silent Microsoft.WindowsTerminal
 
 ## VSCode
 winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
