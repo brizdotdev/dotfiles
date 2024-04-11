@@ -2,8 +2,6 @@
 
 ## Setup
 
-1. If Winget isn't installed, install it from the [Microsoft Store](https://apps.microsoft.com/store/detail/app-installer/9NBLGGH4NNS1)
-
 1. Run the following command from PowerShell
 
     ```powershell
@@ -30,5 +28,6 @@
 
 ## Refs
 
+- [WinGet - Microsoft Store](https://apps.microsoft.com/store/detail/app-installer/9NBLGGH4NNS1)
 - [Git for Windows: Silent Install](https://github.com/git-for-windows/git/wiki/Silent-or-Unattended-Installation)
 - [VSCode install args](https://github.com/microsoft/vscode/blob/main/build/win32/code.iss#L76)
