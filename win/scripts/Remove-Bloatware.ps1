@@ -173,6 +173,13 @@ Get-AppxPackage king.com.CandyCrushSodaSaga | Remove-AppxPackage ;
 Get-AppxPackage microsoft.windowscommunicationsapps | Remove-AppxPackage ;
 Get-AppxPackage Clipchamp.Clipchamp | Remove-AppxPackage;
 Get-AppxPackage MicrosoftTeams | Remove-AppxPackage;
+Get-AppxPackage Microsoft.Copilot | Remove-AppxPackage;
+Get-AppxPackage Microsoft.MicrosoftStickyNotes | Remove-AppxPackage;
+Get-AppxPackage MicrosoftCorporationII.MicrosoftFamily | Remove-AppxPackage;
+Get-AppxPackage Microsoft.XboxIdentityProvider | Remove-AppxPackage;
+Get-AppxPackage Microsoft.WindowsFeedbackHub | Remove-AppxPackage;
+Get-AppxPackage Microsoft.ScreenSketch | Remove-AppPackage;
+Get-AppxPackage MicrosoftWindows.CrossDevice | Remove-AppxPackage;
 # Uninstall Windows Media Player
 Disable-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" -NoRestart -WarningAction SilentlyContinue | Out-Null
 Write-Host -ForegroundColor Green "Done removing bloatware"
