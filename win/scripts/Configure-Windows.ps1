@@ -199,5 +199,6 @@ Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'Long
 Set-ItemProperty "HKCU:\Control Panel\Desktop\WindowMetrics" "MinAnimate" 0
 
 # TODO: Enable Windows sudo (https://learn.microsoft.com/en-us/windows/sudo/)
+# TODO: Enable long paths
 
 Write-Host -ForegroundColor Green "Windows configured"
