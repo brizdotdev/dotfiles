@@ -24,11 +24,14 @@
 	# Undo Commit; leaves files. Only for non-public commits
 	uncommit = reset --soft HEAD^
 
+	# Commit messages
+	msg = log --color=never --no-decorate --format="%s"
+
 	# Graphs
 	## https://stackoverflow.com/a/24186641
 	clog = log --oneline --decorate --left-right --graph
 	## https://stackoverflow.com/a/35075021
-	adog = "log --all --decorate --oneline --graph"
+	adog = log --all --decorate --oneline --graph
 	## https://stackoverflow.com/a/34467298
 	lg = lg1
 	lg1 = lg1-specific --all
