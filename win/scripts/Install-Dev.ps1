@@ -18,6 +18,7 @@ winget install --silent Starship.Starship
 Install-PackageProvider -Name NuGet -Scope AllUsers -Force -ErrorAction SilentlyContinue
 winget install --silent ajeetdsouza.zoxide
 winget install --silent junegunn.fzf
+winget install --silent Fastfetch-cli.Fastfetch
 Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 Reload-Path
 [Environment]::SetEnvironmentVariable("POWERSHELL_TELEMETRY_OPTOUT", "1", 'User')
