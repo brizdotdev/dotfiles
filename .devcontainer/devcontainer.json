@@ -11,8 +11,14 @@
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
+				"christian-kohler.path-intellisense",
 				"eamodio.gitlens",
-				"christian-kohler.path-intellisense"
+				"ms-vscode.powershell-preview",
+        "bungcip.better-toml",
+        "davidanson.vscode-markdownlint",
+        "gordonlarrigan.vscode-kanbn",
+        "redhat.ansible",
+        "redhat.vscode-yaml"
 			]
 		}
 	},
