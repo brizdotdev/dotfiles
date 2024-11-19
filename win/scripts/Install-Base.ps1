@@ -82,6 +82,39 @@ if ($env:PATH -notlike "*$7zipPath*") {
 }
 Reload-Path
 winget install --silent Microsoft.PowerToys
+
+# Download PowerToys plugins
+$processorType = (Get-WmiObject -Class Win32_Processor).Architecture
+
+switch ($processorType) {
+    5 { $arch = "ARM" }
+    9 { $arch = "x64" }
+    0 { $arch = "x86" }
+    default { $arch = "Unknown" }
+}
+$powerToysRunPlugins = @(
+	"8LWXpg/PowerToysRun-GitHubRepo",
+	"CoreyHayward/PowerToys-Run-ClipboardManager",
+	"CoreyHayward/PowerToys-Run-InputTyper",
+	"CoreyHayward/PowerToys-Run-Snippets",
+	"CoreyHayward/PowerToys-Run-Timer"
+)
+
+$powerToysRunPluginsFolder = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Microsoft\PowerToys\PowerToys Run\Plugins"
+
+foreach ($plugin in $powerToysRunPlugins) {
+	Invoke-WebRequest -Uri "https://api.github.com/repos/$plugin/releases/latest" | ConvertFrom-Json | ForEach-Object {
+    Write-Host -ForegroundColor Blue "Installing PowerToys Run plugin: $plugin"
+    $asset = $_.assets[0]
+    if ($_.assets.Count -gt 1) {
+      $asset = $_.assets | Where-Object { $_.name -match $arch }
+    }
+    Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "$env:TEMP\$($asset.name)"
+    Expand-Archive -Path "$env:TEMP\$($asset.name)" -DestinationPath $powerToysRunPluginsFolder -Force
+    Remove-Item -Path "$env:TEMP\$($asset.name)" -Force
+	}
+}
+
 winget install --silent gerardog.gsudo
 winget install --silent VideoLAN.VLC
 winget install --silent CodecGuide.K-LiteCodecPack.Full
