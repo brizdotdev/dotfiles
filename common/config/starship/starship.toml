@@ -199,9 +199,9 @@ modified = "[!$count ](fg:red bg:235)"
 staged = "[ $count ](fg:green bg:235)"
 renamed = "[»$count ](fg:green bg:235)"
 deleted = "[󰆴$count ](fg:red bg:235)"
-ahead = "[⇡$count ](fg:green bg:235) "
-diverged = "[⇕ ⇡${ahead_count} ⇣${behind_count} ](fg:orange bg:235)"
-behind = "[⇣ ${count}(fg:green bg:235)]"
+ahead = "[⇡ $count ](fg:green bg:235) "
+diverged = "[⇕ ⇡ ${ahead_count} ⇣ ${behind_count} ](fg:orange bg:235)"
+behind = "[⇣ ${count} ](fg:green bg:235)"
 
 [golang]
 symbol = "   "
