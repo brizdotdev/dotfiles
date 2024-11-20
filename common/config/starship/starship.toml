@@ -1,6 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 command_timeout = 3000
+add_newline = true
 
 format = """
 $os\
@@ -26,6 +27,7 @@ $cmake\
 $cobol\
 $daml\
 $dart\
+$direnv\
 $deno\
 $dotnet\
 $elixir\
@@ -71,187 +73,171 @@ $env_var\
 $crystal\
 $custom\
 $sudo\
-$cmd_duration\
 $container\
 $jobs\
 $battery\
 $time\
-$line_break\
+$cmd_duration\
 $status\
+$line_break\
 $character"""
+
+[status]
+format = "[](fg:235 bg:none)[󰈆 $common_meaning$signal_name$maybe_int](fg:red bg:235)[](fg:235 bg:none)"
+map_symbol = true
+disabled = false
 
 [character]
 error_symbol = "[](bold red)"
+success_symbol = "[❯](green)"
+vimcmd_symbol = "[❮](bold green)"
+vimcmd_visual_symbol = "[❮](bold yellow)"
+vimcmd_replace_one_symbol = "[❮](bold purple)"
+vimcmd_replace_symbol = "[❮](bold purple)"
 
 [aws]
 symbol = "  "
 disabled = true
-format = '\[[$symbol($profile)(\($region\))(\[$duration\])]($style)\]'
+format = '[](fg:235 bg:none)[$symbol($profile)(\($region\))(\[$duration\])](fg:orange bg:235)[](fg:235 bg:none)'
 
 [azure]
 symbol = " "
 disabled = false
-format = '\[[$symbol($subscription)]($style)\]'
+format = '[](fg:235 bg:none)[$symbol( $username)( $subscription)](fg:blue bg:235)[](fg:235 bg:none)'
 
-[buf]
-symbol = " "
+[azure.subscription_aliases]
+"Microsoft Azure (intuitiveitcomau): #1059806" = "IIT"
+
+[battery]
+full_symbol = "󰁹"
+charging_symbol = "󰂄 "
+discharging_symbol = "󱟤 "
+unknown_symbol = "󰂑 "
+disabled = true
+format = " [](fg:235 bg:none)[$symbol $percentage]($style)[](fg:235 bg:none)"
+
+[[battery.display]]
+style = "fg:202 bg:235"
+threshold=100
 
 [bun]
-format = '\[[$symbol($version)]($style)\]'
+format = '[](fg:235 bg:none)[$symbol($version )](fg:white bg:235)[](fg:235 bg:none)'
 
 [c]
 symbol = " "
-format = '\[[$symbol($version(-$name))]($style)\]'
-
-[cmake]
-format = '\[[$symbol($version)]($style)\]'
-
-[cobol]
-format = '\[[$symbol($version)]($style)\]'
+format = '[](fg:235 bg:none)[$symbol($version(-$name))](fg:blue bg:235)[](fg:235 bg:none)'
 
 [cmd_duration]
-format = '\[[ $duration]($style)\]'
-
-[conda]
-symbol = " "
-format = '\[[$symbol$environment]($style)\]'
+style = "fg:202 bg:235"
+format = "[](fg:235 bg:none)[ $duration]($style)[](fg:235 bg:none)"
 
 [container]
-symbol = " "
+symbol = "⬢ "
 style = "blue"
-format = '\[[$symbol$name]($style)\]'
-
-[crystal]
-format = '\[[$symbol($version)]($style)\]'
-
-[daml]
-format = '\[[$symbol($version)]($style)\]'
-
-[dart]
-symbol = " "
-format = '\[[$symbol($version)]($style)\]'
+format = '[](fg:235 bg:none)[$symbol($version )](fg:27 bg:235)[](fg:235 bg:none)'
 
 [deno]
-format = '\[[$symbol($version)]($style)\]'
+format = '[](fg:235 bg:none)[$symbol($version )](fg:white bg:235)[](fg:235 bg:none)'
 
 [directory]
-read_only = " "
+read_only = " "
+home_symbol = "~"
+format = "[](fg:235 bg:none)[   $path]($style)[](fg:235 bg:none)"
+style = "fg:198 bg:235"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[direnv]
+symbol = "󱃼  "
+format = '[](fg:235 bg:none)[$symbol($context )](fg:27 bg:235)[](fg:235 bg:none)'
+disabled = false
+
 
 [docker_context]
 symbol = " "
-format = '\[[$symbol$context]($style)\]'
+format = '[](fg:235 bg:none)[$symbol($context )](fg:27 bg:235)[](fg:235 bg:none)'
 
 [dotnet]
-format = '\[[$symbol]($style)\]'
+format = "[](fg:235 bg:none)[$symbol( $version)](fg:#512bd4 bg:235)[](fg:235 bg:none)"
 symbol = '.NET'
+version_format = "$major"
 
 [elixir]
 symbol = " "
-format = '\[[$symbol($version \(OTP $otp_version\))]($style)\]'
-
-[elm]
-symbol = " "
-format = '\[[$symbol($version)]($style)\]'
-
-[erlang]
-format = '\[[$symbol($version)]($style)\]'
+format = '[](fg:235 bg:none)[$symbol($context )](fg:#361c50 bg:235)[](fg:235 bg:none)'
 
 [gcloud]
-format = '\[[$symbol$account(@$domain)(\($region\))]($style)\]'
+symbol = "󱇶 "
+format = '[](fg:235 bg:none)[$symbol$account(@$domain)(\($region\))](fg:#185abc bg:235)[](fg:235 bg:none)'
 
 [git_branch]
 symbol = " "
-format = '\[[$symbol$branch]($style)\]'
+format = "[](fg:235 bg:none)[ $symbol$branch]($style)[](fg:235 bg:none)"
+style = "fg:purple bg:235"
 
 [git_commit]
-tag_symbol = " "
+tag_symbol = " "
 tag_disabled = false
-format = '[\($hash$tag\)]($style) '
-commit_hash_length = 4
+format = "[](fg:235 bg:none)[(󰜘 $hash $tag)](fg:197 bg:235)[](fg:235 bg:none)"
+commit_hash_length = 7
+
+[git_state]
+format = "[](fg:235 bg:none)[$state( $progress_current/$progress_total)](fg:197 bg:235)[](fg:235 bg:none)"
 
 [git_status]
-format = '\[[$all_status$ahead_behind]($style)\]'
-conflicted = "=${count} "
-up_to_date = "[](green)"
-untracked = "?${count} "
-stashed = " "
-modified = "!${count} "
-staged = '[ $count](green) '
-renamed = "»${count} "
-deleted = "󰆴${count} "
-ahead = "[⇡${count}](green) "
-diverged = "⇕⇡${ahead_count}⇣${behind_count} "
-behind = "⇣${count} "
+format = "([](fg:235 bg:none)[$all_status$ahead_behind]($style)[](fg:235 bg:none))"
+style = "fg:red bg:235"
+conflicted = "=$count "
+up_to_date = "[  ](fg:green bg:235)"
+untracked = "[?$count ](fg:orange bg:235)"
+stashed = "  "
+modified = "[!$count ](fg:red bg:235)"
+staged = "[ $count ](fg:green bg:235)"
+renamed = "[»$count ](fg:green bg:235)"
+deleted = "[󰆴$count ](fg:red bg:235)"
+ahead = "[⇡$count ](fg:green bg:235) "
+diverged = "[⇕ ⇡${ahead_count} ⇣${behind_count} ](fg:orange bg:235)"
+behind = "[⇣ ${count}(fg:green bg:235)]"
 
 [golang]
-symbol = " "
-format = '\[[$symbol($version)]($style)\]'
-
-[haskell]
-symbol = " "
-format = '\[[$symbol($version)]($style)\]'
-
-[helm]
-format = '\[[$symbol($version)]($style)\]'
-
-[hg_branch]
-symbol = " "
-format = '\[[$symbol$branch]($style)\]'
+symbol = "   "
+format = "[](fg:235 bg:none)[$symbol($version)](fg:#67d0de bg:235)[](fg:235 bg:none)"
 
 [hostname]
 ssh_only = false
-format = "[$ssh_symbol](bold blue)@[$hostname](bold red) "
-trim_at = ".companyname.com"
+format = "[](fg:235 bg:none)[  $hostname]($style)[](fg:235 bg:none)"
+style = "fg:green bg:235"
 disabled = false
 
 [java]
 symbol = " "
-format = '\[[$symbol($version)]($style)\]'
-
-[julia]
-symbol = " "
-format = '\[[$symbol($version)]($style)\]'
-
-[kotlin]
-format = '\[[$symbol($version)]($style)\]'
-
-[kubernetes]
-format = '\[[$symbol$context( \($namespace\))]($style)\]'
+format = "[](fg:235 bg:none)[$symbol($version)](fg:#f58b11 bg:235)[](fg:235 bg:none)"
 
 [lua]
-symbol = " "
-format = '\[[$symbol($version)]($style)\]'
+symbol = "   "
+format = "[](fg:235 bg:none)[$symbol($version)](fg:#02017d bg:235)[](fg:235 bg:none)"
 
 [memory_usage]
-symbol = " "
-format = '\[$symbol[$ram( | $swap)]($style)\]'
+symbol = ""
+format = "[](fg:235 bg:none)[$symbol$ram( | $swap)]($style)[](fg:235 bg:none)"
+style = "fg:243 bg:235"
 disabled = false
 threshold = 90
 
-[meson]
-symbol = "喝 "
-format = '\[[$symbol$project]($style)\]'
-
-[nim]
-symbol = " "
-format = '\[[$symbol($version)]($style)\]'
-
 [nix_shell]
 symbol = " "
-format = '\[[$symbol$state( \($name\))]($style)\]'
+format = "[](fg:235 bg:none)[$symbol $state( $name)](fg:#5d7ea8 bg:235)[](fg:235 bg:none)"
 
 [nodejs]
-symbol = " "
-format = '\[[$symbol($version)]($style)\]'
-
-[ocaml]
-format = '\[[$symbol($version)(\($switch_indicator$switch_name\))]($style)\]'
-
-[openstack]
-format = '\[[$symbol$cloud(\($project\))]($style)\]'
+symbol = "  "
+format = "[](fg:235 bg:none)[$symbol($version)](fg:#599550 bg:235)[](fg:235 bg:none)"
 
 [os]
-format = '\[[$symbol]($style)\]'
+format = "[](fg:235 bg:none)[$symbol ](fg:white bg:235)"
 disabled = false
 
 [os.symbols]
@@ -277,83 +263,59 @@ RedHatEnterprise = ""
 SUSE = ""
 Ubuntu = ""
 Unknown = ""
-Windows = ""
-
-[package]
-symbol = " "
-format = '\[[$symbol$version]($style)\]'
+Windows = ""
 
 [perl]
-format = '\[[$symbol($version)]($style)\]'
+format = "[](fg:235 bg:none)[$symbol($version)](fg:white bg:235)[](fg:235 bg:none)"
 
 [php]
-format = '\[[$symbol($version)]($style)\]'
+format = "[](fg:235 bg:none)[$symbol($version)](fg:white bg:235)[](fg:235 bg:none)"
 
 [pulumi]
-format = '\[[$symbol$stack]($style)\]'
-
-[purescript]
-format = '\[[$symbol($version)]($style)\]'
+format = "[](fg:235 bg:none)[$symbol($version)](fg:white bg:235)[](fg:235 bg:none)"
 
 [python]
 symbol = " "
-format = '\[[${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style)\]'
-
-[raku]
-format = '\[[$symbol($version-$vm_version)]($style)\]'
-
-[red]
-format = '\[[$symbol($version)]($style)\]'
-
-[rlang]
-symbol = "ﳒ "
+format = "[](fg:235 bg:none)[$symbol($version)](fg:yellow bg:235)[](fg:235 bg:none)"
 
 [ruby]
 symbol = " "
-format = '\[[$symbol($version)]($style)\]'
+format = "[](fg:235 bg:none)[$symbol($version)](fg:red bg:235)[](fg:235 bg:none)"
 
 [rust]
 symbol = " "
-format = '\[[$symbol($version)]($style)\]'
-
-[scala]
-symbol = " "
-format = '\[[$symbol($version)]($style)\]'
+format = "[](fg:235 bg:none)[$symbol($version)](fg:#f57408 bg:235)[](fg:235 bg:none)"
 
 [shell]
-fish_indicator = ""
-powershell_indicator = ""
+fish_indicator = "󰈺 "
+powershell_indicator = " "
 bash_indicator = ""
 zsh_indicator = ""
 unknown_indicator = ""
 disabled = false
-format = '\[[$indicator]($style)\]'
-
-[spack]
-symbol = "🅢 "
-format = '\[[$symbol$environment]($style)\]'
+format = "[ $indicator]($style)[](fg:235 bg:none)"
+style = "fg:white bg:235"
 
 [sudo]
-format = '\[[as $symbol]\]'
-
-[swift]
-format = '\[[$symbol($version)]($style)\]'
+symbol = "󰞄 "
+format = "[](fg:235 bg:none)[$symbol](fg:red bg:235)[](fg:235 bg:none)"
 
 [terraform]
-format = '\[[$symbol$workspace]($style)\]'
+symbol = "󱁢 "
+format = "[](fg:235 bg:none)[$symbol($version)]($style)[](fg:235 bg:none)"
+style = "fg:#7740b6 bg:235"
 
 [time]
-format = '\[[$time]($style)\]'
+format = '[](fg:235)[  $time](fg:127 bg:235)[](fg:235)'
+
+time_format = "%R"
+disabled = false
 
 [username]
-format = '[$user]($style)'
+style_user = "fg:yellow bg:235"
+style_root = "fg:red bg:235"
+format = "[](fg:235 bg:none)[ $user]($style)[](fg:235 bg:none)"
 show_always = true
 
-[vagrant]
-format = '\[[$symbol($version)]($style)\]'
-
-[vlang]
-format = '\[[$symbol($version)]($style)\]'
-
 [zig]
-format = '\[[$symbol($version)]($style)\]'
+format = "[](fg:235 bg:none)[$symbol($version)](fg:#ef9f1c bg:235)[](fg:235 bg:none)"

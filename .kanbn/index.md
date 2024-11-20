@@ -17,7 +17,6 @@ completedColumns:
 - [nix](tasks/nix.md)
 - [template-engine](tasks/template-engine.md)
 - [configure-lsd](tasks/configure-lsd.md)
-- [configure-starship](tasks/configure-starship.md)
 - [configure-fastfetch](tasks/configure-fastfetch.md)
 
 ## Todo
@@ -25,3 +24,5 @@ completedColumns:
 ## In Progress
 
 ## Done
+
+- [configure-starship](tasks/configure-starship.md)
