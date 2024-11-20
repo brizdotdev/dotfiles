@@ -52,6 +52,7 @@ Remove-Item alias:rm -Force
 Remove-Item alias:sort -Force
 Remove-Item alias:cat -Force
 Remove-Item alias:mv -Force
+Remove-Item alias:echo -Force
 
 ################################################################################
 # Aliases
