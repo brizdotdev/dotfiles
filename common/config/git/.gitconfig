@@ -58,6 +58,7 @@
 	autocrlf = input
 	editor = nvim
 	pager = delta
+	longpaths = true
 [credential]
 	helper = manager
 [delta]
