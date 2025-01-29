@@ -17,7 +17,6 @@ $WinDirStat = YesNoPrompt "Install WinDirStat?"
 $ScreenToGif = YesNoPrompt "Install ScreenToGif?"
 $FFMPEG = YesNoPrompt "Install ffmpeg?"
 $LightShot = YesNoPrompt "Install LightShot?"
-$ZoomIt = YesNoPrompt "Install ZoomIt?"
 $RegionToShare = YesNoPrompt "Install RegionToShare?"
 $TwinkleTray = YesNoPrompt "Install TwinkleTray?"
 
@@ -55,10 +54,6 @@ if ($FFMPEG -eq $True) {
 
 if ($LightShot -eq $True) {
     winget install --silent Skillbrains.Lightshot
-}
-
-if ($ZoomIt -eq $True) {
-    winget install --silent Microsoft.Sysinternals.ZoomIt
 }
 
 if ($RegionToShare -eq $True) {
