@@ -62,7 +62,6 @@ winget install --silent stedolan.jq
 winget install --silent MikeFarah.yq
 winget install --silent GLab.GLab
 winget install --silent GitHub.cli
-winget install --silent junegunn.fzf
 winget install --silent BurntSushi.ripgrep.MSVC
 winget install --silent JesseDuffield.lazygit
 winget install --silent sharkdp.fd
@@ -90,7 +89,6 @@ New-Item -ItemType SymbolicLink -Path "$LazyGitConfigFile" -Target "$env:DOTFILE
 # Useful GUI tools
 winget install --silent WinMerge.WinMerge
 winget install --silent WinSCP.WinSCP
-winget install --silent Insomnia.Insomnia
 
 # Langs
 ## Node

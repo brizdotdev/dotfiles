@@ -16,7 +16,7 @@ $Obsidian = YesNoPrompt "Install Obsidian?"
 $WinDirStat = YesNoPrompt "Install WinDirStat?"
 $ScreenToGif = YesNoPrompt "Install ScreenToGif?"
 $FFMPEG = YesNoPrompt "Install ffmpeg?"
-$LightShot = YesNoPrompt "Install LightShot?"
+$Flameshot = YesNoPrompt "Install Flameshot?"
 $RegionToShare = YesNoPrompt "Install RegionToShare?"
 $TwinkleTray = YesNoPrompt "Install TwinkleTray?"
 
@@ -52,8 +52,8 @@ if ($FFMPEG -eq $True) {
     winget install --silent Gyan.FFmpeg
 }
 
-if ($LightShot -eq $True) {
-    winget install --silent Skillbrains.Lightshot
+if ($Flameshot -eq $True) {
+    winget install --silent flameshot
 }
 
 if ($RegionToShare -eq $True) {
