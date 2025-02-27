@@ -9,6 +9,7 @@
 	checkuot = checkout
 	chekcout = checkout
 	ck = checkout
+	f = fetch
 	p = pull
 	pl = pull
 	ps = push
@@ -17,6 +18,9 @@
 	st = status
 	stauts = status
 	sw = switch
+
+	# Lists all unpushed commits
+	out = log @{u}..
 
 	# List aliases.
 	aliases = config --get-regexp alias
@@ -54,6 +58,8 @@
 	added = yellow
 	changed = green
 	untracked = cyan
+[column]
+	ui = auto
 [core]
 	autocrlf = input
 	editor = nvim
@@ -68,26 +74,32 @@
 	side-by-side = true
 	line-numbers = true
 [diff]
-	tool = neovim
+	algorithm = histogram
 	colorMoved = default
+	mnemonicPrefix = true
+	renames = true
+	tool = neovim
 [difftool "neovim"]
 	cmd = nvim -d $LOCAL $REMOTE
 [difftool "vscode"]
 	cmd = code --wait --diff $LOCAL $REMOTE
 [fetch]
 	prune = true
+	pruneTags = true
+	all = true
 [help]
 	# Automatically correct and execute mistyped commands.
 	autoCorrect = 1
 [http]
 	sslverify = true
-[init]
 	defaultBranch = main
 [interactive]
 	diffFilter = delta --color-only
+[log]
+	date = iso-local
 [merge]
 	tool = neovim
-	conflictstyle = diff3
+	conflictstyle = zdiff3
 [mergetool]
 	keepBackup = false
 [mergetool "neovim"]
@@ -99,8 +111,13 @@
 [push]
 	# https://git-scm.com/docs/git-config#git-config-pushdefault
 	default = current
+	autoSetupRemote = true
+	followTags = true
 [rebase]
   autoStash = true
+[rerere]
+	enabled = true
+	autoupdate = true
 [safe]
 	directory = *
 
