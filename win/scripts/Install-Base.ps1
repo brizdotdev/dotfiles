@@ -184,6 +184,10 @@ if (Test-Path -Path "$env:USERPROFILE\.gitconfig") {
 		Remove-Item -Path "$env:USERPROFILE\.gitconfig" -Force
 }
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.gitconfig" -Target "$env:DOTFILES\common\config\git\.gitconfig"
+if (Test-Path -Path "$env:USERPROFILE\.gitignore_global") {
+	Remove-Item -Path "$env:USERPROFILE\.gitignore_global" -Force
+}
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.gitignore_global" -Target "$env:DOTFILES\common\config\git\.gitignore_global"
 if (Test-Path -Path "$env:USERPROFILE\.gitconfig.local") {
 		Remove-Item -Path "$env:USERPROFILE\.gitconfig.local" -Force
 }
