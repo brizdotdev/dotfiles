@@ -1,130 +1,171 @@
 [alias]
-	a = add
-	b = branch
-	br = branch
-	c = commit
-	cehckout = checkout
-	chcekout = checkout
-	checkotu = checkout
-	checkuot = checkout
-	chekcout = checkout
-	ck = checkout
-	f = fetch
-	p = pull
-	pl = pull
-	ps = push
-	pf = push --force-with-lease
-	s = status
-	st = status
-	stauts = status
-	sw = switch
+  a = add
+  b = branch
+  br = branch
+  c = commit
+  cehckout = checkout
+  chcekout = checkout
+  checkotu = checkout
+  checkuot = checkout
+  chekcout = checkout
+  ck = checkout
+  f = fetch
+  p = pull
+  pl = pull
+  ps = push
+  pf = push --force-with-lease
+  s = status --short
+  st = status
+  stauts = status
+  sw = switch
 
-	# Lists all unpushed commits
-	out = log @{u}..
+  # Lists all unpushed commits
+  out = log @{u}..
 
-	# List aliases.
-	aliases = config --get-regexp alias
+  # List aliases.
+  aliases = config --get-regexp alias
 
-	# Undo Commit; leaves files. Only for non-public commits
-	uncommit = reset --soft HEAD^
+  # Undo Commit; leaves files. Only for non-public commits
+  uncommit = reset --soft HEAD^
 
-	# Commit messages
-	msg = log --color=never --no-decorate --format="%s"
-	lol = log --oneline --decorate
+  # Commit messages
+  msg = log --color=never --no-decorate --format="%s"
+  lol = log --oneline --decorate
 
-	# Graphs
-	## https://stackoverflow.com/a/24186641
-	clog = log --oneline --decorate --left-right --graph
-	## https://stackoverflow.com/a/35075021
-	adog = log --all --decorate --oneline --graph
-	## https://stackoverflow.com/a/34467298
-	lg = lg1
-	lg1 = lg1-specific --all
-	lg2 = lg2-specific --all
-	lg3 = lg3-specific --all
-	lg1-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
-	lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
-	lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
+  # Graphs
+  ## https://stackoverflow.com/a/24186641
+  clog = log --oneline --decorate --left-right --graph
+  ## https://stackoverflow.com/a/35075021
+  adog = log --all --decorate --oneline --graph
+  ## https://stackoverflow.com/a/34467298
+  lg = lg1
+  lg1 = lg1-specific --all
+  lg2 = lg2-specific --all
+  lg3 = lg3-specific --all
+  lg1-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)'
+  lg2-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'
+  lg3-specific = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold cyan)(committed: %cD)%C(reset) %C(auto)%d%C(reset)%n''          %C(white)%s%C(reset)%n''          %C(dim white)- %an <%ae> %C(reset) %C(dim white)(committer: %cn <%ce>)%C(reset)'
 
 [branch]
-	# Show most recently changed branches first.
-	sort = -committerdate
+  # Show most recently changed branches first.
+  sort = -committerdate
+
 [color]
-	ui = always
+  ui = always
+
 [color "branch"]
-	current = yellow reverse
-	local = yellow
-	remote = green
+  current = yellow reverse
+  local = yellow
+  remote = green
+
 [color "status"]
-	added = yellow
-	changed = green
-	untracked = cyan
+  added = yellow
+  changed = green
+  untracked = cyan
+
 [column]
-	ui = auto
+  ui = auto
+
+[commit]
+  gpgsign = true
+
 [core]
-	autocrlf = input
-	editor = nvim
-	pager = delta
-	longpaths = true
-	excludesfile = ~/.gitignore_global
+  autocrlf = input
+  compression = 9
+  editor = nvim
+  excludesfile = ~/.gitignore_global
+  longpaths = true
+  pager = delta
+  preloadindex = true
+  whitespace = error
+
 [credential]
-	helper = manager
+  helper = manager
+
 [delta]
-	features = decorations
-	navigate = true    # use n and N to move between diff sections
-	light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
-	side-by-side = true
-	line-numbers = true
+  features = decorations
+  navigate = true    # use n and N to move between diff sections
+  light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+  side-by-side = true
+  line-numbers = true
+
 [diff]
-	algorithm = histogram
-	colorMoved = default
-	mnemonicPrefix = true
-	renames = true
-	tool = neovim
+  algorithm = histogram
+  colorMoved = default
+  mnemonicPrefix = true
+  renames = copies
+  tool = neovim
+
 [difftool "neovim"]
-	cmd = nvim -d $LOCAL $REMOTE
+  cmd = nvim -d $LOCAL $REMOTE
+
 [difftool "vscode"]
-	cmd = code --wait --diff $LOCAL $REMOTE
+  cmd = code --wait --diff $LOCAL $REMOTE
+
 [fetch]
-	prune = true
-	pruneTags = true
-	all = true
+  prune = true
+  pruneTags = true
+  all = true
+
+[gpg]
+  format = ssh
+
 [grep]
-	lineNumber = true
-	patternType = perl
+  lineNumber = true
+  patternType = perl
+
 [help]
-	# Automatically correct and execute mistyped commands.
-	autoCorrect = 1
+  # Automatically correct and execute mistyped commands.
+  autoCorrect = 1
+
 [http]
-	sslverify = true
-	defaultBranch = main
+  sslverify = true
+  defaultBranch = main
+
 [interactive]
-	diffFilter = delta --color-only
+  diffFilter = delta --color-only
+  singleKey = true
+
 [log]
-	date = iso-local
+  date = iso-local
+
 [merge]
-	tool = neovim
-	conflictstyle = zdiff3
+  tool = neovim
+  conflictstyle = zdiff3
+
 [mergetool]
-	keepBackup = false
+  keepBackup = false
+
 [mergetool "neovim"]
-	cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+  cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+
 [mergetool "vscode"]
-	cmd = code --wait -m $LOCAL $REMOTE $BASE $MERGED
+  cmd = code --wait -m $LOCAL $REMOTE $BASE $MERGED
+
 [pull]
-	rebase = true
+  rebase = true
+
 [push]
-	# https://git-scm.com/docs/git-config#git-config-pushdefault
-	default = current
-	autoSetupRemote = true
-	followTags = true
+  # https://git-scm.com/docs/git-config#git-config-pushdefault
+  default = current
+  autoSetupRemote = true
+  followTags = true
+
 [rebase]
   autoStash = true
+  missingCommitsCheck = warn
+
 [rerere]
-	enabled = true
-	autoupdate = true
-[safe]
-	directory = *
+  enabled = true
+  autoupdate = true
+
+[status]
+  branch = true
+  showStash = true
+  showUntrackedFiles = all
+
+[user]
+  name = "Akshay Brizmohun"
 
 # Selectively load specific config depending on remote
 # https://gist.github.com/bgauduch/06a8c4ec2fec8fef6354afe94358c89e
@@ -133,6 +174,14 @@
 # [includeIf "hasconfig:remote.*.url:git@github.com:*/**"]
 #     path = .gitconfig.github
 
+[url "git@github.com:brizdotdev"]
+  insteadOf = "briz:"
+  pushInsteadOf = "briz:"
+
+[url "git@github.com:"]
+  insteadOf = "gh:"
+  pushInsteadOf = "gh:"
+
 # Local config
 [include]
-	path = ~/.gitconfig.local
+  path = ~/.gitconfig.local
