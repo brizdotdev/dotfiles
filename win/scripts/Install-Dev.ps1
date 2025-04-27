@@ -75,6 +75,9 @@ choco install -y xsv
 # Install fx
 pushd $LocalWindowsApps
 curl.exe -L -o fx.exe https://github.com/antonmedv/fx/releases/latest/download/fx_windows_amd64.exe
+# https://fx.wtf/configuration
+[Environment]::SetEnvironmentVariable("FX_THEME", "4", "User")
+[Environment]::SetEnvironmentVariable("FX_SHOW_SIZE", "true", "User")
 popd
 
 # Configure Lazygit
