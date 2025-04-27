@@ -12,16 +12,16 @@
             "id": "User.moveFocus.6CD791B"
         },
         {
+            "command": "paste",
+            "id": "User.paste"
+        },
+        {
             "command": 
             {
                 "action": "moveFocus",
                 "direction": "right"
             },
             "id": "User.moveFocus.87C324ED"
-        },
-        {
-            "command": "paste",
-            "id": "User.paste"
         },
         {
             "command": 
@@ -32,13 +32,8 @@
             "id": "User.moveFocus.2A0DA8E0"
         },
         {
-            "command": 
-            {
-                "action": "copy",
-                "copyFormatting": "none",
-                "singleLine": false
-            },
-            "id": "User.copy.B5ED5656"
+            "command": "find",
+            "id": "User.find"
         },
         {
             "command": 
@@ -49,8 +44,13 @@
             "id": "User.moveFocus.F747588A"
         },
         {
-            "command": "find",
-            "id": "User.find"
+            "command": 
+            {
+                "action": "copy",
+                "copyFormatting": "none",
+                "singleLine": false
+            },
+            "id": "User.copy.B5ED5656"
         }
     ],
     "alwaysShowTabs": false,
@@ -61,12 +61,12 @@
     "keybindings": 
     [
         {
-            "id": "User.moveFocus.6CD791B",
-            "keys": "ctrl+k"
-        },
-        {
             "id": null,
             "keys": "win+`"
+        },
+        {
+            "id": "User.moveFocus.6CD791B",
+            "keys": "ctrl+k"
         },
         {
             "id": "User.moveFocus.2A0DA8E0",
@@ -119,6 +119,7 @@
     ],
     "largePasteWarning": false,
     "launchMode": "default",
+    "minimizeToNotificationArea": false,
     "multiLinePasteWarning": false,
     "newTabMenu": 
     [
@@ -133,7 +134,7 @@
         "list": 
         [
             {
-                "colorScheme": "nord",
+                "colorScheme": "Galaxy",
                 "experimental.retroTerminalEffect": false,
                 "font": 
                 {
