@@ -121,6 +121,8 @@ $null = Register-EngineEvent -SourceIdentifier 'PowerShell.OnIdle' -MaxTriggerCo
     # Env
     ################################################################################
     $env:FZF_DEFAULT_OPTS = "--layout=reverse --multi --cycle"
+    # https://github.com/ryanoasis/nerd-fonts/wiki/FAQ-and-Troubleshooting#less-settings
+    $env:LESSUTFCHARDEF = "e000-f8ff:p,f0001-fffff:p"
 
     ## Exec profile.local.ps1 if it exists
     $LocalProfile = Join-Path $PSScriptRoot -ChildPath "profile.local.ps1"
