@@ -12,3 +12,4 @@ https://addons.mozilla.org/en-US/firefox/addon/windowed/
 https://addons.mozilla.org/en-US/firefox/addon/temporary-containers/
 https://addons.mozilla.org/en-US/firefox/addon/containerise/
 https://addons.mozilla.org/en-GB/firefox/addon/firefox-color/
+https://addons.mozilla.org/en-US/firefox/addon/sheetkeys/
