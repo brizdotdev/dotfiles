@@ -103,7 +103,7 @@ if (Test-Path -Path "$LocalWindowsApps\python.exe") {
 if (Test-Path -Path "$LocalWindowsApps\python3.exe") {
 		Remove-Item -Path "$LocalWindowsApps\python3.exe" -Force
 }
-winget install --silent Python.Python.3.13 --override '/passive PrependPath=1'
+winget install --silent Python.Python.3.14 --override '/passive PrependPath=1'
 
 # Repos folder
 # TODO: Set this up in a Dev Drive
