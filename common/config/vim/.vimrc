@@ -23,3 +23,7 @@ inoremap ! !<c-g>u
 inoremap ? ?<c-g>u
 inoremap <Space> <Space><c-g>u
 inoremap <Enter> <Enter><c-g>u
+
+" Paste over selection without yanking it
+" https://stackoverflow.com/a/3837845
+vnoremap p "_dP
