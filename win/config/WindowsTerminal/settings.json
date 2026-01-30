@@ -796,7 +796,6 @@
     ],
     "showTabsInTitlebar": true,
     "showTerminalTitleInTitlebar": true,
-    "startOnUserLogin": false,
     "tabSwitcherMode": "disabled",
     "tabWidthMode": "titleLength",
     "theme": "dark",
@@ -804,5 +803,7 @@
     "trimBlockSelection": true,
     "trimPaste": true,
     "useAcrylicInTabRow": true,
-    "windowingBehavior": "useExisting"
+    "warning.largePaste": false,
+    "warning.multiLinePaste": false,
+    "windowingBehavior": "useNew"
 }
