@@ -71,7 +71,7 @@ winget install --silent muesli.duf
 winget install --silent schollz.croc
 winget install --silent charmbracelet.glow
 winget install --silent chmln.sd
-choco install -y xsv
+winget install --silent BurntSushi.xsv.GNU
 # Install fx
 pushd $LocalWindowsApps
 curl.exe -L -o fx.exe https://github.com/antonmedv/fx/releases/latest/download/fx_windows_amd64.exe
