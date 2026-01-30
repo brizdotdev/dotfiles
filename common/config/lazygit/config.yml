@@ -56,10 +56,10 @@ gui:
   portraitMode: "auto" # one of 'auto' | 'never' | 'always'
   filterMode: "substring" # one of 'substring' | 'fuzzy'; see 'Filtering' section below
 git:
-  paging:
-    colorArg: always
-    useConfig: false
-    # pager: delta --dark --side-by-side --paging=never
+  pagers:
+    - colorArg: always
+      useConfig: false
+      pager: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
   commit:
     signOff: false
     autoWrapCommitMessage: true # automatic WYSIWYG wrapping of the commit message as you type
@@ -199,7 +199,7 @@ keybinding:
     viewResetOptions: "D"
     fetch: "f"
     toggleTreeView: "`"
-    openMergeTool: "M"
+    openMergeOptions: "M"
     openStatusFilter: "<c-b>"
   branches:
     createPullRequest: "o"
