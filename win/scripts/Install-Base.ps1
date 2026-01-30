@@ -148,6 +148,7 @@ foreach ($app in @(
 	"9N4D0MSMP0PT" # VP9 Video Extensions
 	"9N95Q1ZZPMH4" # MPEG-2 Video Extension
 	"9MVZQVXJBQ9V" # AV1 Video Extension
+	"9WZDNCRFJ3PR" # Windows Clock
 )) {
 	winget install --id $app --silent --source msstore --accept-package-agreements --accept-source-agreements
 }
