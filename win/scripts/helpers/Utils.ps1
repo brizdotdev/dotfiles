@@ -50,3 +50,31 @@ function UnlinkFiles {
 function Reload-Path() {
 	$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
 }
+
+function Add-ToPath(
+    [string[]]$Paths,
+    [System.EnvironmentVariableTarget]$Scope = [System.EnvironmentVariableTarget]::User
+) {
+    $currentPath = [System.Environment]::GetEnvironmentVariable("Path", $Scope)
+    $pathEntries = @()
+    if (-not [string]::IsNullOrWhiteSpace($currentPath)) {
+        $pathEntries = $currentPath -split ";"
+    }
+
+    foreach ($pathToAdd in $Paths) {
+        if ([string]::IsNullOrWhiteSpace($pathToAdd)) {
+            continue
+        }
+
+        if (-not ($pathEntries -contains $pathToAdd)) {
+            if ([string]::IsNullOrWhiteSpace($currentPath)) {
+                $currentPath = $pathToAdd
+            } else {
+                $currentPath = "$currentPath;$pathToAdd"
+            }
+            $pathEntries += $pathToAdd
+        }
+    }
+
+    [System.Environment]::SetEnvironmentVariable("Path", $currentPath, $Scope)
+}
