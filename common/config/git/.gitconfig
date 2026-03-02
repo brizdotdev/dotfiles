@@ -87,6 +87,7 @@
   compression = 9
   editor = nvim
   excludesfile = ~/.gitignore_global
+  fsmonitor = true
   longpaths = true
   pager = delta
   preloadindex = true
