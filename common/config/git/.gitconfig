@@ -59,6 +59,13 @@
     git stack $BRANCH | xargs -I {} git push --force-with-lease origin {}; \
   };f "
 
+  # https://piechowski.io/post/git-commands-before-reading-code/
+  contrib = shortlog -sn --no-merges
+  hot-files = "!git log --format=format: --name-only --since='1 year ago' | sort | uniq -c | sort -nr | head -20"
+  where-bugs = "!git log -i -E --grep='fix|bug|broken' --name-only --format='' | sort | uniq -c | sort -nr | head -20"
+  velocity = "!git log --format='%ad' --date=format:'%Y-%m' | sort | uniq -c"
+  firefight = "!git log --oneline --since='1 year ago' | grep -iE 'revert|hotfix|emergency|rollback'"
+
 [branch]
   # Show most recently changed branches first.
   sort = -committerdate
