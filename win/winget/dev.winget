@@ -1,0 +1,387 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+##############################################################################
+# Tools and utilities for development
+##############################################################################
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+    - resource: Microsoft.Windows.Settings/WindowsSettings
+      directives:
+        description: Enable Developer Mode
+        allowPrerelease: true
+        securityContext: elevated
+      settings:
+        DeveloperMode: true
+
+    - resource: xPSDesiredStateConfiguration/xScript
+      id: envvar-hosts
+      directives:
+        description: Set an environment variable to hosts file
+      settings:
+        GetScript: |
+          . "${WinGetConfigRoot}\..\Utils.ps1"
+          Get-EnvVar -Name "HOSTS"
+        TestScript: |
+          . "${WinGetConfigRoot}\..\Utils.ps1"
+          Test-EnvVar -Name "HOSTS" -Value "C:\Windows\System32\drivers\etc\hosts"
+        SetScript: |
+          . "${WinGetConfigRoot}\..\Utils.ps1"
+          Add-EnvVar -Name "HOSTS" -Value "C:\Windows\System32\drivers\etc\hosts"
+
+  ##############################################################################
+  # Languages
+  ##############################################################################
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-bun
+      directives:
+        description: Install Bun
+      settings:
+        id: oven-sh.bun
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-uv
+      directives:
+        description: Install UV
+      settings:
+        id: astral-sh.uv
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-dotnet-sdk
+      directives:
+        description: Install .NET SDK
+      settings:
+        id: Microsoft.DotNet.SDK.10
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-dotnet-sdk-preview
+      directives:
+        description: Install .NET SDK (preview)
+        allowPrerelease: true
+      settings:
+        id: Microsoft.DotNet.SDK.Preview
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-rustup
+      directives:
+        description: Install Rustup
+        allowPrerelease: true
+      settings:
+        id: Rustlang.Rustup
+        source: winget
+
+    - resource: xPSDesiredStateConfiguration/xScript
+      id: remove-fake-python
+      directives:
+        description: Ensure Microsoft Store Python app is uninstalled and removed from the PATH
+      settings:
+        GetScript: |
+          return Get-ChildItem -Path "$env:LocalAppData\Microsoft\WindowsApps\*python*.exe" -ErrorAction SilentlyContinue
+        TestScript: |
+          $pythonExecutables = Get-ChildItem -Path "$env:LocalAppData\Microsoft\WindowsApps\*python*.exe" -ErrorAction SilentlyContinue
+          return $pythonExecutables.Count -eq 0
+        SetScript: |
+          Get-ChildItem -Path "$env:LocalAppData\Microsoft\WindowsApps\*python*.exe" -ErrorAction SilentlyContinue | ForEach-Object {
+            Remove-Item -Path $_.FullName -Force
+          }
+
+  ##############################################################################
+  # WSL
+  ##############################################################################
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-wsl
+      directives:
+        description: Install WSL
+        securityContext: elevated
+      settings:
+        id: Microsoft.WSL
+        source: winget
+
+    - resource: xPSDesiredStateConfiguration/xWindowsOptionalFeature
+      id: feature-virtualmachineplatform
+      directives:
+        description: Enable Virtual Machine Platform
+        securityContext: elevated
+      settings:
+        id: VirtualMachinePlatform
+        state: Enabled
+
+    - resource: xPSDesiredStateConfiguration/xWindowsOptionalFeature
+      id: feature-wsl
+      directives:
+        description: Enable Windows Subsystem for Linux
+        securityContext: elevated
+      settings:
+        id: Microsoft-Windows-Subsystem-Linux
+        state: Enabled
+
+  ##############################################################################
+  # Containers
+  ##############################################################################
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-docker-desktop
+      directives:
+        description: Install Docker Desktop
+        securityContext: elevated
+      settings:
+        id: Docker.DockerDesktop
+        source: winget
+
+  ##############################################################################
+  # Git
+  ##############################################################################
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-delta
+      directives:
+        description: Install Delta
+      settings:
+        id: dandavison.delta
+        source: winget
+
+    - resource: xPSDesiredStateConfiguration/xScript
+      id: git-config
+      directives:
+        description: Ensure Git is configured
+        securityContext: elevated
+      settings:
+        GetScript: |
+          . "${WinGetConfigRoot}\..\Utils.ps1"
+          $config = @{
+            "$env:USERPROFILE\.gitconfig" = "$env:DOTFILES\common\config\git\.gitconfig"
+            "$env:USERPROFILE\.gitignore_global" = "$env:DOTFILES\common\config\git\.gitignore_global"
+          }
+          return Get-SymlinkConfigResult -Config $config
+        TestScript: |
+          . "${WinGetConfigRoot}\..\Utils.ps1"
+          $config = @{
+            "$env:USERPROFILE\.gitconfig" = "$env:DOTFILES\common\config\git\.gitconfig"
+            "$env:USERPROFILE\.gitignore_global" = "$env:DOTFILES\common\config\git\.gitignore_global"
+          }
+          return Test-SymlinkConfig -Config $config
+        SetScript: |
+          . "${WinGetConfigRoot}\..\Utils.ps1"
+          $config = @{
+            "$env:USERPROFILE\.gitconfig" = "$env:DOTFILES\common\config\git\.gitconfig"
+            "$env:USERPROFILE\.gitignore_global" = "$env:DOTFILES\common\config\git\.gitignore_global"
+          }
+          New-SymlinkConfig -Config $config
+
+  ##############################################################################
+  # Utils
+  ##############################################################################
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-opencode
+      directives:
+        description: Install OpenCode
+      settings:
+        id: sst.opencode
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-television
+      directives:
+        description: Install Television
+      settings:
+        id: alexpasmantier.television
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-jq
+      directives:
+        description: Install jq
+      settings:
+        id: stedolan.jq
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-yq
+      directives:
+        description: Install yq
+      settings:
+        id: mikefarah.yq
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-gitlab-cli
+      directives:
+        description: Install GitLab CLI
+      settings:
+        id: GLab.GLab
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-github-cli
+      directives:
+        description: Install GitHub CLI
+      settings:
+        id: github.cli
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-ripgrep
+      directives:
+        description: Install ripgrep
+      settings:
+        id: burntsushi.ripgrep.msvc
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-xsv
+      directives:
+        description: Install xsv
+      settings:
+        id: burntsushi.xsv.gnu
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-lazygit
+      directives:
+        description: Install Lazygit
+      settings:
+        id: jesseduffield.lazygit
+        source: winget
+
+    - resource: xPSDesiredStateConfiguration/xScript
+      id: lazygit-settings
+      directives:
+        description: Ensure Lazygit is configured
+        securityContext: elevated
+      settings:
+        GetScript: |
+          . "${WinGetConfigRoot}\..\Utils.ps1"
+          $config = @{
+            "$env:LOCALAPPDATA\lazygit\config.yml" = "$env:DOTFILES\common\config\lazygit\config.yml"
+          }
+          return Get-SymlinkConfigResult -Config $config
+        TestScript: |
+          . "${WinGetConfigRoot}\..\Utils.ps1"
+          $config = @{
+            "$env:LOCALAPPDATA\lazygit\config.yml" = "$env:DOTFILES\common\config\lazygit\config.yml"
+          }
+          return Test-SymlinkConfig -Config $config
+        SetScript: |
+          . "${WinGetConfigRoot}\..\Utils.ps1"
+          $config = @{
+            "$env:LOCALAPPDATA\lazygit\config.yml" = "$env:DOTFILES\common\config\lazygit\config.yml"
+          }
+          New-SymlinkConfig -Config $config
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-fd
+      directives:
+        description: Install fd
+      settings:
+        id: sharkdp.fd
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-bat
+      directives:
+        description: Install bat
+      settings:
+        id: sharkdp.bat
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-yazi
+      directives:
+        description: Install Yazi
+      settings:
+        id: sxyazi.yazi
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-duf
+      directives:
+        description: Install duf
+      settings:
+        id: muesli.duf
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-croc
+      directives:
+        description: Install Croc
+      settings:
+        id: schollz.croc
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-glow
+      directives:
+        description: Install Glow
+      settings:
+        id: charmbracelet.glow
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-sd
+      directives:
+        description: Install sd
+      settings:
+        id: chmln.sd
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-openssh
+      directives:
+        description: Install OpenSSH
+      settings:
+        id: Microsoft.OpenSSH.Preview
+        source: winget
+
+    - resource: xPSDesiredStateConfiguration/xService
+      id: service-ssh-agent
+      directives:
+        description: Ensure the OpenSSH Authentication Agent service is running and set to automatic
+        securityContext: elevated
+      settings:
+        name: ssh-agent
+        state: Running
+        startupType: Automatic
+
+    - resource: xPSDesiredStateConfiguration/xScript
+      id: install-fx
+      directives:
+        description: Install fx
+      settings:
+        GetScript: |
+          return Get-Command fx -ErrorAction SilentlyContinue
+        TestScript: |
+          $fxInstalled = Test-Path -Path "$env:LocalAppData\Microsoft\WindowsApps\fx.exe" -PathType Leaf
+          return $fxInstalled
+        SetScript: |
+          curl.exe -L https://github.com/antonmedv/fx/releases/latest/download/fx_windows_amd64.exe -o "$env:LocalAppData\Microsoft\WindowsApps\fx.exe"
+
+    # https://fx.wtf/configuration
+    - resource: xPSDesiredStateConfiguration/xScript
+      id: configure-fx
+      directives:
+        description: Configure fx
+      settings:
+        GetScript: |
+          return @{
+            Theme = [Environment]::GetEnvironmentVariable("FX_THEME", "User")
+            ShowSize = [Environment]::GetEnvironmentVariable("FX_SHOW_SIZE", "User")
+            LineNumbers = [Environment]::GetEnvironmentVariable("FX_LINE_NUMBERS", "User")
+          }
+        TestScript: |
+          $themeMatches = [Environment]::GetEnvironmentVariable("FX_THEME", "User") -eq "9"
+          $showSizeMatches = [Environment]::GetEnvironmentVariable("FX_SHOW_SIZE", "User") -eq "true"
+          $lineNumbersMatch = [Environment]::GetEnvironmentVariable("FX_LINE_NUMBERS", "User") -eq "true"
+          return $themeMatches -and $showSizeMatches -and $lineNumbersMatch
+        SetScript: |
+          [Environment]::SetEnvironmentVariable("FX_THEME", "9", "User")
+          [Environment]::SetEnvironmentVariable("FX_SHOW_SIZE", "true", "User")
+          [Environment]::SetEnvironmentVariable("FX_LINE_NUMBERS", "true", "User")
