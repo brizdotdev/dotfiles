@@ -20,7 +20,7 @@ enum WinGetRelease {
 function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRelease]::Stable) {
     Write-Host -ForegroundColor Blue "Installing WinGet"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 # Ensure required TLS protocols are enabled for the gallery
-    Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+    Install-PackageProvider -Name NuGet -Force -Scope CurrentUser | Out-Null
     Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery -Scope CurrentUser -AllowClobber -ErrorAction SilentlyContinue
     if ($Release -eq [WinGetRelease]::Preview) {
         Repair-WinGetPackageManager -Latest -Force -IncludePrerelease
@@ -33,7 +33,7 @@ function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRel
 function Install-Git {
     $ErrorActionPreference = "Stop"
     Write-Host -ForegroundColor Blue "Installing Git"
-    winget configure --accept-configuration-agreements https://raw.githubusercontent.com/$GitHubUsername/$GitHubRepoName/refs/heads/main/win/winget/git.winget
+    winget configure --accept-configuration-agreements --suppress-initial-details https://raw.githubusercontent.com/$GitHubUsername/$GitHubRepoName/refs/heads/main/win/winget/git.winget
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     Write-Host -ForegroundColor Green "Git installed"
 }
