@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+  ##############################################################################
+  # Browsers
+  ##############################################################################
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-google-chrome
+    directives:
+      description: Install Google Chrome
+      securityContext: elevated
+    settings:
+      id: Google.Chrome
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-mozilla-firefox
+    directives:
+      description: Install Mozilla Firefox
+      securityContext: elevated
+    settings:
+      id: Mozilla.Firefox
+      source: winget
+      scope: user
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-librewolf
+    directives:
+      description: Install LibreWolf
+    settings:
+      id: LibreWolf.LibreWolf
+      source: winget
+
+  # TODO: Browser extensions
+  # TODO: Browser config
+  # TODO: Set default browser
