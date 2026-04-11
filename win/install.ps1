@@ -76,9 +76,15 @@ function Get-Inputs{
     $preselectedOptions = ($configMap | Where-Object { $_.Preselected -eq $True } | Select-Object -ExpandProperty Name) -join ','
     $selectedOptions = gum choose --header "Select configuration to apply" --no-limit --selected "$preselectedOptions" $configOptions
     $selectedExtras = gum choose --header "Select extras to install" --no-limit $extras.Keys
-    $ImportSSHKey = gum confirm "Import SSH Key from Yubikey?" && $True || $False
+    $ImportSSHKey = $False
+    if (gum confirm "Import SSH Key from Yubikey?") {
+        $ImportSSHKey = $True
+    }
     $GitUserEmail = gum input --header "Git email address"
-    $GitConfigureSigning = gum confirm "Configure commit signing?" && $True || $False
+    $GitConfigureSigning = $False
+    if (gum confirm "Configure commit signing?") {
+        $GitConfigureSigning = $True
+    }
     return [PSCustomObject]@{
         SelectedOptions = $selectedOptions
         SelectedExtras = $selectedExtras
