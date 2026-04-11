@@ -1,0 +1,51 @@
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-discord
+    directives:
+      description: Install Discord
+    settings:
+      id: Discord.Discord
+      source: winget
+
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: discord-disable-startup
+    directives:
+      description: Ensure Discord does not start on login
+    dependsOn:
+      - winget-discord
+    settings:
+      TestScript: |
+        $val = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "Discord" -ErrorAction SilentlyContinue
+        return $null -eq $val
+      SetScript: |
+        Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "Discord" -ErrorAction SilentlyContinue
+      GetScript: |
+        $val = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "Discord" -ErrorAction SilentlyContinue
+        return @{ Result = ($null -eq $val) }
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-tiny-nvidia-update-checker
+    directives:
+      description: Install TinyNvidiaUpdateChecker
+    settings:
+      id: Hawaii_Beach.TinyNvidiaUpdateChecker
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-steam
+    directives:
+      description: Install Steam
+    settings:
+      id: Valve.Steam
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-gog
+    directives:
+      description: Install GOG Galaxy
+    settings:
+      id: GOG.Galaxy
+      source: winget
