@@ -60,14 +60,25 @@ $extras = @{
     "TwinkleTray" = "xanderfrangos.twinkletray"
 }
 
+$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
 function Initialize-Requirements {
     # Ensure that Gum is installed
     if (-not (Get-Command "gum" -ErrorAction SilentlyContinue)) {
-        winget install --silent --scope user --accept-source-agreements --accept-package-agreements --source winget charmbracelet.gum
+        winget install --silent --scope user --accept-source-agreements --accept-package-agreements --source winget --no-upgrade charmbracelet.gum
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     }
 
-    if ($null -eq (Get-ComputerRestorePoint)) {
-        Enable-ComputerRestore -Drive "$env:SystemDrive\"
+    winget install --silent --no-upgrade --source winget Microsoft.VCRedist.2015+.x64
+    winget configure --enable
+
+    if ($isAdmin) {
+        if ($null -eq (Get-ComputerRestorePoint)) {
+            Enable-ComputerRestore -Drive "$env:SystemDrive\"
+        }
+    }
+    else {
+        Write-Warning "Skipping System Restore setup because the script is not running as Administrator."
     }
 }
 
@@ -116,16 +127,6 @@ function Install-SelectedItems {
     }
 }
 
-function Import-SSHKey {
-    & "$PSScriptRoot\scripts\Import-SSHKey.ps1"
-    if ($? -eq $False) {
-        Write-Host -ForegroundColor Red "SSH Key import failed"
-        Read-Host
-        exit 1
-    }
-    Write-Host ""
-}
-
 function Set-GitConfiguration {
     param (
         [string]$GitUserEmail,
@@ -144,9 +145,9 @@ function Set-GitConfiguration {
 Initialize-Requirements
 $inputs = Get-Inputs
 Install-SelectedItems -SelectedOptions $inputs.SelectedOptions -SelectedExtras $inputs.SelectedExtras
-if ($inputs.ImportSSHKey) {
-    Import-SSHKey
-}
 Set-GitConfiguration -GitUserEmail $inputs.GitUserEmail -GitConfigureSigning $inputs.GitConfigureSigning
+if ($inputs.ImportSSHKey) {
+    & "$PSScriptRoot\scripts\Import-SSHKey.ps1"
+}
 Write-Host -ForegroundColor Green "Done!"
 Read-Host
