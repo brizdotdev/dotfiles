@@ -9,6 +9,9 @@ param (
 $GitHubUsername = "brizdotdev"
 $GitHubRepoName = "dotfiles"
 
+$dotfilesPath = Join-Path -Path $HOME -ChildPath ".dotfiles"
+
+$ErrorActionPreference = 'Stop'
 enum WinGetRelease {
     Stable
     Preview
@@ -20,9 +23,9 @@ function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRel
     Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
     Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery -Scope CurrentUser -AllowClobber -ErrorAction SilentlyContinue
     if ($Release -eq [WinGetRelease]::Preview) {
-        Repair-WinGetPackageManager -Latest -IncludePrerelease
+        Repair-WinGetPackageManager -Latest -Force -IncludePrerelease
     } else {
-        Repair-WinGetPackageManager -Latest
+        Repair-WinGetPackageManager -Latest -Force
     }
     winget configure --enable
 }
@@ -38,7 +41,6 @@ function Install-Git {
 function Clone-Repo {
     $ErrorActionPreference = "Stop"
     Write-Host -ForegroundColor Blue "Cloning dotfiles"
-    $dotfilesPath = Join-Path -Path $HOME -ChildPath ".dotfiles"
     if (Test-Path -Path $dotfilesPath) {
         Write-Host -ForegroundColor Yellow "Dotfiles folder already exists"
         Read-Host
@@ -55,6 +57,13 @@ function Clone-Repo {
     Write-Host -ForegroundColor Green "Run $dotfilesPath\win\install.ps1 to finish setup"
 }
 
+function Set-EnvironmentVariables {
+    # Set dotfiles env var to the path of the dotfiles repo
+    [Environment]::SetEnvironmentVariable("DOTFILES", $dotfilesPath, "User")
+    $env:DOTFILES = [Environment]::GetEnvironmentVariable("DOTFILES", "User")
+}
+
 Update-WinGetFromPowerShellGallery -Release $WinGetRelease
 Install-Git
 Clone-Repo
+Set-EnvironmentVariables
