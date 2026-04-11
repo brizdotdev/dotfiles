@@ -3,7 +3,8 @@
 ################################################################################
 param (
     [ValidateSet("Preview", "Stable")]
-    [string]$WinGetRelease = "Stable"
+    [string]$WinGetRelease = "Stable",
+    [string]$Branch = "main"
 )
 
 $GitHubUsername = "brizdotdev"
@@ -33,7 +34,7 @@ function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRel
 function Install-Git {
     $ErrorActionPreference = "Stop"
     Write-Host -ForegroundColor Blue "Installing Git"
-    winget configure --accept-configuration-agreements --suppress-initial-details https://raw.githubusercontent.com/$GitHubUsername/$GitHubRepoName/refs/heads/main/win/winget/git.winget
+    winget configure --accept-configuration-agreements --suppress-initial-details https://raw.githubusercontent.com/$GitHubUsername/$GitHubRepoName/refs/heads/$Branch/win/winget/git.winget
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     Write-Host -ForegroundColor Green "Git installed"
 }
@@ -46,7 +47,7 @@ function Clone-Repo {
         Read-Host
         exit 0
     }
-    git clone --recurse-submodules "https://github.com/$GitHubUsername/$GitHubRepoName" $dotfilesPath
+    git clone --recurse-submodules --branch $Branch "https://github.com/$GitHubUsername/$GitHubRepoName" $dotfilesPath
     if ($LASTEXITCODE -ne 0) {
         Write-Host -ForegroundColor Red  "Failed to clone dotfiles"
         Read-Host
