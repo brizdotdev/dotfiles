@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+  ##############################################################################
+  # VS Code
+  ##############################################################################
+
+  # Use script until Winget supports custom overrides
+  # https://github.com/microsoft/winget-cli/issues/3401
+  # https://github.com/microsoft/vscode/blob/main/build/win32/code.iss
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: install-vscode
+    directives:
+      description: Install Visual Studio Code
+    settings:
+      GetScript: |
+        @{ Result = & winget list --id Microsoft.VisualStudioCode --exact --quiet 2>$null }
+      TestScript: |
+        $result = & winget list --id Microsoft.VisualStudioCode --exact --quiet 2>$null
+        return $LASTEXITCODE -eq 0
+      SetScript: |
+        winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
+
+  - resource: Microsoft.VSCode.Dsc/VSCodeExtension
+    id: vscodevim.vim
+    dependsOn:
+      - install-vscode
+    directives:
+      description: Install VS Code Vim extension
+      allowPrerelease: false
+      securityContext: current
+      edition: stable
+    settings:
+      Name: vscodevim.vim
+
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: path-contains-vscode
+    directives:
+      description: Ensure Visual Studio Code is in the path
+    dependsOn:
+      - install-vscode
+    settings:
+      TestScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $pathsToAdd = @("$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin")
+        return Test-EnvPath -Paths $pathsToAdd
+      SetScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $pathsToAdd = @("$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin")
+        Add-EnvPath -Paths $pathsToAdd
