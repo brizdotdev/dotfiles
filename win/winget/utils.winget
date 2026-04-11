@@ -17,6 +17,14 @@ properties:
       source: msstore
 
   - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-everything
+    directives:
+      description: Install Everything
+    settings:
+      id: voidtools.Everything
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
     id: winget-7zip
     directives:
       description: Install 7-Zip
