@@ -3,126 +3,114 @@
 # Setup script for my dotfiles
 ################################################################################
 
-# Helper functions
-$HelperPath = Join-Path -Path $PSScriptRoot -ChildPath "scripts\helpers"
-Get-ChildItem -Path $HelperPath -Filter "*.ps1" | ForEach-Object {
-    . $_.FullName
-}
-
-$InstallChocolatey = YesNoPrompt "Install Chocolatey?"
-$ConfigureWindows = YesNoPrompt "Configure Windows?"
-$InstallBase = YesNoPrompt "Install base apps and fonts?"
-$InstallFirefoxExtensions = $False
-$InstallLibrewolfExtensions = $False
-$InstallChromeExtensions = $False
-if ($InstallBase -eq $True)
-{
-    $InstallFirefoxExtensions = YesNoPrompt "Install Firefox extensions?"
-    $InstallLibrewolfExtensions = YesNoPrompt "Install Librewolf extensions?"
-    $InstallChromeExtensions = YesNoPrompt "Install Chrome extensions?"
-}
-$InstallDevTools = YesNoPrompt "Install apps and tools for development?"
-$InstallWebDev = YesNoPrompt "Install apps and tools for web development?"
-$InstallExtras = YesNoPrompt "Install extras?"
-$RemoveBloatware = YesNoPrompt "Remove bloatware?"
-do {
-    $browserChoice = Read-Host -Prompt "Which browser do you want to set as default? (firefox, chrome, none): "
-}
-while ($browserChoice -ne "firefox" -and $browserChoice -ne "chrome" -and $browserChoice -ne "none")
-$GitUserName = Read-Host -Prompt "Enter your Git user name: "
-$GitUserEmail = Read-Host -Prompt "Enter your Git user email: "
-$GitConfigureSigning = YesNoPrompt "Configure Commit Signing?"
-$ImportSSHKey = YesNoPrompt "Import SSH Key from Yubikey?"
-
-Write-Host ""
-
-# Set dotfiles env var to the path of the dotfiles repo
-$ParentPath = ((Get-Item -Path $PSScriptRoot).Parent).FullName
-[Environment]::SetEnvironmentVariable("DOTFILES", $ParentPath, "User")
-$env:DOTFILES = [Environment]::GetEnvironmentVariable("DOTFILES", "User")
-
-# TODO: Refactor all the scripts to use winget configure
-# TODO: https://learn.microsoft.com/en-us/windows/package-manager/configuration/
-
-# Install Chocolatey
-if ($InstallChocolatey -eq $True) {
-    & "$PSScriptRoot\scripts\Install-Chocolatey.ps1"
-    if ($? -eq $False) {
-        Write-Host -ForegroundColor Red "Chocolatey installation failed"
-        Read-Host
-        exit 1
+$configMap = @(
+    [PSCustomObject]@{
+        Name = "Base"
+        Preselected = $True
+        Configs = @(
+            "$PSScriptRoot\winget\browsers.winget"
+            "$PSScriptRoot\winget\powertoys.winget"
+            "$PSScriptRoot\winget\utils.winget"
+            "$PSScriptRoot\winget\vscode.winget"
+            "$PSScriptRoot\winget\windows-settings.winget"
+            "$PSScriptRoot\winget\windows-terminal-settings.winget"
+            "$PSScriptRoot\winget\winget-settings.winget"
+        )
+        Scripts = @(
+            "$PSScriptRoot\scripts\Remove-Bloatware.ps1"
+        )
     }
-    Write-Host ""
-}
-
-# Configure Windows
-if ($ConfigureWindows -eq $True) {
-    & "$PSScriptRoot\scripts\Configure-Windows.ps1"
-    if ($? -eq $False) {
-        Write-Host -ForegroundColor Red "Windows configuration failed"
-        Read-Host
-        exit 1
+    [PSCustomObject]@{
+        Name = "Dev"
+        Configs = @(
+            "$PSScriptRoot\winget\dev.winget"
+            "$PSScriptRoot\winget\git.winget"
+            "$PSScriptRoot\winget\fonts.winget"
+            "$PSScriptRoot\winget\neovim.winget"
+            "$PSScriptRoot\winget\powershell.winget"
+            "$PSScriptRoot\winget\sandbox.winget"
+        )
     }
-    Write-Host ""
-}
-
-# Install Base
-if ($InstallBase -eq $True) {
-    & "$PSScriptRoot\scripts\Install-Base.ps1" $browserChoice $InstallFirefoxExtensions $InstallLibrewolfExtensions $InstallChromeExtensions $GitUserName $GitUserEmail $GitConfigureSigning
-    if ($? -eq $False) {
-        Write-Host -ForegroundColor Red "Base installation failed"
-        Read-Host
-        exit 1
+    [PSCustomObject]@{
+        Name = "Gaming"
+        Configs = @(
+            "$PSScriptRoot\winget\gaming.winget"
+        )
     }
-    Write-Host ""
-}
-
-# Install Dev
-if ($InstallDevTools -eq $True) {
-    & "$PSScriptRoot\scripts\Install-Dev.ps1"
-    if ($? -eq $False) {
-        Write-Host -ForegroundColor Red "Dev installation failed"
-        Read-Host
-        exit 1
+    [PSCustomObject]@{
+        Name = "Remove Teams and OneDrive"
+        Preselected = $True
+        Configs = @(
+            "$PSScriptRoot\winget\remove-teams-onedrive.winget"
+        )
     }
-    Write-Host ""
+)
+
+$extras = @{
+    "OBS" = "OBSProject.OBSStudio"
+    "Spotify" = "9NCBCSZSJRSB"
+    "LibreOffice" = "TheDocumentFoundation.LibreOffice"
+    "WireGuard" = "WireGuard.WireGuard"
+    "Obsidian" = "Obsidian.Obsidian"
+    "WinDirStat" = "WinDirStat.WinDirStat"
+    "ScreenToGif" = "NickeManarin.ScreenToGif"
+    "FFMPEG" = "Gyan.FFmpeg"
+    "Flameshot" = "flameshot"
+    "RegionToShare" = "9N4066W2R5Q4"
+    "TwinkleTray" = "xanderfrangos.twinkletray"
 }
 
-# Install web dev
-if ($InstallWebDev -eq $True) {
-    & "$PSScriptRoot\scripts\Install-Web-Dev.ps1"
-    if ($? -eq $False) {
-        Write-Host -ForegroundColor Red "Web Dev installation failed"
-        Read-Host
-        exit 1
+function Initialize-Requirements {
+    # Ensure that Gum is installed
+    if (-not (Get-Command "gum" -ErrorAction SilentlyContinue)) {
+        winget install --silent --scope user --accept-source-agreements --accept-package-agreements --source winget charmbracelet.gum
     }
-    Write-Host ""
-}
 
-# Remove Bloatware
-if ($RemoveBloatware -eq $True) {
-    & "$PSScriptRoot\scripts\Remove-Bloatware.ps1"
-    if ($? -eq $False) {
-        Write-Host -ForegroundColor Red "Bloatware removal failed"
-        Read-Host
-        exit 1
+    if ($null -eq (Get-ComputerRestorePoint)) {
+        Enable-ComputerRestore -Drive "$env:SystemDrive\"
     }
-    Write-Host ""
 }
 
-# Install Extras
-if ($InstallExtras -eq $True) {
-    & "$PSScriptRoot\scripts\Install-Extras.ps1"
-    if ($? -eq $False) {
-        Write-Host -ForegroundColor Red "Extras installation failed"
-        Read-Host
-        exit 1
+function Get-Inputs{
+    $configOptions = @($configMap.Name)
+    $preselectedOptions = ($configMap | Where-Object { $_.Preselected -eq $True } | Select-Object -ExpandProperty Name) -join ','
+    $selectedOptions = gum choose --header "Select configuration to apply" --no-limit --selected "$preselectedOptions" $configOptions
+    $selectedExtras = gum choose --header "Select extras to install" --no-limit $extras.Keys
+    $ImportSSHKey = gum confirm "Import SSH Key from Yubikey?" && $True || $False
+    $GitUserEmail = gum input --header "Git email address"
+    $GitConfigureSigning = gum confirm "Configure commit signing?" && $True || $False
+    return [PSCustomObject]@{
+        SelectedOptions = $selectedOptions
+        SelectedExtras = $selectedExtras
+        ImportSSHKey = $ImportSSHKey
+        GitUserEmail = $GitUserEmail
+        GitConfigureSigning = $GitConfigureSigning
     }
-    Write-Host ""
 }
 
-# Import SSH Key
-if ($ImportSSHKey -eq $True) {
+function Install-SelectedItems {
+    param (
+        [object[]]$SelectedOptions,
+        [object[]]$SelectedExtras
+    )
+
+    foreach ($option in $SelectedOptions) {
+        $selectedConfig = $configMap | Where-Object { $_.Name -eq $option }
+        foreach ($config in $selectedConfig.Configs) {
+            winget configure --suppress-initial-details --accept-configuration-agreements $config
+        }
+        foreach ($script in $selectedConfig.Scripts) {
+            & $script
+        }
+    }
+
+    foreach ($extra in $SelectedExtras) {
+        $packageId = $extras[$extra]
+        winget install --accept-package-agreements --accept-source-agreements $packageId
+    }
+}
+
+function Import-SSHKey {
     & "$PSScriptRoot\scripts\Import-SSHKey.ps1"
     if ($? -eq $False) {
         Write-Host -ForegroundColor Red "SSH Key import failed"
@@ -132,7 +120,27 @@ if ($ImportSSHKey -eq $True) {
     Write-Host ""
 }
 
-& "$PSScriptRoot\scripts\Backup-Path.ps1"
+function Set-GitConfiguration {
+    param (
+        [string]$GitUserEmail,
+        [bool]$GitConfigureSigning
+    )
 
+    if ($GitUserEmail -ne "") {
+        git config --file "$HOME/.gitconfig.local" user.email $GitUserEmail
+    }
+    if ($GitConfigureSigning) {
+        git config --file "$HOME/.gitconfig.local" commit.gpgsign true
+        git config --file "$HOME/.gitconfig.local" user.signingkey ~/.ssh/id_ed25519_sk_rk_Default
+    }
+}
+
+Initialize-Requirements
+$inputs = Get-Inputs
+Install-SelectedItems -SelectedOptions $inputs.SelectedOptions -SelectedExtras $inputs.SelectedExtras
+if ($inputs.ImportSSHKey) {
+    Import-SSHKey
+}
+Set-GitConfiguration -GitUserEmail $inputs.GitUserEmail -GitConfigureSigning $inputs.GitConfigureSigning
 Write-Host -ForegroundColor Green "Done!"
 Read-Host
