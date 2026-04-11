@@ -1,0 +1,1570 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+  ##############################################################################
+  # Windows settings
+  ##############################################################################
+
+  - resource: Microsoft.Windows.Settings/WindowsSettings
+    id: windows-settings
+    directives:
+      description: Configure Windows
+      allowPrerelease: true
+    settings:
+      AppColorMode: "Dark"
+      SystemColorMode: "Dark"
+      TaskbarAlignment: "Middle"
+      # TODO: Add rest of the settings when released: https://github.com/microsoft/winget-dsc/commits/main/resources/Microsoft.Windows.Settings/Microsoft.Windows.Settings.psm1
+      # TODO: Taskbar multi monitor
+
+  # Power: Disable hibernation, disable sleep, set display timeout, and disable lid-close sleep
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: script-power-settings
+    directives:
+      description: Disable hibernation, disable sleep, set display timeout, and disable sleep on lid close
+      securityContext: elevated
+    settings:
+      SetScript: |
+        powercfg /hibernate off
+        powercfg /change standby-timeout-ac 0
+        powercfg /change standby-timeout-dc 0
+        powercfg /change monitor-timeout-ac 5
+        powercfg /change monitor-timeout-dc 5
+        powercfg -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
+        powercfg -setdcvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
+      GetScript: |
+        return @{ Result = @{
+          LidClose = (powercfg /query SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936)
+          SleepTimeout = (powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE)
+          MonitorTimeout = (powercfg /query SCHEME_CURRENT SUB_VIDEO VIDEOIDLE)
+        } }
+      TestScript: |
+        return $false
+
+  ##############################################################################
+  # Privacy
+  ##############################################################################
+
+  # Don't let apps use advertising ID
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-advertising-info
+    directives:
+      description: Disable advertising ID for experiences across apps
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo
+      ValueName: Enabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Disable Application launch tracking
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-launch-tracking
+    directives:
+      description: Disable application launch tracking
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: Start-TrackProgs
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Disable SmartScreen Filter for Store Apps
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-smartscreen-store
+    directives:
+      description: Disable SmartScreen Filter for Store Apps
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost
+      ValueName: EnableWebContentEvaluation
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Disable key logging & transmission to Microsoft
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-key-logging
+    directives:
+      description: Disable key logging and transmission to Microsoft
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Input\TIPC
+      ValueName: Enabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Opt-out from websites accessing language list
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-language-opt-out
+    directives:
+      description: Opt-out from websites accessing language list
+    settings:
+      Key: HKCU:\Control Panel\International\User Profile
+      ValueName: HttpAcceptLanguageOptOut
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Speech, Inking, & Typing: Stop "Getting to know me"
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-restrict-text-collection
+    directives:
+      description: Restrict implicit text collection
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\InputPersonalization
+      ValueName: RestrictImplicitTextCollection
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  ##############################################################################
+  # Ads
+  ##############################################################################
+
+  # Disable suggested content in settings app
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-suggested-content-338393
+    directives:
+      description: Disable suggested content in settings app (338393)
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+      ValueName: SubscribedContent-338393Enabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-suggested-content-338394
+    directives:
+      description: Disable suggested content in settings app (338394)
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+      ValueName: SubscribedContent-338394Enabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-suggested-content-338396
+    directives:
+      description: Disable suggested content in settings app (338396)
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+      ValueName: SubscribedContent-338396Enabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-suggested-content-353694
+    directives:
+      description: Disable suggested content in settings app (353694)
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+      ValueName: SubscribedContent-353694Enabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-suggested-content-353696
+    directives:
+      description: Disable suggested content in settings app (353696)
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+      ValueName: SubscribedContent-353696Enabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Disable tips and suggestions for welcome and what's new
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-silent-installed-apps
+    directives:
+      description: Disable tips and suggestions for welcome and what's new
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+      ValueName: SilentInstalledAppsEnabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Disable auto installing suggested apps
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-suggested-apps-338388
+    directives:
+      description: Disable auto installing suggested apps
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+      ValueName: SubscribedContent-338388Enabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Disable tips and suggestions when using Windows
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-tips-suggestions-338389
+    directives:
+      description: Disable tips and suggestions when using Windows
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+      ValueName: SubscribedContent-338389Enabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-cloud-optimized-content
+    directives:
+      description: Disable cloud optimized content
+    settings:
+      Key: HKLM:\Software\Policies\Microsoft\Windows\CloudContent
+      ValueName: DisableCloudOptimizedContent
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  ##############################################################################
+  # Start Menu
+  ##############################################################################
+
+  # Empty pinned list
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-start-configure-pins
+    directives:
+      description: Set Start Menu pinned list to empty
+    settings:
+      Key: HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start
+      ValueName: ConfigureStartPins
+      ValueData: '{"pinnedList":[]}'
+      ValueType: String
+      Force: True
+
+  # Disable search box suggestions
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-search-suggestions
+    directives:
+      description: Disable search box suggestions in Start Menu
+    settings:
+      Key: HKCU:\Software\Policies\Microsoft\Windows\Explorer
+      ValueName: DisableSearchBoxSuggestions
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Hide recommended places (empty VisiblePlaces)
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: script-start-visible-places
+    directives:
+      description: Hide recommended places in Start Menu
+    settings:
+      SetScript: |
+        Set-ItemProperty -Path 'Registry::HKCU\Software\Microsoft\Windows\CurrentVersion\Start' -Name 'VisiblePlaces' -Value ([byte[]](,)) -Type Binary -Force
+      GetScript: |
+        $val = (Get-ItemProperty -Path 'Registry::HKCU\Software\Microsoft\Windows\CurrentVersion\Start' -Name 'VisiblePlaces' -ErrorAction SilentlyContinue).VisiblePlaces
+        return @{ Result = [Convert]::ToBase64String($val) }
+      TestScript: |
+        $val = (Get-ItemProperty -Path 'Registry::HKCU\Software\Microsoft\Windows\CurrentVersion\Start' -Name 'VisiblePlaces' -ErrorAction SilentlyContinue).VisiblePlaces
+        return ($null -ne $val -and $val.Length -eq 0)
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-restrict-ink-collection
+    directives:
+      description: Restrict implicit ink collection
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\InputPersonalization
+      ValueName: RestrictImplicitInkCollection
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-harvest-contacts
+    directives:
+      description: Disable harvesting contacts for input personalization
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore
+      ValueName: HarvestContacts
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-privacy-policy
+    directives:
+      description: Reject personalization privacy policy
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Personalization\Settings
+      ValueName: AcceptedPrivacyPolicy
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-online-speech-privacy
+    directives:
+      description: Disable online speech privacy acceptance
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Speech_OneCore\Settings\OnlineSpeechPrivacy
+      ValueName: HasAccepted
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Account Info: Don't let apps access account info
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-deny-account-info
+    directives:
+      description: Deny apps access to account info
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation
+      ValueName: Value
+      ValueData: Deny
+      ValueType: String
+      Force: True
+
+  # Contacts: Don't let apps access contacts
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-deny-contacts
+    directives:
+      description: Deny apps access to contacts
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\contacts
+      ValueName: Value
+      ValueData: Deny
+      ValueType: String
+      Force: True
+
+  # Calendar: Don't let apps access calendar
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-deny-calendar
+    directives:
+      description: Deny apps access to calendar
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appointments
+      ValueName: Value
+      ValueData: Deny
+      ValueType: String
+      Force: True
+
+  # Call History: Don't let apps make phone calls
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-deny-phone-call
+    directives:
+      description: Deny apps permission to make phone calls
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\phoneCall
+      ValueName: Value
+      ValueData: Deny
+      ValueType: String
+      Force: True
+
+  # Call History: Don't let apps access call history
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-deny-call-history
+    directives:
+      description: Deny apps access to call history
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\phoneCallHistory
+      ValueName: Value
+      ValueData: Deny
+      ValueType: String
+      Force: True
+
+  # Diagnostics: Don't let apps access diagnostics of other apps
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-deny-app-diagnostics
+    directives:
+      description: Deny apps access to diagnostics of other apps
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics
+      ValueName: Value
+      ValueData: Deny
+      ValueType: String
+      Force: True
+
+  # Location: Don't let apps access location
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-deny-location
+    directives:
+      description: Deny apps access to location
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location
+      ValueName: Value
+      ValueData: Deny
+      ValueType: String
+      Force: True
+
+  # Feedback: Windows should never ask for feedback
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-no-feedback
+    directives:
+      description: Disable Windows feedback requests
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Siuf\Rules
+      ValueName: NumberOfSIUFInPeriod
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Feedback: Telemetry - disable diagnostic data
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-telemetry-allow
+    directives:
+      description: Set telemetry to minimum (AllowTelemetry)
+    settings:
+      Key: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection
+      ValueName: AllowTelemetry
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-telemetry-max
+    directives:
+      description: Set telemetry to minimum (MaxTelemetryAllowed)
+    settings:
+      Key: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection
+      ValueName: MaxTelemetryAllowed
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-tailored-experiences
+    directives:
+      description: Disable tailored experiences with diagnostic data
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Privacy
+      ValueName: TailoredExperiencesWithDiagnosticDataEnabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Explorer: Open File Explorer to This PC
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-explorer-launch-to
+    directives:
+      description: Open File Explorer to This PC
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: LaunchTo
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Explorer: Show system files
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-show-super-hidden
+    directives:
+      description: Show system (super hidden) files in Explorer
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: ShowSuperHidden
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Explorer: Show hidden files by default
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-show-hidden-files
+    directives:
+      description: Show hidden files in Explorer
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: Hidden
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Explorer: Show file extensions
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-show-file-ext
+    directives:
+      description: Show file extensions in Explorer
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: HideFileExt
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Explorer: Show full path in title bar
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-full-path-title
+    directives:
+      description: Show full path in Explorer title bar
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState
+      ValueName: FullPath
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Explorer: Disable Thumbs.db on network volumes
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-no-thumbsdb-network
+    directives:
+      description: Disable Thumbs.db on network folders
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+      ValueName: DisableThumbnailsOnNetworkFolders
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Explorer: Restore classic right-click context menu (Windows 11)
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-classic-context-menu
+    directives:
+      description: Restore classic right-click context menu in Windows 11
+    settings:
+      Key: HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32
+      ValueName: ""
+      ValueData: ""
+      ValueType: String
+      Force: True
+
+  # Explorer: Hide files from office.com
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-hide-office-files
+    directives:
+      description: Hide files from office.com
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer
+      ValueName: ShowCloudFilesInQuickAccess
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Explorer: Hide Desktop icons
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-hide-desktop-icons
+    directives:
+      description: Hide desktop icons
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+      ValueName: NoDesktop
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # TODO: Add Userprofile to sidebar
+
+  # Taskbar: Hide Search button
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-hide-search
+    directives:
+      description: Hide Search button from taskbar
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Search
+      ValueName: SearchboxTaskbarMode
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Taskbar: Hide Task View button
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-hide-task-view
+    directives:
+      description: Hide Task View button from taskbar
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: ShowTaskViewButton
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Taskbar: Hide Widgets button
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-hide-widgets
+    directives:
+      description: Hide Widgets button from taskbar
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: TaskbarDa
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Taskbar: Hide Chat button
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-hide-chat
+    directives:
+      description: Hide Chat button from taskbar
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: TaskbarMn
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-chat-auto-install
+    directives:
+      description: Disable Chat auto install
+    settings:
+      Key: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications
+      ValueName: ConfigureChatAutoInstall
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-news-and-interests
+    directives:
+      description: Disable News and Interests
+    settings:
+      Key: HKLM:\SOFTWARE\Policies\Microsoft\Dsh
+      ValueName: AllowNewsAndInterests
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Hide Gallery
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-hide-gallery
+    directives:
+      description: Hide Gallery from Explorer
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: ShowGallery
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-hide-gallery-2
+    directives:
+      description: Hide Gallery from Explorer
+    settings:
+      Key: HKCU:\Software\Classes\CLSID\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}
+      ValueName: System.IsPinnedToNameSpaceTree
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Titlebar: Disable theme colors on titlebar
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-titlebar-color
+    directives:
+      description: Disable theme colors on titlebar
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\DWM
+      ValueName: ColorPrevalence
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Themes: Turn off accent color on Start and taskbar
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-no-accent-color
+    directives:
+      description: Turn off accent color on Start and taskbar
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize
+      ValueName: ColorPrevalence
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-start-no-recently-added
+    directives:
+      description: "Start: Hide recently added apps from Start"
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Start
+      ValueName: ShowRecentList
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-start-no-recommended-tips
+    directives:
+      description: "Start: Disable Recommended Tips, Shortcuts, New Apps and more"
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: Start_IrisRecommendations
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Update: Disable automatic restart after updates outside active hours
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-no-auto-restart
+    directives:
+      description: Disable automatic restart after updates
+    settings:
+      Key: HKLM:\Software\Policies\Microsoft\Windows\WindowsUpdate
+      ValueName: SetActiveHours
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Update: Set update behavior to auto download and notify for install
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-au-options
+    directives:
+      description: Set AU to auto-download but notify before installing
+    settings:
+      Key: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+      ValueName: AUOptions
+      ValueData: 4
+      ValueType: Dword
+      Force: True
+
+  # Update: Don't auto-reboot while users are logged on
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-no-auto-reboot-logged-on
+    directives:
+      description: Disable automatic reboot when users are logged on
+    settings:
+      Key: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU
+      ValueName: NoAutoRebootWithLoggedOnUsers
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Edge: Skip first-run prompts and background features
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-edge-hide-first-run
+    directives:
+      description: Hide Microsoft Edge first run experience
+    settings:
+      Key: HKLM:\Software\Policies\Microsoft\Edge
+      ValueName: HideFirstRunExperience
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-edge-disable-background-mode
+    directives:
+      description: Disable Microsoft Edge background mode
+    settings:
+      Key: HKLM:\Software\Policies\Microsoft\Edge\Recommended
+      ValueName: BackgroundModeEnabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-edge-disable-startup-boost
+    directives:
+      description: Disable Microsoft Edge startup boost
+    settings:
+      Key: HKLM:\Software\Policies\Microsoft\Edge\Recommended
+      ValueName: StartupBoostEnabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Update: Disable automatic reboot after install
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-no-expedited-reboot
+    directives:
+      description: Disable automatic reboot after update install
+    settings:
+      Key: HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings
+      ValueName: IsExpedited
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Update: Disable restart required notifications
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-no-restart-notifications
+    directives:
+      description: Disable restart required notifications
+    settings:
+      Key: HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings
+      ValueName: RestartNotificationsAllowed2
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Update: Disable updates over metered connections
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-no-metered-updates
+    directives:
+      description: Disable auto updates over metered connections
+    settings:
+      Key: HKLM:\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings
+      ValueName: AllowAutoWindowsUpdateDownloadOverMeteredNetwork
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Accessibility: Turn off Windows Narrator hotkey
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-narrator-hotkey
+    directives:
+      description: Turn off Windows Narrator hotkey
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Narrator\NoRoam
+      ValueName: WinEnterLaunchEnabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Snap: Disable showing what can be snapped next to a window
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-snap-assist
+    directives:
+      description: Disable Snap Assist
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: SnapAssist
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Explorer: Hide recently used files in Quick access
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-no-track-docs
+    directives:
+      description: Hide recently used files in Quick access
+    settings:
+      Key: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: Start_TrackDocs
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-no-show-frequent
+    directives:
+      description: Hide frequent folders in Quick access
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer
+      ValueName: ShowFrequent
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # OneDrive: Remove OneDriveSetup from user startup
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-remove-onedrive-startup
+    directives:
+      description: Remove OneDriveSetup from current user startup run key
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Run
+      ValueName: OneDriveSetup
+      Ensure: Absent
+      Force: True
+
+  # Clipboard: Enable Clipboard History
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-clipboard-history
+    directives:
+      description: Enable Clipboard History
+    settings:
+      Key: HKCU:\Software\Microsoft\Clipboard
+      ValueName: EnableClipboardHistory
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Clock: Set 24-hour format
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-clock-itime
+    directives:
+      description: Set clock to 24-hour format (iTime)
+    settings:
+      Key: HKCU:\Control Panel\International
+      ValueName: iTime
+      ValueData: 1
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-clock-short-time
+    directives:
+      description: Set short time format to HH:mm
+    settings:
+      Key: HKCU:\Control Panel\International
+      ValueName: sShortTime
+      ValueData: HH:mm
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-clock-time-format
+    directives:
+      description: Set long time format to HH:mm:ss
+    settings:
+      Key: HKCU:\Control Panel\International
+      ValueName: sTimeFormat
+      ValueData: HH:mm:ss
+      ValueType: String
+      Force: True
+
+  # Filesystem: Enable long paths
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-long-paths
+    directives:
+      description: Enable Win32 long paths
+    settings:
+      Key: HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem
+      ValueName: LongPathsEnabled
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Copilot: Disable Windows Copilot
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-copilot
+    directives:
+      description: Disable Windows Copilot
+    settings:
+      Key: HKCU:\Software\Policies\Microsoft\Windows\WindowsCopilot
+      ValueName: TurnOffWindowsCopilot
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Game DVR: Disable app capture
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-game-dvr
+    directives:
+      description: Disable Game DVR app capture
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\GameDVR
+      ValueName: AppCaptureEnabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Mouse: Disable pointer precision (enhance pointer precision)
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-mouse-speed
+    directives:
+      description: Disable enhanced pointer precision (MouseSpeed)
+    settings:
+      Key: HKCU:\Control Panel\Mouse
+      ValueName: MouseSpeed
+      ValueData: 0
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-mouse-threshold1
+    directives:
+      description: Disable enhanced pointer precision (MouseThreshold1)
+    settings:
+      Key: HKCU:\Control Panel\Mouse
+      ValueName: MouseThreshold1
+      ValueData: 0
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-mouse-threshold2
+    directives:
+      description: Disable enhanced pointer precision (MouseThreshold2)
+    settings:
+      Key: HKCU:\Control Panel\Mouse
+      ValueName: MouseThreshold2
+      ValueData: 0
+      ValueType: String
+      Force: True
+
+  # Taskbar: Show End Task button in taskbar right-click menu
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-taskbar-end-task
+    directives:
+      description: Show End Task button in taskbar context menu
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings
+      ValueName: TaskbarEndTask
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  # Accessibility: Disable Sticky Keys prompt
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-sticky-keys
+    directives:
+      description: Disable Sticky Keys prompt
+    settings:
+      Key: HKCU:\Control Panel\Accessibility\StickyKeys
+      ValueName: Flags
+      ValueData: 10
+      ValueType: String
+      Force: True
+
+  # Window animations: Disable minimize/maximize animations
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-animate-windows
+    directives:
+      description: Disable window animations when minimizing and maximizing
+    settings:
+      Key: HKCU:\Control Panel\Desktop\WindowMetrics
+      ValueName: MinAnimate
+      ValueData: 0
+      ValueType: String
+      Force: True
+
+  # Do not show tabs in Alt+Tab
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-alt-tab-tabs
+    directives:
+      description: Disable showing tabs in Alt+Tab
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+      ValueName: AltTabSettings
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-bing-search
+    directives:
+      description: Disable Bing search integration
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\Search
+      ValueName: BingSearchEnabled
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # Disable Windows store running in the background
+  # https://superuser.com/a/1933437
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-windows-store-background-ncb
+    directives:
+      description: Disable Windows store running in the background
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+      ValueName: NCBEnabled
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-windows-store-background-user
+    directives:
+      description: Mark Windows Store background access as disabled by user
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+      ValueName: DisabledByUser
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-windows-store-background-disabled
+    directives:
+      description: Disable Windows Store background access
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+      ValueName: Disabled
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-windows-store-background-ignore-battery-saver
+    directives:
+      description: Keep Windows Store background access battery saver override disabled
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+      ValueName: IgnoreBatterySaver
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-windows-store-background-sleep-disabled
+    directives:
+      description: Disable Windows Store background activity during sleep
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+      ValueName: SleepDisabled
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-disable-windows-store-background-sleep-ignore-battery-saver
+    directives:
+      description: Keep Windows Store sleep battery saver override disabled
+    settings:
+      Key: HKCU:\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+      ValueName: SleepIgnoreBatterySaver
+      ValueData: 0
+      ValueType: Dword
+      Force: True
+
+  # TODO: Rest on Windows settings
+  # TODO: Taskbar layout from autounattend.xml
+
+  ##############################################################################
+  # Cursor settings
+  ##############################################################################
+
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: install-bibata-cursor
+    directives:
+      description: Install Bibata cursor
+      securityContext: elevated
+    settings:
+      GetScript: |
+        return $false
+      TestScript: |
+          if (Get-ChildItem -Path "$env:WINDIR\Cursors" -Directory -Filter "Bibata*" -ErrorAction SilentlyContinue | Select-Object -First 1) {
+            return $true
+          }
+          return $false
+      SetScript: |
+        cd "$env:TEMP"
+        curl.exe -L -O https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.6/Bibata-Modern-Classic-Windows.zip
+        if (Test-Path -Path Bibata) {
+          Remove-Item -Path Bibata -Force -Recurse
+        }
+        New-Item -Path .\Bibata -ItemType Directory -Force
+        Expand-Archive -Path Bibata-Modern-Classic-Windows.zip -DestinationPath .\Bibata
+        $cursors = Get-ChildItem -Path .\Bibata
+        foreach ($cursor in $cursors) {
+          $installPath = Join-Path -Path $cursor.FullName -ChildPath "install.inf"
+          Start-Process "$installPath" -Verb "Install"
+        }
+
+  # https://devblogs.microsoft.com/scripting/use-powershell-to-change-the-mouse-pointer-scheme/
+  # https://superuser.com/a/1769211
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-scheme-name
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor scheme name (default value)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: ""
+      ValueData: Bibata-Modern-Classic-Small Cursors
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-scheme-source
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor scheme source
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: "Scheme Source"
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-base-size
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor base size
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: CursorBaseSize
+      ValueData: 32
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-contact-visualization
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor contact visualization
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: ContactVisualization
+      ValueData: 1
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-gesture-visualization
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor gesture visualization
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: GestureVisualization
+      ValueData: 31
+      ValueType: Dword
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-app-starting
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor AppStarting (busy/working)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: AppStarting
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Work.ani"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-arrow
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Arrow (normal select)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Arrow
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Pointer.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-crosshair
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Crosshair (precision select)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Crosshair
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Cross.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-hand
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Hand (link select)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Hand
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Link.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-help
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Help (help select)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Help
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Help.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-ibeam
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor IBeam (text select)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: IBeam
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Text.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-no
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor No (unavailable)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: "No"
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Unavailable.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-nwpen
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor NWPen (handwriting)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: NWPen
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Handwriting.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-size-all
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor SizeAll (move)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: SizeAll
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Move.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-size-nesw
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor SizeNESW (diagonal resize 2)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: SizeNESW
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Dgn2.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-size-ns
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor SizeNS (vertical resize)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: SizeNS
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Vert.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-size-nwse
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor SizeNWSE (diagonal resize 1)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: SizeNWSE
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Dgn1.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-size-we
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor SizeWE (horizontal resize)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: SizeWE
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Horz.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-up-arrow
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor UpArrow (alternate select)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: UpArrow
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Alternate.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-wait
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Wait (busy)
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Wait
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Busy.ani"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-precisionhair
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor precisionhair
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: precisionhair
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Cross.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-grab
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Grab
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Grab
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Move.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-grabbing
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Grabbing
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Grabbing
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Grabbing.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-pin
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Pin
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Pin
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Pin.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-person
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Person
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Person
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Person.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-pan
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Pan
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Pan
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Pan.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-zoom-in
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Zoom-in
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Zoom-in
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Zoom-in.cur"
+      ValueType: String
+      Force: True
+
+  - resource: xPSDesiredStateConfiguration/xRegistry
+    id: reg-set-bibata-cursor-zoom-out
+    dependsOn:
+      - install-bibata-cursor
+    directives:
+      description: Set Bibata cursor Zoom-out
+    settings:
+      Key: HKCU:\Control Panel\Cursors
+      ValueName: Zoom-out
+      ValueData: "%SystemRoot%\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Zoom-out.cur"
+      ValueType: String
+      Force: True
+
+  # Refresh cursor after all registry values are set
+  # https://superuser.com/a/1769211
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: script-refresh-cursor
+    dependsOn:
+      - reg-set-bibata-cursor-scheme-name
+      - reg-set-bibata-cursor-scheme-source
+      - reg-set-bibata-cursor-base-size
+      - reg-set-bibata-cursor-contact-visualization
+      - reg-set-bibata-cursor-gesture-visualization
+      - reg-set-bibata-cursor-app-starting
+      - reg-set-bibata-cursor-arrow
+      - reg-set-bibata-cursor-crosshair
+      - reg-set-bibata-cursor-hand
+      - reg-set-bibata-cursor-help
+      - reg-set-bibata-cursor-ibeam
+      - reg-set-bibata-cursor-no
+      - reg-set-bibata-cursor-nwpen
+      - reg-set-bibata-cursor-size-all
+      - reg-set-bibata-cursor-size-nesw
+      - reg-set-bibata-cursor-size-ns
+      - reg-set-bibata-cursor-size-nwse
+      - reg-set-bibata-cursor-size-we
+      - reg-set-bibata-cursor-up-arrow
+      - reg-set-bibata-cursor-wait
+      - reg-set-bibata-cursor-precisionhair
+      - reg-set-bibata-cursor-grab
+      - reg-set-bibata-cursor-grabbing
+      - reg-set-bibata-cursor-pin
+      - reg-set-bibata-cursor-person
+      - reg-set-bibata-cursor-pan
+      - reg-set-bibata-cursor-zoom-in
+      - reg-set-bibata-cursor-zoom-out
+    directives:
+      description: Refresh cursor scheme via SystemParametersInfo
+    settings:
+      GetScript: |
+        return @{ Result = "cursor refresh" }
+      TestScript: |
+        return $false
+      SetScript: |
+        $CSharpSig = @'
+        [DllImport("user32.dll", EntryPoint = "SystemParametersInfo")]
+        public static extern bool SystemParametersInfo(
+                    uint uiAction,
+                    uint uiParam,
+                    uint pvParam,
+                    uint fWinIni);
+        '@
+        $CursorRefresh = Add-Type -MemberDefinition $CSharpSig -Name WinAPICall -Namespace SystemParamInfo -PassThru
+        $CursorRefresh::SystemParametersInfo(0x0057, 0, $null, 0)
+
+  - resource: xPSDesiredStateConfiguration/xWindowsOptionalFeature
+    id: feature-WindowsMediaPlayer
+    directives:
+      description: Disable Windows Media Player
+      securityContext: elevated
+    settings:
+      id: WindowsMediaPlayer
+      state: Disabled
+      removefilesondisable: true
+
+# TODO: Add settings from CTT
+# TODO: Add settings from debloat
+# TODO: https://privacylearn.com/windows
+# TODO: https://www.elevenforum.com/tags/start-menu/
+# TODO: Remove pinned from startmenu. This should be in autounattend
+# TODO: Disable Windows Search Index

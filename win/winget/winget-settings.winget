@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+  ##############################################################################
+  # WinGet settings
+  ##############################################################################
+
+  - resource: Microsoft.Winget.DSC/WinGetUserSettings
+    directives:
+      description: WinGet User settings config
+    settings:
+      Settings:
+        experimentalFeatures:
+          fonts: true
+          resume: true
+        visual:
+          progressBar: "rainbow"
+          enableSixels: true
+        $schema: "https://aka.ms/winget-settings.schema.json"
+      Action: "Full"
