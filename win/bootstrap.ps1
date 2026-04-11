@@ -33,7 +33,7 @@ function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRel
 function Install-Git {
     $ErrorActionPreference = "Stop"
     Write-Host -ForegroundColor Blue "Installing Git"
-    winget configure --accept-configuration-agreements https://raw.githubusercontent.com/$GitHubUsername/$GitHubRepoName/refs/heads/main/win/scripts/config/git.winget
+    winget configure --accept-configuration-agreements https://raw.githubusercontent.com/$GitHubUsername/$GitHubRepoName/refs/heads/main/win/winget/git.winget
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     Write-Host -ForegroundColor Green "Git installed"
 }
