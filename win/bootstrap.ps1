@@ -54,17 +54,11 @@ function Clone-Repo {
         exit 1
     }
     [Environment]::SetEnvironmentVariable("DOTFILES", $dotfilesPath, "User")
+    $env:DOTFILES = [Environment]::GetEnvironmentVariable("DOTFILES", "User")
     Write-Host -ForegroundColor Green "Dotfiles cloned to $dotfilesPath"
     Write-Host -ForegroundColor Green "Run $dotfilesPath\win\install.ps1 to finish setup"
-}
-
-function Set-EnvironmentVariables {
-    # Set dotfiles env var to the path of the dotfiles repo
-    [Environment]::SetEnvironmentVariable("DOTFILES", $dotfilesPath, "User")
-    $env:DOTFILES = [Environment]::GetEnvironmentVariable("DOTFILES", "User")
 }
 
 Update-WinGetFromPowerShellGallery -Release $WinGetRelease
 Install-Git
 Clone-Repo
-Set-EnvironmentVariables
