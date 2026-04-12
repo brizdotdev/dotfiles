@@ -3,12 +3,16 @@
 ################################################################################
 param (
     [ValidateSet("Preview", "Stable")]
-    [string]$WinGetRelease = "Stable"
+    [string]$WinGetRelease = "Stable",
+    [string]$Branch = "main"
 )
 
 $GitHubUsername = "brizdotdev"
 $GitHubRepoName = "dotfiles"
 
+$dotfilesPath = Join-Path -Path $HOME -ChildPath ".dotfiles"
+
+$ErrorActionPreference = 'Stop'
 enum WinGetRelease {
     Stable
     Preview
@@ -17,12 +21,12 @@ enum WinGetRelease {
 function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRelease]::Stable) {
     Write-Host -ForegroundColor Blue "Installing WinGet"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 # Ensure required TLS protocols are enabled for the gallery
-    Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+    Install-PackageProvider -Name NuGet -Force -Scope CurrentUser | Out-Null
     Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery -Scope CurrentUser -AllowClobber -ErrorAction SilentlyContinue
     if ($Release -eq [WinGetRelease]::Preview) {
-        Repair-WinGetPackageManager -Latest -IncludePrerelease
+        Repair-WinGetPackageManager -Latest -Force -IncludePrerelease
     } else {
-        Repair-WinGetPackageManager -Latest
+        Repair-WinGetPackageManager -Latest -Force
     }
     winget configure --enable
 }
@@ -30,7 +34,7 @@ function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRel
 function Install-Git {
     $ErrorActionPreference = "Stop"
     Write-Host -ForegroundColor Blue "Installing Git"
-    winget configure --accept-configuration-agreements https://raw.githubusercontent.com/$GitHubUsername/$GitHubRepoName/refs/heads/main/win/scripts/config/git.winget
+    winget configure --accept-configuration-agreements --suppress-initial-details https://raw.githubusercontent.com/$GitHubUsername/$GitHubRepoName/refs/heads/$Branch/win/winget/git.winget
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     Write-Host -ForegroundColor Green "Git installed"
 }
@@ -38,13 +42,12 @@ function Install-Git {
 function Clone-Repo {
     $ErrorActionPreference = "Stop"
     Write-Host -ForegroundColor Blue "Cloning dotfiles"
-    $dotfilesPath = Join-Path -Path $HOME -ChildPath ".dotfiles"
     if (Test-Path -Path $dotfilesPath) {
         Write-Host -ForegroundColor Yellow "Dotfiles folder already exists"
         Read-Host
         exit 0
     }
-    git clone --recurse-submodules "https://github.com/$GitHubUsername/$GitHubRepoName" $dotfilesPath
+    git clone --recurse-submodules --branch $Branch "https://github.com/$GitHubUsername/$GitHubRepoName" $dotfilesPath
     if ($LASTEXITCODE -ne 0) {
         Write-Host -ForegroundColor Red  "Failed to clone dotfiles"
         Read-Host
@@ -55,6 +58,13 @@ function Clone-Repo {
     Write-Host -ForegroundColor Green "Run $dotfilesPath\win\install.ps1 to finish setup"
 }
 
+function Set-EnvironmentVariables {
+    # Set dotfiles env var to the path of the dotfiles repo
+    [Environment]::SetEnvironmentVariable("DOTFILES", $dotfilesPath, "User")
+    $env:DOTFILES = [Environment]::GetEnvironmentVariable("DOTFILES", "User")
+}
+
 Update-WinGetFromPowerShellGallery -Release $WinGetRelease
 Install-Git
 Clone-Repo
+Set-EnvironmentVariables

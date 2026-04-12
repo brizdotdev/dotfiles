@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+  ##############################################################################
+  # Windows Terminal settings
+  ##############################################################################
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-microsoft-windows-terminal
+    directives:
+      description: Install Microsoft Windows Terminal
+    settings:
+      id: Microsoft.WindowsTerminal
+      source: winget
+
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: windows-terminal-settings
+    directives:
+      description: Ensure Windows Terminal is configured
+      securityContext: elevated
+    settings:
+      GetScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $config = @{
+          "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = "$env:DOTFILES\win\config\WindowsTerminal\settings.json"
+        }
+        return Get-SymlinkConfigResult -Config $config
+      TestScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $config = @{
+          "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = "$env:DOTFILES\win\config\WindowsTerminal\settings.json"
+        }
+        return Test-SymlinkConfig -Config $config
+      SetScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $config = @{
+          "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = "$env:DOTFILES\win\config\WindowsTerminal\settings.json"
+        }
+        New-SymlinkConfig -Config $config

@@ -1,0 +1,197 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+  ##############################################################################
+  # Utilities
+  ##############################################################################
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-raycast
+    directives:
+      description: Install Raycast
+    settings:
+      id: 9PFXXSHC64H3
+      source: msstore
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-everything
+    directives:
+      description: Install Everything
+    settings:
+      id: voidtools.Everything
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-7zip
+    directives:
+      description: Install 7-Zip
+    settings:
+      id: 7zip.7zip
+      source: winget
+
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: path-contains-7zip
+    directives:
+      description: Ensure 7-Zip is in the path
+    dependsOn:
+      - winget-7zip
+    settings:
+      TestScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $pathsToAdd = @('C:\Program Files\7-Zip')
+        return Test-EnvPath -Paths $pathsToAdd
+      SetScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $pathsToAdd = @('C:\Program Files\7-Zip')
+        Add-EnvPath -Paths $pathsToAdd
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-gsudo
+    directives:
+      description: Install gsudo
+    settings:
+      id: gerardog.gsudo
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-openssh
+    directives:
+      description: Install OpenSSH
+    settings:
+      id: Microsoft.OpenSSH.Preview
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-local-send
+    directives:
+      description: Install LocalSend
+    settings:
+      id: LocalSend.LocalSend
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-eza
+    directives:
+      description: Install eza
+    settings:
+      id: eza-community.eza
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-bitwarden
+    directives:
+      description: Install Bitwarden
+    settings:
+      id: Bitwarden.Bitwarden
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-bitwarden-cli
+    directives:
+      description: Install Bitwarden CLI
+    settings:
+      id: Bitwarden.Bitwarden.CLI
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-windowsclock
+    directives:
+      description: Install Windows Clock
+    settings:
+      id: 9WZDNCRFJ3PR
+      source: msstore
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-windowscalculator
+    directives:
+      description: Install Windows Calculator
+    settings:
+      id: 9WZDNCRFHVN5
+      source: msstore
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-windowscamera
+    directives:
+      description: Install Windows Camera
+    settings:
+      id: 9WZDNCRFJBBG
+      source: msstore
+
+  ##############################################################################
+  # Media
+  ##############################################################################
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-spotify
+    directives:
+      description: Install Spotify
+    settings:
+      id: Spotify.Spotify
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-mpv
+    directives:
+      description: Install mpv
+    settings:
+      id: shinchiro.mpv
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-vlc
+    directives:
+      description: Install VLC
+    settings:
+      id: VideoLAN.VLC
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-yt-dlp
+    directives:
+      description: Install yt-dlp
+    settings:
+      id: yt-dlp.yt-dlp
+      source: winget
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-heif
+    directives:
+      description: Install HEIF Image Extensions
+    settings:
+      id: 9PMMSR1CGPWG
+      source: msstore
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-web-media-extensions
+    directives:
+      description: Install Web Media Extensions
+    settings:
+      id: 9N5TDP8VCMHS
+      source: msstore
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-web-pextensions
+    directives:
+      description: Install WebP Extensions
+    settings:
+      id: 9PG2DK419DRG
+      source: msstore
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-vp9-extensions
+    directives:
+      description: Install VP9 Extensions
+    settings:
+      id: 9N4D0MSMP0PT
+      source: msstore
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-av1-extensions
+    directives:
+      description: Install AV1 Extensions
+    settings:
+      id: 9MVZQVXJBQ9V
+      source: msstore

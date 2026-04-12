@@ -58,14 +58,26 @@ Remove-Item alias:echo -Force
 # Aliases
 ################################################################################
 
-Set-Alias -Name "v" -Value nvim
-Set-Alias -Name "vim" -Value nvim
+if (Get-Command -Name "nvim" -ErrorAction SilentlyContinue) {
+    Set-Alias -Name "v" -Value nvim
+    Set-Alias -Name "vi" -Value nvim
+    Set-Alias -Name "vim" -Value nvim
+} elseif (Get-Command -Name "vim" -ErrorAction SilentlyContinue) {
+    Set-Alias -Name "v" -Value vim
+    Set-Alias -Name "vi" -Value vim
+}
 Set-Alias -Name "g" -Value git
 Set-Alias -Name "ex" -Value explorer
 Set-Alias -Name "lg" -Value lazygit
 Set-Alias -Name "cat" -Value bat
 Set-Alias -Name "mkdir" -Value mkdir.exe
-Set-Alias -Name "ls" -Value lsd
+if (Get-Command -Name "lsd" -ErrorAction SilentlyContinue) {
+    Set-Alias -Name "ls" -Value lsd
+}
+elseif (Get-Command -Name "exa" -ErrorAction SilentlyContinue) {
+    Set-Alias -Name "ls" -Value exa
+}
+
 
 ################################################################################
 # PSReadLine
@@ -131,3 +143,5 @@ $null = Register-EngineEvent -SourceIdentifier 'PowerShell.OnIdle' -MaxTriggerCo
     }
 
 }
+
+# TODO: CTT PowerShell profile

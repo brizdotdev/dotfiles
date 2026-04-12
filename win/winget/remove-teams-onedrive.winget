@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-onedrive-absent
+    directives:
+      description: Uninstall OneDrive
+    settings:
+      id: Microsoft.OneDrive
+      source: winget
+      ensure: absent
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-teams-absent
+    directives:
+      description: Uninstall Microsoft Teams
+    settings:
+      id: Microsoft.Teams
+      source: winget
+      ensure: absent
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-teams-store-absent
+    directives:
+      description: Uninstall Microsoft Teams (store version)
+    settings:
+      id: XP8BT8DW290MPQ
+      source: msstore
+      ensure: absent

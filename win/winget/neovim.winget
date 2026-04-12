@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+  ##############################################################################
+  # Neovim
+  ##############################################################################
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-neovim
+    directives:
+      description: Install Neovim
+    settings:
+      id: Neovim.Neovim
+      source: winget
+
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: envvar-editor-neovim
+    directives:
+      description: Ensure Neovim is set as EDITOR
+    settings:
+      GetScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        Get-EnvVar -Name "EDITOR" -Value "nvim"
+      TestScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        Test-EnvVar -Name "EDITOR" -Value "nvim"
+      SetScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        Add-EnvVar -Name "EDITOR" -Value "nvim"
+
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: nvim-settings
+    directives:
+      description: Ensure Neovim is configured
+      securityContext: elevated
+    settings:
+      GetScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $config = @{
+          "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
+        }
+        return Get-SymlinkConfigResult -Config $config
+      TestScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $config = @{
+          "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
+        }
+        return Test-SymlinkConfig -Config $config
+      SetScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $config = @{
+          "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
+        }
+        New-SymlinkConfig -Config $config
+
+  - resource: xPSDesiredStateConfiguration/xScript
+    id: vimrc-settings
+    directives:
+      description: Ensure vimrc is configured
+      securityContext: elevated
+    settings:
+      GetScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $config = @{
+          "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
+        }
+        return Get-SymlinkConfigResult -Config $config
+      TestScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $config = @{
+          "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
+        }
+        return Test-SymlinkConfig -Config $config
+      SetScript: |
+        . "${WinGetConfigRoot}\..\Utils.ps1"
+        $config = @{
+          "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
+        }
+        New-SymlinkConfig -Config $config

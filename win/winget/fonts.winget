@@ -1,0 +1,155 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+
+  ##############################################################################
+  # Fonts
+  # TODO: Replace font install with WinGet when they add font support
+  # https://github.com/ryanoasis/nerd-fonts/issues/1935
+  ##############################################################################
+
+  - resource: Microsoft.WinGet.DSC/WinGetPackage
+    id: winget-chocolatey
+    directives:
+      description: Install Chocolatey
+      securityContext: elevated
+    settings:
+      id: Chocolatey.Chocolatey
+      source: winget
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-bitstreamverasansmono
+    directives:
+      description: Install Bitstream Vera Sans Mono Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-bitstreamverasansmono
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-commitmono
+    directives:
+      description: Install CommitMono Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-commitmono
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-fantasquesansmono
+    directives:
+      description: Install Fantasque Sans Mono Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-fantasquesansmono
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-iosevka
+    directives:
+      description: Install Iosevka Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-iosevka
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-jetbrainsmono
+    directives:
+      description: Install JetBrains Mono Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-jetbrainsmono
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-lekton
+    directives:
+      description: Install Lekton Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-lekton
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-proggyclean
+    directives:
+      description: Install ProggyClean Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-proggyclean
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-spacemono
+    directives:
+      description: Install SpaceMono Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-spacemono
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-terminus
+    directives:
+      description: Install Terminus Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-terminus
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-ubuntumono
+    directives:
+      description: Install Ubuntu Mono Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-ubuntumono
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-victormono
+    directives:
+      description: Install VictorMono Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-victormono
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-nerd-fonts-hack
+    directives:
+      description: Install Hack Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-hack
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-cascadiamono
+    directives:
+      description: Install Cascadia Mono using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: cascadiamono
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-monaspace
+    directives:
+      description: Install Monaspace using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: monaspace
+
+  - resource: cChoco/cChocoPackageInstaller
+    id: choco-delugia
+    directives:
+      description: Install Delugia Nerd Font using Chocolatey
+    dependsOn:
+      - winget-chocolatey
+    settings:
+      Name: nerd-fonts-delugiacomplete
