@@ -19,21 +19,19 @@ properties:
           $result = & winget list --id Git.Git --exact --quiet 2>$null
           return $LASTEXITCODE -eq 0
         SetScript: |
-          $gitInstallPath = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\Git"
           $overrideParams = @(
             '/SP-'
             '/VERYSILENT'
             '/SUPPRESSMSGBOXES'
             '/NORESTART'
             '/NOCANCEL'
-            '/CURRENTUSER'
             '/LOG'
-            '/Components="gitlfs,scalar"'
-            "/DIR=`"$gitInstallPath`""
+            '/Components="gitlfs,scalar,windowsterminal,assoc,assoc_sh"'
             '/o:PathOption=BashOnly'
             '/o:SSHOption=ExternalOpenSSH'
             '/o:CURLOption=WinSSL'
             '/o:BashTerminalOption=ConHost'
+            '/o:DefaultBranchOption=main'
           ) -join ' '
           winget install Git.Git --source winget --silent --override $overrideParams
 
@@ -45,7 +43,7 @@ properties:
         - install-git
       settings:
         GetScript: |
-          $gitInstallPath = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\Git"
+          $gitInstallPath = "C:\Program Files\Git"
           $pathsToAdd = @(
             (Join-Path -Path $gitInstallPath -ChildPath "bin"),
             (Join-Path -Path $gitInstallPath -ChildPath "cmd"),
@@ -53,14 +51,15 @@ properties:
             (Join-Path -Path $gitInstallPath -ChildPath "usr\bin")
           )
           $currentPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User)
-          $splitPath = $currentPath -split ';'
-          if (($pathsToAdd | Where-Object { $splitPath -notcontains $_ }).Count -eq 0) {
+            $splitPath = @($currentPath -split ';' | Where-Object { $_ })
+            $missingPaths = @($pathsToAdd | Where-Object { $splitPath -notcontains $_ })
+            if ($missingPaths.Count -eq 0) {
             return $true
           } else {
             return $false
           }
         TestScript: |
-          $gitInstallPath = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\Git"
+          $gitInstallPath = "C:\Program Files\Git"
           $pathsToAdd = @(
             (Join-Path -Path $gitInstallPath -ChildPath "bin"),
             (Join-Path -Path $gitInstallPath -ChildPath "cmd"),
@@ -68,14 +67,15 @@ properties:
             (Join-Path -Path $gitInstallPath -ChildPath "usr\bin")
           )
           $currentPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User)
-          $splitPath = $currentPath -split ';'
-          if (($pathsToAdd | Where-Object { $splitPath -notcontains $_ }).Count -eq 0) {
+            $splitPath = @($currentPath -split ';' | Where-Object { $_ })
+            $missingPaths = @($pathsToAdd | Where-Object { $splitPath -notcontains $_ })
+            if ($missingPaths.Count -eq 0) {
             return $true
           } else {
             return $false
           }
         SetScript: |
-          $gitInstallPath = Join-Path -Path $env:LOCALAPPDATA -ChildPath "Programs\Git"
+          $gitInstallPath = "C:\Program Files\Git"
           $pathsToAdd = @(
             (Join-Path -Path $gitInstallPath -ChildPath "bin"),
             (Join-Path -Path $gitInstallPath -ChildPath "cmd"),
@@ -83,12 +83,13 @@ properties:
             (Join-Path -Path $gitInstallPath -ChildPath "usr\bin")
           )
           $currentPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User)
-          $splitPath = $currentPath -split ';'
-          $missingPaths = $pathsToAdd | Where-Object { $splitPath -notcontains $_ }
+            $splitPath = @($currentPath -split ';' | Where-Object { $_ })
+            $missingPaths = @($pathsToAdd | Where-Object { $splitPath -notcontains $_ })
           if ($missingPaths.Count -eq 0) {
             Write-Host 'Git is already in the path.'
           } else {
             $newPath = ($splitPath + $missingPaths) -join ';'
             [Environment]::SetEnvironmentVariable('Path', $newPath, [EnvironmentVariableTarget]::User)
+            $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
             Write-Host 'Git has been added to the path.'
           }
