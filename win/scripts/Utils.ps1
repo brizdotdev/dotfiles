@@ -16,8 +16,9 @@ function Test-EnvPath {
 		[System.EnvironmentVariableTarget]$Scope = [System.EnvironmentVariableTarget]::User
 	)
 	$currentPath = [Environment]::GetEnvironmentVariable('Path', $Scope)
-	$splitPath = $currentPath -split ';'
-	return ($Paths | Where-Object { $splitPath -notcontains $_ }).Count -eq 0
+	$splitPath = @($currentPath -split ';' | Where-Object { $_ })
+	$missingPaths = @($Paths | Where-Object { $splitPath -notcontains $_ })
+	return $missingPaths.Count -eq 0
 }
 
 function Add-EnvPath {
@@ -38,8 +39,8 @@ function Add-EnvPath {
 		[System.EnvironmentVariableTarget]$Scope = [System.EnvironmentVariableTarget]::User
 	)
 	$currentPath = [Environment]::GetEnvironmentVariable('Path', $Scope)
-	$splitPath = $currentPath -split ';'
-	$missingPaths = $Paths | Where-Object { $splitPath -notcontains $_ }
+	$splitPath = @($currentPath -split ';' | Where-Object { $_ })
+	$missingPaths = @($Paths | Where-Object { $splitPath -notcontains $_ })
 	if ($missingPaths.Count -eq 0) {
 		Write-Host 'All paths are already in PATH.'
 	} else {
