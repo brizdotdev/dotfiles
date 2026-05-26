@@ -302,6 +302,14 @@ properties:
         source: winget
 
     - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: winget-poppler
+      directives:
+        description: Install Poppler (Yazi PDF Preview)
+      settings:
+        id: oschwartz10612.poppler
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
       id: winget-duf
       directives:
         description: Install duf
