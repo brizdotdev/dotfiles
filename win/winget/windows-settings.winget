@@ -1569,3 +1569,4 @@ properties:
 # TODO: Remove pinned from startmenu. This should be in autounattend
 # TODO: Disable Windows Search Index
 # TODO: Set wallpaper (https://github.com/cschneegans/unattend-generator/blob/master/resource/SetWallpaper.ps1)
+# TODO: Add stuff from Windows Developer Config: https://github.com/microsoft/WindowsDeveloperConfig
