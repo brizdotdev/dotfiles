@@ -127,6 +127,7 @@ properties:
   # Containers
   ##############################################################################
 
+    # TODO: Replace with wslc when that's available (https://learn.microsoft.com/en-us/windows/wsl/wsl-container)
     - resource: Microsoft.WinGet.DSC/WinGetPackage
       id: winget-docker-desktop
       directives:
