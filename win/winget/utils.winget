@@ -1,197 +1,223 @@
-# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
 
-properties:
-  configurationVersion: 0.2.0
-  resources:
+resources:
+##############################################################################
+# Utilities
+##############################################################################
 
-  ##############################################################################
-  # Utilities
-  ##############################################################################
+- name: Raycast
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Raycast
+  properties:
+    id: 9PFXXSHC64H3
+    source: msstore
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-raycast
-    directives:
-      description: Install Raycast
-    settings:
-      id: 9PFXXSHC64H3
-      source: msstore
+- name: Everything
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Everything
+  properties:
+    id: voidtools.Everything
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-everything
-    directives:
-      description: Install Everything
-    settings:
-      id: voidtools.Everything
-      source: winget
+- name: SevenZip
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install 7-Zip
+  properties:
+    id: 7zip.7zip
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-7zip
-    directives:
-      description: Install 7-Zip
-    settings:
-      id: 7zip.7zip
-      source: winget
+- name: PathContains7Zip
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  dependsOn:
+  - SevenZip
+  metadata:
+    description: Ensure 7-Zip is in the path
+  properties:
+    getScript: |
+      . "${WinGetConfigRoot}\..\Utils.ps1"
+      $pathsToAdd = @('C:\Program Files\7-Zip')
+      return Test-EnvPath -Paths $pathsToAdd
+    testScript: |
+      . "${WinGetConfigRoot}\..\Utils.ps1"
+      $pathsToAdd = @('C:\Program Files\7-Zip')
+      return Test-EnvPath -Paths $pathsToAdd
+    setScript: |
+      . "${WinGetConfigRoot}\..\Utils.ps1"
+      $pathsToAdd = @('C:\Program Files\7-Zip')
+      Add-EnvPath -Paths $pathsToAdd
 
-  - resource: xPSDesiredStateConfiguration/xScript
-    id: path-contains-7zip
-    directives:
-      description: Ensure 7-Zip is in the path
-    dependsOn:
-      - winget-7zip
-    settings:
-      TestScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $pathsToAdd = @('C:\Program Files\7-Zip')
-        return Test-EnvPath -Paths $pathsToAdd
-      SetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $pathsToAdd = @('C:\Program Files\7-Zip')
-        Add-EnvPath -Paths $pathsToAdd
+- name: gsudo
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install gsudo
+  properties:
+    id: gerardog.gsudo
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-gsudo
-    directives:
-      description: Install gsudo
-    settings:
-      id: gerardog.gsudo
-      source: winget
+- name: OpenSSH
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install OpenSSH
+  properties:
+    id: Microsoft.OpenSSH.Preview
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-openssh
-    directives:
-      description: Install OpenSSH
-    settings:
-      id: Microsoft.OpenSSH.Preview
-      source: winget
+- name: LocalSend
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install LocalSend
+  properties:
+    id: LocalSend.LocalSend
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-local-send
-    directives:
-      description: Install LocalSend
-    settings:
-      id: LocalSend.LocalSend
-      source: winget
+- name: Eza
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install eza
+  properties:
+    id: eza-community.eza
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-eza
-    directives:
-      description: Install eza
-    settings:
-      id: eza-community.eza
-      source: winget
+- name: Bitwarden
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Bitwarden
+  properties:
+    id: Bitwarden.Bitwarden
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-bitwarden
-    directives:
-      description: Install Bitwarden
-    settings:
-      id: Bitwarden.Bitwarden
-      source: winget
+- name: BitwardenCli
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Bitwarden CLI
+  properties:
+    id: Bitwarden.Bitwarden.CLI
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-bitwarden-cli
-    directives:
-      description: Install Bitwarden CLI
-    settings:
-      id: Bitwarden.Bitwarden.CLI
-      source: winget
+- name: WindowsClock
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Windows Clock
+  properties:
+    id: 9WZDNCRFJ3PR
+    source: msstore
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-windowsclock
-    directives:
-      description: Install Windows Clock
-    settings:
-      id: 9WZDNCRFJ3PR
-      source: msstore
+- name: WindowsCalculator
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Windows Calculator
+  properties:
+    id: 9WZDNCRFHVN5
+    source: msstore
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-windowscalculator
-    directives:
-      description: Install Windows Calculator
-    settings:
-      id: 9WZDNCRFHVN5
-      source: msstore
+- name: WindowsCamera
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Windows Camera
+  properties:
+    id: 9WZDNCRFJBBG
+    source: msstore
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-windowscamera
-    directives:
-      description: Install Windows Camera
-    settings:
-      id: 9WZDNCRFJBBG
-      source: msstore
+##############################################################################
+# Media
+##############################################################################
 
-  ##############################################################################
-  # Media
-  ##############################################################################
+- name: Spotify
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Spotify
+  properties:
+    id: Spotify.Spotify
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-spotify
-    directives:
-      description: Install Spotify
-    settings:
-      id: Spotify.Spotify
-      source: winget
+- name: mpv
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install mpv
+  properties:
+    id: shinchiro.mpv
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-mpv
-    directives:
-      description: Install mpv
-    settings:
-      id: shinchiro.mpv
-      source: winget
+- name: VLC
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install VLC
+  properties:
+    id: VideoLAN.VLC
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-vlc
-    directives:
-      description: Install VLC
-    settings:
-      id: VideoLAN.VLC
-      source: winget
+- name: ytDlp
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install yt-dlp
+  properties:
+    id: yt-dlp.yt-dlp
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-yt-dlp
-    directives:
-      description: Install yt-dlp
-    settings:
-      id: yt-dlp.yt-dlp
-      source: winget
+- name: HEIFExtensions
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install HEIF Image Extensions
+  properties:
+    id: 9PMMSR1CGPWG
+    source: msstore
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-heif
-    directives:
-      description: Install HEIF Image Extensions
-    settings:
-      id: 9PMMSR1CGPWG
-      source: msstore
+- name: WebMediaExtensions
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Web Media Extensions
+  properties:
+    id: 9N5TDP8VCMHS
+    source: msstore
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-web-media-extensions
-    directives:
-      description: Install Web Media Extensions
-    settings:
-      id: 9N5TDP8VCMHS
-      source: msstore
+- name: WebPExtensions
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install WebP Extensions
+  properties:
+    id: 9PG2DK419DRG
+    source: msstore
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-web-pextensions
-    directives:
-      description: Install WebP Extensions
-    settings:
-      id: 9PG2DK419DRG
-      source: msstore
+- name: VP9Extensions
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install VP9 Extensions
+  properties:
+    id: 9N4D0MSMP0PT
+    source: msstore
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-vp9-extensions
-    directives:
-      description: Install VP9 Extensions
-    settings:
-      id: 9N4D0MSMP0PT
-      source: msstore
-
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-av1-extensions
-    directives:
-      description: Install AV1 Extensions
-    settings:
-      id: 9MVZQVXJBQ9V
-      source: msstore
+- name: AV1Extensions
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install AV1 Extensions
+  properties:
+    id: 9MVZQVXJBQ9V
+    source: msstore
+    useLatest: true

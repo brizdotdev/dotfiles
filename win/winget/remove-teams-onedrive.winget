@@ -1,32 +1,36 @@
-# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
 
-properties:
-  configurationVersion: 0.2.0
-  resources:
+resources:
+- name: OneDriveAbsent
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Uninstall OneDrive
+  properties:
+    id: Microsoft.OneDrive
+    source: winget
+    ensure: absent
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-onedrive-absent
-    directives:
-      description: Uninstall OneDrive
-    settings:
-      id: Microsoft.OneDrive
-      source: winget
-      ensure: absent
+- name: TeamsAbsent
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Uninstall Microsoft Teams
+  properties:
+    id: Microsoft.Teams
+    source: winget
+    ensure: absent
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-teams-absent
-    directives:
-      description: Uninstall Microsoft Teams
-    settings:
-      id: Microsoft.Teams
-      source: winget
-      ensure: absent
-
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-teams-store-absent
-    directives:
-      description: Uninstall Microsoft Teams (store version)
-    settings:
-      id: XP8BT8DW290MPQ
-      source: msstore
-      ensure: absent
+- name: TeamsStoreAbsent
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Uninstall Microsoft Teams (store version)
+  properties:
+    id: XP8BT8DW290MPQ
+    source: msstore
+    ensure: absent
+    useLatest: true

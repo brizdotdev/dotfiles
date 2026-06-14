@@ -1,23 +1,25 @@
-# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
 
-properties:
-  configurationVersion: 0.2.0
-  resources:
+resources:
+##############################################################################
+# WinGet settings
+##############################################################################
 
-  ##############################################################################
-  # WinGet settings
-  ##############################################################################
-
-  - resource: Microsoft.Winget.DSC/WinGetUserSettings
-    directives:
-      description: WinGet User settings config
-    settings:
-      Settings:
-        experimentalFeatures:
-          fonts: true
-          resume: true
-        visual:
-          progressBar: "rainbow"
-          enableSixels: true
-        $schema: "https://aka.ms/winget-settings.schema.json"
-      Action: "Full"
+- name: WinGetUserSettings
+  type: Microsoft.Winget.DSC/WinGetUserSettings
+  metadata:
+    description: WinGet User settings config
+  properties:
+    Settings:
+      experimentalFeatures:
+        fonts: true
+        resume: true
+      visual:
+        progressBar: rainbow
+        enableSixels: true
+      $schema: https://aka.ms/winget-settings.schema.json
+    Action: Full

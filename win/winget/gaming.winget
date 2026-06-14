@@ -1,51 +1,58 @@
-properties:
-  configurationVersion: 0.2.0
-  resources:
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-discord
-    directives:
-      description: Install Discord
-    settings:
-      id: Discord.Discord
-      source: winget
+resources:
+- name: Discord
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Discord
+  properties:
+    id: Discord.Discord
+    source: winget
+    useLatest: true
 
-  - resource: xPSDesiredStateConfiguration/xScript
-    id: discord-disable-startup
-    directives:
-      description: Ensure Discord does not start on login
-    dependsOn:
-      - winget-discord
-    settings:
-      TestScript: |
-        $val = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "Discord" -ErrorAction SilentlyContinue
-        return $null -eq $val
-      SetScript: |
-        Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "Discord" -ErrorAction SilentlyContinue
-      GetScript: |
-        $val = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "Discord" -ErrorAction SilentlyContinue
-        return @{ Result = ($null -eq $val) }
+- name: DiscordStartup
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  dependsOn:
+  - Discord
+  metadata:
+    description: Ensure Discord does not start on login
+  properties:
+    getScript: |
+      $val = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'Discord' -ErrorAction SilentlyContinue
+      return @{ Result = ($null -eq $val) }
+    testScript: |
+      $val = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'Discord' -ErrorAction SilentlyContinue
+      return $null -eq $val
+    setScript: |
+      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'Discord' -ErrorAction SilentlyContinue
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-tiny-nvidia-update-checker
-    directives:
-      description: Install TinyNvidiaUpdateChecker
-    settings:
-      id: Hawaii_Beach.TinyNvidiaUpdateChecker
-      source: winget
+- name: TinyNvidiaUpdateChecker
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install TinyNvidiaUpdateChecker
+  properties:
+    id: Hawaii_Beach.TinyNvidiaUpdateChecker
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-steam
-    directives:
-      description: Install Steam
-    settings:
-      id: Valve.Steam
-      source: winget
+- name: Steam
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Steam
+  properties:
+    id: Valve.Steam
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-gog
-    directives:
-      description: Install GOG Galaxy
-    settings:
-      id: GOG.Galaxy
-      source: winget
+- name: GOGGalaxy
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install GOG Galaxy
+  properties:
+    id: GOG.Galaxy
+    source: winget
+    useLatest: true

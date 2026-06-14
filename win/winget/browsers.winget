@@ -1,40 +1,38 @@
-# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
 
-properties:
-  configurationVersion: 0.2.0
-  resources:
+resources:
+- name: GoogleChrome
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Google Chrome
+  properties:
+    id: Google.Chrome
+    source: winget
+    useLatest: true
 
-  ##############################################################################
-  # Browsers
-  ##############################################################################
+- name: MozillaFirefox
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Mozilla Firefox
+  properties:
+    id: Mozilla.Firefox
+    source: winget
+    scope: user
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-google-chrome
-    directives:
-      description: Install Google Chrome
-      securityContext: elevated
-    settings:
-      id: Google.Chrome
-      source: winget
+- name: LibreWolf
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install LibreWolf
+  properties:
+    id: LibreWolf.LibreWolf
+    source: winget
+    useLatest: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-mozilla-firefox
-    directives:
-      description: Install Mozilla Firefox
-      securityContext: elevated
-    settings:
-      id: Mozilla.Firefox
-      source: winget
-      scope: user
-
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-librewolf
-    directives:
-      description: Install LibreWolf
-    settings:
-      id: LibreWolf.LibreWolf
-      source: winget
-
-  # TODO: Browser extensions
-  # TODO: Browser config
-  # TODO: Set default browser
+# TODO: Browser extensions
+# TODO: Browser config
+# TODO: Set default browser
