@@ -71,6 +71,7 @@ function Initialize-Requirements {
 
     winget install --silent --no-upgrade --source winget Microsoft.VCRedist.2015+.x64
     winget install --silent OpenDsc.Resources
+    winget install --silent Microsoft.Dsc.Preview
     winget configure --enable
 
     if ($isAdmin) {
