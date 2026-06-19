@@ -5,34 +5,19 @@ metadata:
       identifier: dscv3
 
 resources:
-# Use script until Winget supports custom overrides
+
+# TODO: Add override params once available: /SP /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NOCANCEL /LOG /Components="gitlfs,scalar,windowsterminal,assoc,assoc_sh" /o:PathOption=BashOnly /o:SSHOption=ExternalOpenSSH /o:CURLOption=WinSSL /o:BashTerminalOption=ConHost /o:DefaultBranchOption=main
 # https://github.com/microsoft/winget-cli/issues/3401
-- name: InstallGit
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Install Git for Windows with custom options
+- type: Microsoft.WinGet/Package
+  name: Git
   properties:
-    getScript: |
-      @{ Result = & winget list --id Git.Git --exact --quiet 2>$null }
-    testScript: |
-      $result = & winget list --id Git.Git --exact --quiet 2>$null
-      return $LASTEXITCODE -eq 0
-    setScript: |
-      $overrideParams = @(
-        '/SP-'
-        '/VERYSILENT'
-        '/SUPPRESSMSGBOXES'
-        '/NORESTART'
-        '/NOCANCEL'
-        '/LOG'
-        '/Components="gitlfs,scalar,windowsterminal,assoc,assoc_sh"'
-        '/o:PathOption=BashOnly'
-        '/o:SSHOption=ExternalOpenSSH'
-        '/o:CURLOption=WinSSL'
-        '/o:BashTerminalOption=ConHost'
-        '/o:DefaultBranchOption=main'
-      ) -join ' '
-      winget install Git.Git --source winget --silent --override $overrideParams
+    id: Git.Git
+    source: winget
+    useLatest: true
+    installMode: silent
+  metadata:
+    description: Install Git
+    securityContext: elevated
 
 - name: GitPath
   type: Microsoft.DSC.Transitional/PowerShellScript
