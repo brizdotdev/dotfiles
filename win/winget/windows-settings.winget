@@ -1418,3 +1418,4 @@ resources:
     - featureName: WindowsMediaPlayer
       state: NotPresent
 
+# TODO: https://github.com/oscarmeldgaard/Windows-Privacy-Debloat
