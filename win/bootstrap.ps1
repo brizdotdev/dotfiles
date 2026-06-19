@@ -28,6 +28,7 @@ function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRel
     } else {
         Repair-WinGetPackageManager -Latest -Force
     }
+    winget configure --enable
 }
 
 function Install-Git {
