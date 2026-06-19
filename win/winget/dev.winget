@@ -5,12 +5,17 @@ metadata:
       identifier: dscv3
 
 resources:
-- name: WindowsSettings
-  type: Microsoft.Windows.Settings/WindowsSettings
-  metadata:
-    description: Enable Developer Mode
+
+- name: DeveloperMode
+  type: Microsoft.Windows/Registry
   properties:
-    DeveloperMode: true
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock
+    valueName: AllowDevelopmentWithoutDevLicense
+    valueData:
+      DWord: 1
+  metadata:
+    description: Enable Developer Mode (sideload + dev features)
+    securityContext: elevated
 
 - name: HostsEnvVar
   type: OpenDsc.Windows/Environment
