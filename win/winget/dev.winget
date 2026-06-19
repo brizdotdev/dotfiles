@@ -13,19 +13,13 @@ resources:
     DeveloperMode: true
 
 - name: HostsEnvVar
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: OpenDsc.Windows/Environment
   metadata:
     description: Set an environment variable to hosts file
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
-      Get-EnvVar -Name "HOSTS"
-    testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
-      Test-EnvVar -Name "HOSTS" -Value "C:\Windows\System32\drivers\etc\hosts"
-    setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
-      Add-EnvVar -Name "HOSTS" -Value "C:\Windows\System32\drivers\etc\hosts"
+    name: HOSTS
+    value: C:\Windows\System32\drivers\etc\hosts
+    scope: User
 
 ##############################################################################
 # Languages
