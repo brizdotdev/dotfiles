@@ -87,9 +87,7 @@ elseif (Get-Command -Name "exa" -ErrorAction SilentlyContinue) {
 ################################################################################
 # PSReadLine
 ################################################################################
-Import-Module PSFzf
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
-Set-PsFzfOption -TabExpansion
 Set-PSReadLineOption -EditMode Vi
 $OnViModeChange = [scriptblock] {
     if ($args[0] -eq 'Command') {
@@ -132,6 +130,8 @@ $null = Register-EngineEvent -SourceIdentifier 'PowerShell.OnIdle' -MaxTriggerCo
     $GitPromptSettings.EnableFileStatus = $false
     Import-Module DockerCompletion
     Import-Module CompletionPredictor
+    Import-Module PSFzf
+    Set-PsFzfOption -TabExpansion
 
     ################################################################################
     # Env
