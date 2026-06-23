@@ -48,12 +48,6 @@ function y {
 }
 
 ################################################################################
-# Import Modules
-################################################################################
-Import-Module Microsoft.PowerShell.Utility
-Import-Module Microsoft.PowerShell.Management
-
-################################################################################
 # Remove stupid aliases
 ################################################################################
 Remove-Item alias:history -Force
@@ -93,7 +87,6 @@ elseif (Get-Command -Name "exa" -ErrorAction SilentlyContinue) {
 ################################################################################
 # PSReadLine
 ################################################################################
-Import-Module PSReadLine
 Import-Module PSFzf
 Set-PSReadLineOption -PredictionSource HistoryAndPlugin
 Set-PsFzfOption -TabExpansion
