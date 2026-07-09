@@ -100,6 +100,7 @@ resources:
   properties:
     id: 9WZDNCRFJ3PR
     source: msstore
+    acceptAgreements: true
 
 - name: WindowsCalculator
   type: Microsoft.WinGet/Package
@@ -108,6 +109,7 @@ resources:
   properties:
     id: 9WZDNCRFHVN5
     source: msstore
+    acceptAgreements: true
 
 - name: WindowsCamera
   type: Microsoft.WinGet/Package
@@ -116,6 +118,7 @@ resources:
   properties:
     id: 9WZDNCRFJBBG
     source: msstore
+    acceptAgreements: true
 
 ##############################################################################
 # Media
@@ -160,6 +163,7 @@ resources:
   properties:
     id: 9PMMSR1CGPWG
     source: msstore
+    acceptAgreements: true
 
 - name: WebMediaExtensions
   type: Microsoft.WinGet/Package
@@ -168,6 +172,7 @@ resources:
   properties:
     id: 9N5TDP8VCMHS
     source: msstore
+    acceptAgreements: true
 
 - name: WebPExtensions
   type: Microsoft.WinGet/Package
@@ -176,6 +181,7 @@ resources:
   properties:
     id: 9PG2DK419DRG
     source: msstore
+    acceptAgreements: true
 
 - name: VP9Extensions
   type: Microsoft.WinGet/Package
@@ -184,6 +190,7 @@ resources:
   properties:
     id: 9N4D0MSMP0PT
     source: msstore
+    acceptAgreements: true
 
 - name: AV1Extensions
   type: Microsoft.WinGet/Package
@@ -192,3 +199,4 @@ resources:
   properties:
     id: 9MVZQVXJBQ9V
     source: msstore
+    acceptAgreements: true
