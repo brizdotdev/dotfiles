@@ -217,7 +217,7 @@ function New-Symlink {
 	if (-not (Test-Path -Path $parentDir)) {
 		New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
 	}
-	New-Item -ItemType SymbolicLink -Path $Path -Target $Target
+	New-Item -ItemType SymbolicLink -Path $Path -Target $Target | Out-Null
 }
 
 function New-SymlinkConfig {
