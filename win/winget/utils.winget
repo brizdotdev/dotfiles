@@ -17,7 +17,7 @@ resources:
     id: voidtools.Everything
     source: winget
 
-- name: SevenZip
+- name: 7Zip
   type: Microsoft.WinGet/Package
   metadata:
     description: Install 7-Zip
@@ -28,7 +28,7 @@ resources:
 - name: PathContains7Zip
   type: Microsoft.DSC.Transitional/PowerShellScript
   dependsOn:
-  - SevenZip
+  - 7Zip
   metadata:
     description: Ensure 7-Zip is in the path
   properties:
