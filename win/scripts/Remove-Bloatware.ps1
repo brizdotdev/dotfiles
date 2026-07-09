@@ -92,7 +92,9 @@ $packages = @(
     "*wunderlist*",
     "*xbox*",
     "*xing*",
-    "*zune*"
+    "*zune*",
+    "*whatsapp*",
+    "*linkedin*"
 )
 
 foreach ($package in $packages) {
