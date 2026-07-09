@@ -12,11 +12,13 @@ $GitHubRepoName = "dotfiles"
 
 $dotfilesPath = Join-Path -Path $HOME -ChildPath ".dotfiles"
 
-$ErrorActionPreference = 'Stop'
 enum WinGetRelease {
     Stable
     Preview
 }
+
+$ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
 
 function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRelease]::Stable) {
     Write-Host -ForegroundColor Blue "Installing WinGet..."
@@ -30,8 +32,10 @@ function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRel
     }
     Write-Host -ForegroundColor Green "WinGet installed"
     Write-Host -ForegroundColor Blue "Enabling WinGet configuration..."
-    winget configure --enable
-    winget install --silent --scope user --accept-source-agreements --accept-package-agreements --source winget Microsoft.Dsc.Preview
+    winget install --silent --disable-interactivity --source winget --scope user --accept-source-agreements --accept-package-agreements Microsoft.Dsc.Preview
+    winget install --silent --disable-interactivity --source winget Microsoft.VCRedist.2015+.x64
+    winget install --silent --disable-interactivity --source winget OpenDsc.Resources
+    winget configure --enable --disable-interactivity --accept-source-agreements
     Write-Host -ForegroundColor Green "WinGet configuration enabled"
 }
 
@@ -39,7 +43,7 @@ function Install-Git {
     $ErrorActionPreference = "Stop"
     Write-Host -ForegroundColor Blue "Installing Git..."
     winget configure --accept-configuration-agreements --suppress-initial-details https://raw.githubusercontent.com/$GitHubUsername/$GitHubRepoName/refs/heads/$Branch/win/winget/git.winget
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+    $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
     Write-Host -ForegroundColor Green "Git installed"
 }
 
