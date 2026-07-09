@@ -7,122 +7,179 @@ metadata:
 resources:
 ##############################################################################
 # Fonts
-# TODO: Replace font install with WinGet when they add font support
-# https://github.com/ryanoasis/nerd-fonts/issues/1935
+# TODO: Migrate to https://github.com/chocolatey-community/Chocolatey-Module if they support DSC 3
+# TODO: Or replace font install with WinGet when they add font support (https://github.com/ryanoasis/nerd-fonts/issues/1935)
 ##############################################################################
 
-- name: Chocolatey
+- name: InstallChocolatey
   type: Microsoft.WinGet/Package
   metadata:
     description: Install Chocolatey
-    winget:
-      securityContext: elevated
   properties:
     id: Chocolatey.Chocolatey
     source: winget
-    useLatest: true
+
+- name: InstallChocolateyModule
+  type: Microsoft.DSC.Transitional/RunCommandOnSet
+  properties:
+    executable: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+    arguments:
+      "0": -NoProfile
+      "1": -NoLogo
+      "2": -Command
+      "3": >-
+        if (-not (Get-Module -ListAvailable -Name Chocolatey))
+        { Install-Module -Name Chocolatey -Scope AllUsers -Force -AllowClobber }
+      treatAsArray: true
+  metadata:
+    description: Ensure the Chocolatey module is installed from the PowerShell Gallery
 
 - name: NerdFontsBitstreamVeraSansMono
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install Bitstream Vera Sans Mono Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-bitstreamverasansmono
+    name: nerd-fonts-bitstreamverasansmono
 
 - name: NerdFontsCommitMono
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install CommitMono Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-commitmono
+    name: nerd-fonts-commitmono
 
 - name: NerdFontsFantasqueSansMono
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install Fantasque Sans Mono Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-fantasquesansmono
+    name: nerd-fonts-fantasquesansmono
 
 - name: NerdFontsIosevka
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install Iosevka Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-iosevka
+    name: nerd-fonts-iosevka
 
 - name: NerdFontsJetBrainsMono
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install JetBrains Mono Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-jetbrainsmono
+    name: nerd-fonts-jetbrainsmono
 
 - name: NerdFontsLekton
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install Lekton Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-lekton
+    name: nerd-fonts-lekton
 
 - name: NerdFontsProggyClean
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install ProggyClean Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-proggyclean
+    name: nerd-fonts-proggyclean
 
 - name: NerdFontsSpaceMono
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install SpaceMono Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-spacemono
+    name: nerd-fonts-spacemono
 
 - name: NerdFontsTerminus
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install Terminus Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-terminus
+    name: nerd-fonts-terminus
 
 - name: NerdFontsUbuntuMono
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install Ubuntu Mono Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-ubuntumono
+    name: nerd-fonts-ubuntumono
 
 - name: NerdFontsVictorMono
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install VictorMono Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-victormono
+    name: nerd-fonts-victormono
 
 - name: NerdFontsHack
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install Hack Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-hack
+    name: nerd-fonts-hack
 
 - name: CascadiaMono
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install Cascadia Mono using Chocolatey
   properties:
-    Name: cascadiamono
+    name: cascadiamono
 
 - name: Monaspace
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install Monaspace using Chocolatey
   properties:
-    Name: monaspace
+    name: monaspace
 
 - name: Delugia
-  type: cChoco/cChocoPackageInstaller
+  type: Chocolatey/ChocolateyPackage
+  dependsOn:
+    - InstallChocolatey
+    - InstallChocolateyModule
   metadata:
     description: Install Delugia Nerd Font using Chocolatey
   properties:
-    Name: nerd-fonts-delugiacomplete
+    name: nerd-fonts-delugiacomplete
