@@ -12,7 +12,6 @@ resources:
   properties:
     id: Google.Chrome
     source: winget
-    useLatest: true
 
 - name: MozillaFirefox
   type: Microsoft.WinGet/Package
@@ -22,7 +21,6 @@ resources:
     id: Mozilla.Firefox
     source: winget
     scope: user
-    useLatest: true
 
 - name: LibreWolf
   type: Microsoft.WinGet/Package
@@ -31,7 +29,6 @@ resources:
   properties:
     id: LibreWolf.LibreWolf
     source: winget
-    useLatest: true
 
 # TODO: Browser extensions
 # TODO: Browser config

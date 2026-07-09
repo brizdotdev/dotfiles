@@ -16,7 +16,6 @@ resources:
   properties:
     id: Microsoft.WindowsTerminal
     source: winget
-    useLatest: true
 
 - name: WindowsTerminalSettings
   type: Microsoft.DSC.Transitional/PowerShellScript

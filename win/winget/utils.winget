@@ -16,7 +16,6 @@ resources:
   properties:
     id: 9PFXXSHC64H3
     source: msstore
-    useLatest: true
 
 - name: Everything
   type: Microsoft.WinGet/Package
@@ -25,7 +24,6 @@ resources:
   properties:
     id: voidtools.Everything
     source: winget
-    useLatest: true
 
 - name: SevenZip
   type: Microsoft.WinGet/Package
@@ -34,7 +32,6 @@ resources:
   properties:
     id: 7zip.7zip
     source: winget
-    useLatest: true
 
 - name: PathContains7Zip
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -63,7 +60,6 @@ resources:
   properties:
     id: gerardog.gsudo
     source: winget
-    useLatest: true
 
 - name: OpenSSH
   type: Microsoft.WinGet/Package
@@ -72,7 +68,6 @@ resources:
   properties:
     id: Microsoft.OpenSSH.Preview
     source: winget
-    useLatest: true
 
 - name: LocalSend
   type: Microsoft.WinGet/Package
@@ -81,7 +76,6 @@ resources:
   properties:
     id: LocalSend.LocalSend
     source: winget
-    useLatest: true
 
 - name: Eza
   type: Microsoft.WinGet/Package
@@ -90,7 +84,6 @@ resources:
   properties:
     id: eza-community.eza
     source: winget
-    useLatest: true
 
 - name: Bitwarden
   type: Microsoft.WinGet/Package
@@ -99,7 +92,6 @@ resources:
   properties:
     id: Bitwarden.Bitwarden
     source: winget
-    useLatest: true
 
 - name: BitwardenCli
   type: Microsoft.WinGet/Package
@@ -108,7 +100,6 @@ resources:
   properties:
     id: Bitwarden.Bitwarden.CLI
     source: winget
-    useLatest: true
 
 - name: WindowsClock
   type: Microsoft.WinGet/Package
@@ -117,7 +108,6 @@ resources:
   properties:
     id: 9WZDNCRFJ3PR
     source: msstore
-    useLatest: true
 
 - name: WindowsCalculator
   type: Microsoft.WinGet/Package
@@ -126,7 +116,6 @@ resources:
   properties:
     id: 9WZDNCRFHVN5
     source: msstore
-    useLatest: true
 
 - name: WindowsCamera
   type: Microsoft.WinGet/Package
@@ -135,7 +124,6 @@ resources:
   properties:
     id: 9WZDNCRFJBBG
     source: msstore
-    useLatest: true
 
 ##############################################################################
 # Media
@@ -148,7 +136,6 @@ resources:
   properties:
     id: Spotify.Spotify
     source: winget
-    useLatest: true
 
 - name: mpv
   type: Microsoft.WinGet/Package
@@ -157,7 +144,6 @@ resources:
   properties:
     id: shinchiro.mpv
     source: winget
-    useLatest: true
 
 - name: VLC
   type: Microsoft.WinGet/Package
@@ -166,7 +152,6 @@ resources:
   properties:
     id: VideoLAN.VLC
     source: winget
-    useLatest: true
 
 - name: ytDlp
   type: Microsoft.WinGet/Package
@@ -175,7 +160,6 @@ resources:
   properties:
     id: yt-dlp.yt-dlp
     source: winget
-    useLatest: true
 
 - name: HEIFExtensions
   type: Microsoft.WinGet/Package
@@ -184,7 +168,6 @@ resources:
   properties:
     id: 9PMMSR1CGPWG
     source: msstore
-    useLatest: true
 
 - name: WebMediaExtensions
   type: Microsoft.WinGet/Package
@@ -193,7 +176,6 @@ resources:
   properties:
     id: 9N5TDP8VCMHS
     source: msstore
-    useLatest: true
 
 - name: WebPExtensions
   type: Microsoft.WinGet/Package
@@ -202,7 +184,6 @@ resources:
   properties:
     id: 9PG2DK419DRG
     source: msstore
-    useLatest: true
 
 - name: VP9Extensions
   type: Microsoft.WinGet/Package
@@ -211,7 +192,6 @@ resources:
   properties:
     id: 9N4D0MSMP0PT
     source: msstore
-    useLatest: true
 
 - name: AV1Extensions
   type: Microsoft.WinGet/Package
@@ -220,4 +200,3 @@ resources:
   properties:
     id: 9MVZQVXJBQ9V
     source: msstore
-    useLatest: true

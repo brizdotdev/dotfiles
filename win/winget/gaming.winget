@@ -12,7 +12,6 @@ resources:
   properties:
     id: Discord.Discord
     source: winget
-    useLatest: true
 
 - name: DiscordStartup
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -37,7 +36,6 @@ resources:
   properties:
     id: Hawaii_Beach.TinyNvidiaUpdateChecker
     source: winget
-    useLatest: true
 
 - name: Steam
   type: Microsoft.WinGet/Package
@@ -46,7 +44,6 @@ resources:
   properties:
     id: Valve.Steam
     source: winget
-    useLatest: true
 
 - name: GOGGalaxy
   type: Microsoft.WinGet/Package
@@ -55,4 +52,3 @@ resources:
   properties:
     id: GOG.Galaxy
     source: winget
-    useLatest: true

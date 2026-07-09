@@ -16,7 +16,6 @@ resources:
   properties:
     id: Microsoft.WindowsPowerShell
     source: winget
-    useLatest: true
 
 - name: PowerShellTelemetry
   type: Microsoft.DSC.Transitional/PowerShellScript

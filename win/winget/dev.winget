@@ -37,7 +37,6 @@ resources:
   properties:
     id: oven-sh.bun
     source: winget
-    useLatest: true
 
 - name: UV
   type: Microsoft.WinGet/Package
@@ -46,7 +45,6 @@ resources:
   properties:
     id: astral-sh.uv
     source: winget
-    useLatest: true
 
 - name: DotNetSDK
   type: Microsoft.WinGet/Package
@@ -55,7 +53,6 @@ resources:
   properties:
     id: Microsoft.DotNet.SDK.10
     source: winget
-    useLatest: true
 
 - name: DotNetSDKPreview
   type: Microsoft.WinGet/Package
@@ -64,7 +61,6 @@ resources:
   properties:
     id: Microsoft.DotNet.SDK.Preview
     source: winget
-    useLatest: true
 
 - name: Rustup
   type: Microsoft.WinGet/Package
@@ -73,7 +69,6 @@ resources:
   properties:
     id: Rustlang.Rustup
     source: winget
-    useLatest: true
 
 - name: RemoveFakePython
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -101,7 +96,6 @@ resources:
   properties:
     id: Microsoft.WSL
     source: winget
-    useLatest: true
 
 - name: VirtualMachinePlatform
   type: Microsoft.Windows/OptionalFeatureList
@@ -133,7 +127,6 @@ resources:
   properties:
     id: Docker.DockerDesktop
     source: winget
-    useLatest: true
 
 ##############################################################################
 # Git
@@ -146,7 +139,6 @@ resources:
   properties:
     id: dandavison.delta
     source: winget
-    useLatest: true
 
 - name: GitConfig
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -186,7 +178,6 @@ resources:
   properties:
     id: sst.opencode
     source: winget
-    useLatest: true
 
 - name: Television
   type: Microsoft.WinGet/Package
@@ -195,7 +186,6 @@ resources:
   properties:
     id: alexpasmantier.television
     source: winget
-    useLatest: true
 
 - name: jq
   type: Microsoft.WinGet/Package
@@ -204,7 +194,6 @@ resources:
   properties:
     id: stedolan.jq
     source: winget
-    useLatest: true
 
 - name: yq
   type: Microsoft.WinGet/Package
@@ -213,7 +202,6 @@ resources:
   properties:
     id: mikefarah.yq
     source: winget
-    useLatest: true
 
 - name: GitLabCli
   type: Microsoft.WinGet/Package
@@ -222,7 +210,6 @@ resources:
   properties:
     id: GLab.GLab
     source: winget
-    useLatest: true
 
 - name: GitHubCli
   type: Microsoft.WinGet/Package
@@ -231,7 +218,6 @@ resources:
   properties:
     id: github.cli
     source: winget
-    useLatest: true
 
 - name: ripgrep
   type: Microsoft.WinGet/Package
@@ -240,7 +226,6 @@ resources:
   properties:
     id: burntsushi.ripgrep.msvc
     source: winget
-    useLatest: true
 
 - name: xsv
   type: Microsoft.WinGet/Package
@@ -249,7 +234,6 @@ resources:
   properties:
     id: burntsushi.xsv.gnu
     source: winget
-    useLatest: true
 
 - name: lazygit
   type: Microsoft.WinGet/Package
@@ -258,7 +242,6 @@ resources:
   properties:
     id: jesseduffield.lazygit
     source: winget
-    useLatest: true
 
 - name: LazygitSettings
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -291,7 +274,6 @@ resources:
   properties:
     id: sharkdp.fd
     source: winget
-    useLatest: true
 
 - name: bat
   type: Microsoft.WinGet/Package
@@ -300,7 +282,6 @@ resources:
   properties:
     id: sharkdp.bat
     source: winget
-    useLatest: true
 
 - name: yazi
   type: Microsoft.WinGet/Package
@@ -309,7 +290,6 @@ resources:
   properties:
     id: sxyazi.yazi
     source: winget
-    useLatest: true
 
 - name: Poppler
   type: Microsoft.WinGet/Package
@@ -318,7 +298,6 @@ resources:
   properties:
     id: oschwartz10612.poppler
     source: winget
-    useLatest: true
 
 - name: duf
   type: Microsoft.WinGet/Package
@@ -327,7 +306,6 @@ resources:
   properties:
     id: muesli.duf
     source: winget
-    useLatest: true
 
 - name: Croc
   type: Microsoft.WinGet/Package
@@ -336,7 +314,6 @@ resources:
   properties:
     id: schollz.croc
     source: winget
-    useLatest: true
 
 - name: Glow
   type: Microsoft.WinGet/Package
@@ -345,7 +322,6 @@ resources:
   properties:
     id: charmbracelet.glow
     source: winget
-    useLatest: true
 
 - name: sd
   type: Microsoft.WinGet/Package
@@ -354,7 +330,6 @@ resources:
   properties:
     id: chmln.sd
     source: winget
-    useLatest: true
 
 - name: OpenSSHPreview
   type: Microsoft.WinGet/Package
@@ -363,7 +338,6 @@ resources:
   properties:
     id: Microsoft.OpenSSH.Preview
     source: winget
-    useLatest: true
 
 - name: SshAgent
   type: Microsoft.DSC.Transitional/PowerShellScript

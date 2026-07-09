@@ -13,7 +13,6 @@ resources:
   properties:
     id: Git.Git
     source: winget
-    useLatest: true
     installMode: silent
   metadata:
     description: Install Git

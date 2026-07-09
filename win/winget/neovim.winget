@@ -16,7 +16,6 @@ resources:
   properties:
     id: Neovim.Neovim
     source: winget
-    useLatest: true
 
 - name: EditorEnvVar
   type: Microsoft.DSC.Transitional/PowerShellScript
