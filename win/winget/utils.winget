@@ -9,14 +9,6 @@ resources:
 # Utilities
 ##############################################################################
 
-- name: Raycast
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Raycast
-  properties:
-    id: 9PFXXSHC64H3
-    source: msstore
-
 - name: Everything
   type: Microsoft.WinGet/Package
   metadata:
