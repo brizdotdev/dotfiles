@@ -10,11 +10,11 @@ resources:
 ##############################################################################
 
 - name: WinGetUserSettings
-  type: Microsoft.Winget.DSC/WinGetUserSettings
+  type: Microsoft.WinGet/UserSettingsFile
   metadata:
     description: WinGet User settings config
   properties:
-    Settings:
+    settings:
       experimentalFeatures:
         fonts: true
         resume: true
@@ -22,4 +22,4 @@ resources:
         progressBar: rainbow
         enableSixels: true
       $schema: https://aka.ms/winget-settings.schema.json
-    Action: Full
+    action: Full
