@@ -1,0 +1,163 @@
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+resources:
+- name: MaxPerformanceOnAC
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Set power mode to best performance on AC via powrprof.dll
+    winget:
+      securityContext: elevated
+  properties:
+    getScript: |
+      Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
+      [DllImport("powrprof.dll", EntryPoint = "PowerGetUserConfiguredACPowerMode")]
+      public static extern uint PowerGetUserConfiguredACPowerMode(out System.Guid PowerModeGuid);
+      '@
+      $guid = [System.Guid]::Empty
+      [Win32.PowerMode]::PowerGetUserConfiguredACPowerMode([ref]$guid) | Out-Null
+      return @{ PowerMode = $guid.ToString() }
+    testScript: |
+      Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
+      [DllImport("powrprof.dll", EntryPoint = "PowerGetUserConfiguredACPowerMode")]
+      public static extern uint PowerGetUserConfiguredACPowerMode(out System.Guid PowerModeGuid);
+      '@
+      $guid = [System.Guid]::Empty
+      [Win32.PowerMode]::PowerGetUserConfiguredACPowerMode([ref]$guid) | Out-Null
+      return $guid -eq [System.Guid]'ded574b5-45a0-4f42-8737-46345c09c238'
+    setScript: |
+      Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
+      [DllImport("powrprof.dll", EntryPoint = "PowerSetUserConfiguredACPowerMode")]
+      public static extern uint PowerSetUserConfiguredACPowerMode(ref System.Guid PowerModeGuid);
+      '@
+      $guid = [System.Guid]'ded574b5-45a0-4f42-8737-46345c09c238'
+      $result = [Win32.PowerMode]::PowerSetUserConfiguredACPowerMode([ref]$guid)
+      if ($result -ne 0) { throw "PowerSetUserConfiguredACPowerMode failed: 0x$($result.ToString('X8'))" }
+
+- name: BalancedPerformanceOnBattery
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Set power mode to balanced on battery via powrprof.dll
+    winget:
+      securityContext: elevated
+  properties:
+    getScript: |
+      Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
+      [DllImport("powrprof.dll", EntryPoint = "PowerGetUserConfiguredDCPowerMode")]
+      public static extern uint PowerGetUserConfiguredDCPowerMode(out System.Guid PowerModeGuid);
+      '@
+      $guid = [System.Guid]::Empty
+      [Win32.PowerMode]::PowerGetUserConfiguredDCPowerMode([ref]$guid) | Out-Null
+      return @{ PowerMode = $guid.ToString() }
+    testScript: |
+      Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
+      [DllImport("powrprof.dll", EntryPoint = "PowerGetUserConfiguredDCPowerMode")]
+      public static extern uint PowerGetUserConfiguredDCPowerMode(out System.Guid PowerModeGuid);
+      '@
+      $guid = [System.Guid]::Empty
+      [Win32.PowerMode]::PowerGetUserConfiguredDCPowerMode([ref]$guid) | Out-Null
+      return $guid -eq [System.Guid]'00000000-0000-0000-0000-000000000000'
+    setScript: |
+      Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
+      [DllImport("powrprof.dll", EntryPoint = "PowerSetUserConfiguredDCPowerMode")]
+      public static extern uint PowerSetUserConfiguredDCPowerMode(ref System.Guid PowerModeGuid);
+      '@
+      $guid = [System.Guid]'00000000-0000-0000-0000-000000000000'
+      $result = [Win32.PowerMode]::PowerSetUserConfiguredDCPowerMode([ref]$guid)
+      if ($result -ne 0) { throw "PowerSetUserConfiguredDCPowerMode failed: 0x$($result.ToString('X8'))" }
+
+- name: DisableHibernation
+  type: Microsoft.DSC.Transitional/RunCommandOnSet
+  metadata:
+    description: Disable hibernation
+    winget:
+      securityContext: elevated
+  properties:
+    executable: powercfg
+    arguments:
+      - /hibernate
+      - off
+
+- name: DisableStandbyOnAC
+  type: Microsoft.DSC.Transitional/RunCommandOnSet
+  metadata:
+    description: Disable standby timeout on AC
+    winget:
+      securityContext: elevated
+  properties:
+    executable: powercfg
+    arguments:
+      - /change
+      - standby-timeout-ac
+      - "0"
+
+- name: DisableStandbyOnDC
+  type: Microsoft.DSC.Transitional/RunCommandOnSet
+  metadata:
+    description: Disable standby timeout on battery
+    winget:
+      securityContext: elevated
+  properties:
+    executable: powercfg
+    arguments:
+      - /change
+      - standby-timeout-dc
+      - "0"
+
+- name: SetMonitorTimeoutOnAC
+  type: Microsoft.DSC.Transitional/RunCommandOnSet
+  metadata:
+    description: Set display timeout to 5 minutes on AC
+    winget:
+      securityContext: elevated
+  properties:
+    executable: powercfg
+    arguments:
+      - /change
+      - monitor-timeout-ac
+      - "5"
+
+- name: SetMonitorTimeoutOnDC
+  type: Microsoft.DSC.Transitional/RunCommandOnSet
+  metadata:
+    description: Set display timeout to 5 minutes on battery
+    winget:
+      securityContext: elevated
+  properties:
+    executable: powercfg
+    arguments:
+      - /change
+      - monitor-timeout-dc
+      - "5"
+
+- name: DisableLidActionOnAC
+  type: Microsoft.DSC.Transitional/RunCommandOnSet
+  metadata:
+    description: Disable sleep on lid close on AC
+    winget:
+      securityContext: elevated
+  properties:
+    executable: powercfg
+    arguments:
+      - /setacvalueindex
+      - SCHEME_CURRENT
+      - sub_buttons
+      - lidaction
+      - "0"
+
+- name: DisableLidActionOnDC
+  type: Microsoft.DSC.Transitional/RunCommandOnSet
+  metadata:
+    description: Disable sleep on lid close on battery
+    winget:
+      securityContext: elevated
+  properties:
+    executable: powercfg
+    arguments:
+      - /setdcvalueindex
+      - SCHEME_CURRENT
+      - sub_buttons
+      - lidaction
+      - "0"
