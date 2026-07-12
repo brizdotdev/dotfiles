@@ -176,5 +176,115 @@ resources:
         Write-Host "Wrote $($settings.Count) extensions to $($entry.Key) policies.json"
       }
 
+- name: ChromeExtensions
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Install Google Chrome extensions via enterprise policy (normal_installed)
+    winget:
+      securityContext: elevated
+  dependsOn:
+    - GoogleChrome
+  properties:
+    getScript: |
+      $ErrorActionPreference = 'Stop'
+      $dotfilesRoot = $env:DOTFILES_ROOT
+      if (-not $dotfilesRoot) {
+        $candidate = "$env:USERPROFILE\.dotfiles"
+        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\chrome\extensions.txt')) {
+          $dotfilesRoot = $candidate
+        }
+      }
+      if (-not $dotfilesRoot) { return @{ Error = 'DOTFILES_ROOT not set' } }
+      $extensionsFile = Join-Path $dotfilesRoot 'common\config\chrome\extensions.txt'
+      $policyFile = 'C:\Program Files\Google\Chrome\Application\policies.json'
+      $result = $null
+      if (Test-Path -LiteralPath $policyFile) {
+        try {
+          $json = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json
+          $result = $json.ExtensionSettings
+        } catch {
+          $result = $null
+        }
+      }
+      return @{ ExtensionSettings = $result; Source = $extensionsFile }
+    testScript: |
+      $ErrorActionPreference = 'Stop'
+      $dotfilesRoot = $env:DOTFILES_ROOT
+      if (-not $dotfilesRoot) {
+        $candidate = "$env:USERPROFILE\.dotfiles"
+        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\chrome\extensions.txt')) {
+          $dotfilesRoot = $candidate
+        }
+      }
+      if (-not $dotfilesRoot) { return $false }
+      $extensionsFile = Join-Path $dotfilesRoot 'common\config\chrome\extensions.txt'
+      $policyFile = 'C:\Program Files\Google\Chrome\Application\policies.json'
+      $expectedIds = @()
+      if (Test-Path -LiteralPath $extensionsFile) {
+        foreach ($line in Get-Content -LiteralPath $extensionsFile) {
+          $t = $line.Trim()
+          if (-not $t -or $t.StartsWith('#')) { continue }
+          if ($t -match '/(?:webstore/)?detail/[^/?]+/([a-p]{32})') { $expectedIds += $Matches[1] }
+        }
+      }
+      $expectedCount = $expectedIds.Count
+      if (-not (Test-Path -LiteralPath $policyFile)) { return $false }
+      try {
+        $json = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json
+        $ext = $json.ExtensionSettings
+        if (-not $ext) { return $false }
+        $actualCount = @($ext.PSObject.Properties | Where-Object { $_.MemberType -eq 'NoteProperty' }).Count
+        return $actualCount -eq $expectedCount
+      } catch {
+        return $false
+      }
+    setScript: |
+      $ErrorActionPreference = 'Stop'
+      $dotfilesRoot = $env:DOTFILES_ROOT
+      if (-not $dotfilesRoot) {
+        $candidate = "$env:USERPROFILE\.dotfiles"
+        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\chrome\extensions.txt')) {
+          $dotfilesRoot = $candidate
+        }
+      }
+      if (-not $dotfilesRoot) { throw 'DOTFILES_ROOT env var not set and could not locate dotfiles directory' }
+      $extensionsFile = Join-Path $dotfilesRoot 'common\config\chrome\extensions.txt'
+      $policyFile = 'C:\Program Files\Google\Chrome\Application\policies.json'
+      $settings = @{}
+      if (Test-Path -LiteralPath $extensionsFile) {
+        foreach ($line in Get-Content -LiteralPath $extensionsFile) {
+          $t = $line.Trim()
+          if (-not $t -or $t.StartsWith('#')) { continue }
+          if ($t -match '/(?:webstore/)?detail/[^/?]+/([a-p]{32})') {
+            $id = $Matches[1]
+            $settings[$id] = @{
+              installation_mode = 'normal_installed'
+              update_url        = 'https://clients2.google.com/service/update2/crx'
+            }
+          }
+        }
+      }
+      if ($settings.Count -eq 0) {
+        Write-Warning 'No Chrome extensions resolved; skipping policies.json write'
+        return
+      }
+      $dir = Split-Path -Parent $policyFile
+      if (-not (Test-Path -LiteralPath $dir)) {
+        Write-Warning "Chrome installation dir not found at '$dir'; skipping"
+        return
+      }
+      $policy = @{}
+      if (Test-Path -LiteralPath $policyFile) {
+        try {
+          $policy = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json -AsHashtable
+        } catch {
+          $policy = @{}
+        }
+      }
+      $policy['ExtensionSettings'] = $settings
+      $json = $policy | ConvertTo-Json -Depth 10
+      [System.IO.File]::WriteAllText($policyFile, $json, [System.Text.UTF8Encoding]::new($false))
+      Write-Host "Wrote $($settings.Count) extensions to Chrome policies.json"
+
 # TODO: Browser config
 # TODO: Set default browser
