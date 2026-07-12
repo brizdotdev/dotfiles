@@ -287,4 +287,3 @@ resources:
       Write-Host "Wrote $($settings.Count) extensions to Chrome policies.json"
 
 # TODO: Browser config
-# TODO: Set default browser

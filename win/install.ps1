@@ -69,7 +69,7 @@ $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIde
 function Initialize-Requirements {
     # Ensure that Gum is installed
     if (-not (Get-Command "gum" -ErrorAction SilentlyContinue)) {
-        winget install --silent --scope user --accept-source-agreements --accept-package-agreements --source winget --no-upgrade charmbracelet.gum
+        winget install --silent --accept-source-agreements --accept-package-agreements --source winget --no-upgrade charmbracelet.gum
         $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
     }
 
@@ -104,12 +104,20 @@ function Get-Inputs{
     if (gum confirm "Configure commit signing?") {
         $GitConfigureSigning = $True
     }
+    $SetDefaultBrowser = $False
+    $Browser = $null
+    if (gum confirm "Set a default browser?") {
+        $SetDefaultBrowser = $True
+        $Browser = gum choose --header "Select default browser" Firefox Chrome LibreWolf
+    }
     return [PSCustomObject]@{
         SelectedOptions = $selectedOptions
         SelectedExtras = $selectedExtras
         ImportSSHKey = $ImportSSHKey
         GitUserEmail = $GitUserEmail
         GitConfigureSigning = $GitConfigureSigning
+        SetDefaultBrowser = $SetDefaultBrowser
+        Browser = $Browser
     }
 }
 
@@ -157,6 +165,9 @@ Install-SelectedItems -SelectedOptions $inputs.SelectedOptions -SelectedExtras $
 Set-GitConfiguration -GitUserEmail $inputs.GitUserEmail -GitConfigureSigning $inputs.GitConfigureSigning
 if ($inputs.ImportSSHKey) {
     & "$PSScriptRoot\scripts\Import-SSHKey.ps1"
+}
+if ($inputs.SetDefaultBrowser) {
+    & "$PSScriptRoot\scripts\Set-DefaultBrowser.ps1" -Browser $inputs.Browser
 }
 Write-Host -ForegroundColor Green "Done!"
 Read-Host
