@@ -12,10 +12,12 @@ resources:
 - name: PowerShell
   type: Microsoft.WinGet/Package
   metadata:
-    description: Install Microsoft PowerShell
+    description: Install PowerShell 7
   properties:
-    id: Microsoft.WindowsPowerShell
+    id: Microsoft.PowerShell
     source: winget
+    installMode: silent
+
 
 - name: PowerShellTelemetry
   type: Microsoft.DSC.Transitional/PowerShellScript
