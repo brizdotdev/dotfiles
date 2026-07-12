@@ -12,6 +12,7 @@ resources:
   properties:
     id: Google.Chrome
     source: winget
+    installMode: silent
 
 - name: MozillaFirefox
   type: Microsoft.WinGet/Package
@@ -20,7 +21,7 @@ resources:
   properties:
     id: Mozilla.Firefox
     source: winget
-    scope: user
+    installMode: silent
 
 - name: LibreWolf
   type: Microsoft.WinGet/Package
@@ -29,6 +30,7 @@ resources:
   properties:
     id: LibreWolf.LibreWolf
     source: winget
+    installMode: silent
 
 # TODO: Browser extensions
 # TODO: Browser config
