@@ -13,6 +13,43 @@ resources:
     id: "Microsoft.PowerToys"
     source: "winget"
 
+# CmdPal extensions
+
+- name: winget_CmdPalExtensionForBitwarden
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Command Palette Extension for Bitwarden"
+  properties:
+    id: "9P5KS8T80MV3"
+    source: "msstore"
+    acceptAgreements: true
+
+- name: winget_CmdPalExtensionForVSCode
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Command Palette Extension for VSCode"
+  properties:
+    id: "9MVLFK6TR4D4"
+    source: "msstore"
+    acceptAgreements: true
+
+- name: winget_CmdPalExtensionForBrowserTabs
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Command Palette Extension for Browser Tabs"
+  properties:
+    id: "9N7BMMLTGFWX"
+    source: "msstore"
+    acceptAgreements: true
+
+- name: winget_CmdPalExtensionForEverything
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Command Palette Extension for Everything"
+  properties:
+    id: lin-ycv.EverythingCmdPal
+    source: "winget"
+
 # Docs: https://learn.microsoft.com/en-us/windows/powertoys/dsc-configure/microsoft-dsc
 
 - name: AdvancedPasteSettings-0
