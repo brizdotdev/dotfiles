@@ -94,12 +94,47 @@ $packages = @(
     "*xing*",
     "*zune*",
     "*whatsapp*",
-    "*linkedin*"
+    "*linkedin*",
+    "*Microsoft.Edge.GameAssist*",
+    "*Microsoft.OutlookForWindows*",
+    "*Microsoft.549981C3F5F10*"
 )
 
 foreach ($package in $packages) {
     Get-AppxPackage -Name $package | Remove-AppxPackage -ErrorAction SilentlyContinue
     Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $package | Remove-AppxProvisionedPackage -Online
+}
+
+$capabilities = @(
+    "Language.Handwriting",
+    "Browser.InternetExplorer",
+    "MathRecognizer",
+    "OneCoreUAP.OneSync",
+    "Microsoft.Windows.PowerShell.ISE",
+    "App.Support.QuickAssist",
+    "Language.Speech",
+    "Language.TextToSpeech",
+    "App.StepsRecorder",
+    "Media.WindowsMediaPlayer",
+    "Microsoft.Windows.WordPad"
+)
+
+foreach ($capability in $capabilities) {
+    Get-WindowsCapability -Online | Where-Object { $_.Name -like "*$capability*" } | Remove-WindowsCapability -Online -ErrorAction SilentlyContinue
+}
+
+$features = @(
+    "MediaPlayback",
+    "MicrosoftWindowsPowerShellV2Root",
+    "Recall"
+)
+
+foreach ($feature in $features) {
+    $installed = Get-WindowsOptionalFeature -Online | Where-Object { $_.FeatureName -eq $feature }
+    if ($installed -and $installed.State -notin @('Disabled', 'DisabledWithPayloadRemoved')) {
+        Disable-WindowsOptionalFeature -Online -FeatureName $feature -Remove -NoRestart -ErrorAction SilentlyContinue
+        Write-Host -ForegroundColor Green "Disabled feature: $feature"
+    }
 }
 
 Write-Host -ForegroundColor Green "Done removing bloatware"
