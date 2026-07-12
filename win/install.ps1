@@ -3,16 +3,21 @@
 # Setup script for my dotfiles
 ################################################################################
 
+$ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
+
 $configMap = @(
     [PSCustomObject]@{
         Name = "Base"
         Preselected = $True
         Configs = @(
+            "$PSScriptRoot\winget\powershell.winget"
+            "$PSScriptRoot\winget\windows-settings.winget"
+            "$PSScriptRoot\winget\power-plan.winget"
             "$PSScriptRoot\winget\browsers.winget"
             "$PSScriptRoot\winget\powertoys.winget"
             "$PSScriptRoot\winget\utils.winget"
             "$PSScriptRoot\winget\vscode.winget"
-            "$PSScriptRoot\winget\windows-settings.winget"
             "$PSScriptRoot\winget\windows-terminal-settings.winget"
             "$PSScriptRoot\winget\winget-settings.winget"
         )
@@ -27,7 +32,6 @@ $configMap = @(
             "$PSScriptRoot\winget\git.winget"
             "$PSScriptRoot\winget\fonts.winget"
             "$PSScriptRoot\winget\neovim.winget"
-            "$PSScriptRoot\winget\powershell.winget"
             "$PSScriptRoot\winget\sandbox.winget"
         )
     }
@@ -66,13 +70,15 @@ function Initialize-Requirements {
     # Ensure that Gum is installed
     if (-not (Get-Command "gum" -ErrorAction SilentlyContinue)) {
         winget install --silent --scope user --accept-source-agreements --accept-package-agreements --source winget --no-upgrade charmbracelet.gum
-        $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+        $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
     }
 
+    Write-Host -ForegroundColor Blue "Enabling WinGet configuration..."
+    winget install --silent --scope user --accept-source-agreements --accept-package-agreements --source winget Microsoft.Dsc.Preview
     winget install --silent --no-upgrade --source winget Microsoft.VCRedist.2015+.x64
-    winget install --silent OpenDsc.Resources
-    winget install --silent Microsoft.Dsc.Preview
-    winget configure --enable
+    winget install --silent --source winget OpenDsc.Resources
+    winget configure --enable --disable-interactivity --accept-source-agreements
+    Write-Host -ForegroundColor Green "WinGet configuration enabled"
 
     if ($isAdmin) {
         if ($null -eq (Get-ComputerRestorePoint)) {
@@ -116,7 +122,7 @@ function Install-SelectedItems {
     foreach ($option in $SelectedOptions) {
         $selectedConfig = $configMap | Where-Object { $_.Name -eq $option }
         foreach ($config in $selectedConfig.Configs) {
-            winget configure --suppress-initial-details --accept-configuration-agreements $config
+            winget configure --suppress-initial-details --accept-configuration-agreements --disable-interactivity $config
         }
         foreach ($script in $selectedConfig.Scripts) {
             & $script
@@ -125,7 +131,7 @@ function Install-SelectedItems {
 
     foreach ($extra in $SelectedExtras) {
         $packageId = $extras[$extra]
-        winget install --accept-package-agreements --accept-source-agreements $packageId
+        winget install --accept-package-agreements --accept-source-agreements --disable-interactivity $packageId
     }
 }
 
@@ -144,6 +150,7 @@ function Set-GitConfiguration {
     }
 }
 
+$env:DOTFILES_ROOT = Split-Path -Parent $PSScriptRoot
 Initialize-Requirements
 $inputs = Get-Inputs
 Install-SelectedItems -SelectedOptions $inputs.SelectedOptions -SelectedExtras $inputs.SelectedExtras
