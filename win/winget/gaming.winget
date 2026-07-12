@@ -14,20 +14,15 @@ resources:
     source: winget
 
 - name: DiscordStartup
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.Windows/Registry
   dependsOn:
   - Discord
   metadata:
     description: Ensure Discord does not start on login
   properties:
-    getScript: |
-      $val = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'Discord' -ErrorAction SilentlyContinue
-      return @{ Result = ($null -eq $val) }
-    testScript: |
-      $val = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'Discord' -ErrorAction SilentlyContinue
-      return $null -eq $val
-    setScript: |
-      Remove-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'Discord' -ErrorAction SilentlyContinue
+    keyPath: HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+    valueName: Discord
+    _exist: false
 
 - name: TinyNvidiaUpdateChecker
   type: Microsoft.WinGet/Package
