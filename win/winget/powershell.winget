@@ -9,6 +9,16 @@ resources:
 # PowerShell
 ##############################################################################
 
+
+- name: Terminal
+  type: Microsoft.WinGet/Package
+  properties:
+    id: Microsoft.WindowsTerminal
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install Windows Terminal
+
 - name: PowerShell
   type: Microsoft.WinGet/Package
   metadata:
