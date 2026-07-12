@@ -331,6 +331,32 @@ resources:
     id: chmln.sd
     source: winget
 
+- name: mise
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install mise
+  properties:
+    id: jdx.mise
+    source: winget
+
+- name: MiseShimsPath
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the mise shims directory is in the PATH
+  properties:
+    getScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $shimsPath = "$env:LocalAppData\mise\shims"
+      return @{ InPath = (Test-EnvPath -Paths @($shimsPath)) }
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $shimsPath = "$env:LocalAppData\mise\shims"
+      return Test-EnvPath -Paths @($shimsPath)
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $shimsPath = "$env:LocalAppData\mise\shims"
+      Add-EnvPath -Paths @($shimsPath)
+
 - name: OpenSSHPreview
   type: Microsoft.WinGet/Package
   metadata:
