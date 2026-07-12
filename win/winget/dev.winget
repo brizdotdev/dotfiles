@@ -146,21 +146,21 @@ resources:
     description: Ensure Git is configured
   properties:
     getScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:USERPROFILE\.gitconfig" = "$env:DOTFILES\common\config\git\.gitconfig"
         "$env:USERPROFILE\.gitignore_global" = "$env:DOTFILES\common\config\git\.gitignore_global"
       }
       return Get-SymlinkConfigResult -Config $config
     testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:USERPROFILE\.gitconfig" = "$env:DOTFILES\common\config\git\.gitconfig"
         "$env:USERPROFILE\.gitignore_global" = "$env:DOTFILES\common\config\git\.gitignore_global"
       }
       return Test-SymlinkConfig -Config $config
     setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:USERPROFILE\.gitconfig" = "$env:DOTFILES\common\config\git\.gitconfig"
         "$env:USERPROFILE\.gitignore_global" = "$env:DOTFILES\common\config\git\.gitignore_global"
@@ -249,19 +249,19 @@ resources:
     description: Ensure Lazygit is configured
   properties:
     getScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:LOCALAPPDATA\lazygit\config.yml" = "$env:DOTFILES\common\config\lazygit\config.yml"
       }
       return Get-SymlinkConfigResult -Config $config
     testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:LOCALAPPDATA\lazygit\config.yml" = "$env:DOTFILES\common\config\lazygit\config.yml"
       }
       return Test-SymlinkConfig -Config $config
     setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:LOCALAPPDATA\lazygit\config.yml" = "$env:DOTFILES\common\config\lazygit\config.yml"
       }

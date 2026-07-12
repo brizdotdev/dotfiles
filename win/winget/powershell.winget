@@ -23,13 +23,13 @@ resources:
     description: Disable PowerShell telemetry
   properties:
     getScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Get-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT"
     testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Test-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
     setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Add-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
 
 - name: PowerShellUpdateCheck
@@ -38,13 +38,13 @@ resources:
     description: Disable PowerShell update check
   properties:
     getScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Get-EnvVar -Name "POWERSHELL_UPDATECHECK"
     testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Test-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
     setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Add-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
 
 - name: PowerShellSettings
@@ -53,35 +53,38 @@ resources:
     description: Ensure PowerShell is configured
   properties:
     getScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $profileAllHosts = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\profile.ps1'
       $config = @{
-        "$PROFILE.CurrentUserAllHosts" = "$env:DOTFILES\win\config\PowerShell\profile.ps1"
+        $profileAllHosts = "${WinGetConfigRoot}\..\config\PowerShell\profile.ps1"
       }
       return Get-SymlinkConfigResult -Config $config
     testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $profileAllHosts = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\profile.ps1'
       $config = @{
-        "$PROFILE.CurrentUserAllHosts" = "$env:DOTFILES\win\config\PowerShell\profile.ps1"
+        $profileAllHosts = "${WinGetConfigRoot}\..\config\PowerShell\profile.ps1"
       }
       return Test-SymlinkConfig -Config $config
     setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $profileAllHosts = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\profile.ps1'
       $config = @{
-        "$PROFILE.CurrentUserAllHosts" = "$env:DOTFILES\win\config\PowerShell\profile.ps1"
+        $profileAllHosts = "${WinGetConfigRoot}\..\config\PowerShell\profile.ps1"
       }
       New-SymlinkConfig -Config $config
 
-- name: PagerLess
+- name: SetLessAsPager
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Ensure Less is set as the default pager
   properties:
     getScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Get-EnvVar -Name "PAGER" -Value "less"
     testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Test-EnvVar -Name "PAGER" -Value "less"
     setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Add-EnvVar -Name "PAGER" -Value "less"

@@ -23,13 +23,13 @@ resources:
     description: Ensure Neovim is set as EDITOR
   properties:
     getScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Get-EnvVar -Name "EDITOR" -Value "nvim"
     testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Test-EnvVar -Name "EDITOR" -Value "nvim"
     setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Add-EnvVar -Name "EDITOR" -Value "nvim"
 
 - name: NvimSettings
@@ -38,19 +38,19 @@ resources:
     description: Ensure Neovim is configured
   properties:
     getScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
       }
       return Get-SymlinkConfigResult -Config $config
     testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
       }
       return Test-SymlinkConfig -Config $config
     setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
       }
@@ -62,19 +62,19 @@ resources:
     description: Ensure vimrc is configured
   properties:
     getScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
       }
       return Get-SymlinkConfigResult -Config $config
     testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
       }
       return Test-SymlinkConfig -Config $config
     setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
         "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
       }
