@@ -32,6 +32,149 @@ resources:
     source: winget
     installMode: silent
 
-# TODO: Browser extensions
+- name: FirefoxExtensions
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Install Firefox and LibreWolf extensions via enterprise policy (normal_installed)
+    winget:
+      securityContext: elevated
+  dependsOn:
+    - MozillaFirefox
+    - LibreWolf
+  properties:
+    getScript: |
+      $ErrorActionPreference = 'Stop'
+      $dotfilesRoot = $env:DOTFILES_ROOT
+      if (-not $dotfilesRoot) {
+        $candidate = "$env:USERPROFILE\.dotfiles"
+        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\firefox\extensions.txt')) {
+          $dotfilesRoot = $candidate
+        }
+      }
+      if (-not $dotfilesRoot) { return @{ Error = 'DOTFILES_ROOT not set' } }
+      $extensionsFile = Join-Path $dotfilesRoot 'common\config\firefox\extensions.txt'
+      $browsers = @{
+        Firefox   = 'C:\Program Files\Mozilla Firefox\distribution'
+        LibreWolf = 'C:\Program Files\LibreWolf\distribution'
+      }
+      $result = @{}
+      foreach ($entry in $browsers.GetEnumerator()) {
+        $policyFile = Join-Path $entry.Value 'policies.json'
+        if (Test-Path -LiteralPath $policyFile) {
+          try {
+            $json = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json
+            $result[$entry.Key] = $json.policies.ExtensionSettings
+          } catch {
+            $result[$entry.Key] = $null
+          }
+        } else {
+          $result[$entry.Key] = $null
+        }
+      }
+      return $result
+    testScript: |
+      $ErrorActionPreference = 'Stop'
+      $dotfilesRoot = $env:DOTFILES_ROOT
+      if (-not $dotfilesRoot) {
+        $candidate = "$env:USERPROFILE\.dotfiles"
+        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\firefox\extensions.txt')) {
+          $dotfilesRoot = $candidate
+        }
+      }
+      if (-not $dotfilesRoot) { return $false }
+      $extensionsFile = Join-Path $dotfilesRoot 'common\config\firefox\extensions.txt'
+      $browsers = @{
+        Firefox   = 'C:\Program Files\Mozilla Firefox\distribution'
+        LibreWolf = 'C:\Program Files\LibreWolf\distribution'
+      }
+      $slugs = @()
+      if (Test-Path -LiteralPath $extensionsFile) {
+        foreach ($line in Get-Content -LiteralPath $extensionsFile) {
+          $t = $line.Trim()
+          if (-not $t -or $t.StartsWith('#')) { continue }
+          if ($t -match '/addon/([^/]+)/?') { $slugs += $Matches[1] }
+        }
+      }
+      $expectedCount = $slugs.Count
+      $needsUpdate = $false
+      foreach ($entry in $browsers.GetEnumerator()) {
+        if (-not (Test-Path -LiteralPath $entry.Value)) { continue }
+        $policyFile = Join-Path $entry.Value 'policies.json'
+        if (-not (Test-Path -LiteralPath $policyFile)) { $needsUpdate = $true; continue }
+        try {
+          $json = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json
+          $ext = $json.policies.ExtensionSettings
+          if (-not $ext) { $needsUpdate = $true; continue }
+          $actualCount = @($ext.PSObject.Properties | Where-Object { $_.MemberType -eq 'NoteProperty' }).Count
+          if ($actualCount -ne $expectedCount) { $needsUpdate = $true }
+        } catch {
+          $needsUpdate = $true
+        }
+      }
+      return -not $needsUpdate
+    setScript: |
+      $ErrorActionPreference = 'Stop'
+      $dotfilesRoot = $env:DOTFILES_ROOT
+      if (-not $dotfilesRoot) {
+        $candidate = "$env:USERPROFILE\.dotfiles"
+        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\firefox\extensions.txt')) {
+          $dotfilesRoot = $candidate
+        }
+      }
+      if (-not $dotfilesRoot) { throw 'DOTFILES_ROOT env var not set and could not locate dotfiles directory' }
+      $extensionsFile = Join-Path $dotfilesRoot 'common\config\firefox\extensions.txt'
+      $browsers = @{
+        Firefox   = 'C:\Program Files\Mozilla Firefox\distribution'
+        LibreWolf = 'C:\Program Files\LibreWolf\distribution'
+      }
+      $slugs = @()
+      if (Test-Path -LiteralPath $extensionsFile) {
+        foreach ($line in Get-Content -LiteralPath $extensionsFile) {
+          $t = $line.Trim()
+          if (-not $t -or $t.StartsWith('#')) { continue }
+          if ($t -match '/addon/([^/]+)/?') { $slugs += $Matches[1] }
+        }
+      }
+      $settings = @{}
+      foreach ($slug in $slugs) {
+        try {
+          $api = Invoke-RestMethod -Uri "https://addons.mozilla.org/api/v5/addons/addon/$slug/" -Headers @{ 'User-Agent' = 'dotfiles' } -ErrorAction Stop
+          $guid = $api.guid
+          $url = $api.current_version.file.url
+          if ($url -and $url.StartsWith('//')) { $url = 'https:' + $url }
+          $settings[$guid] = @{
+            installation_mode = 'normal_installed'
+            install_url       = $url
+          }
+          Write-Host "Resolved $slug -> $guid"
+        } catch {
+          Write-Warning "Failed to fetch metadata for '$slug': $_"
+        }
+      }
+      if ($settings.Count -eq 0) {
+        Write-Warning 'No extensions resolved; skipping policies.json write'
+        return
+      }
+      foreach ($entry in $browsers.GetEnumerator()) {
+        if (-not (Test-Path -LiteralPath $entry.Value)) {
+          Write-Warning "$($entry.Key) distribution dir not found at '$($entry.Value)'; skipping"
+          continue
+        }
+        $policyFile = Join-Path $entry.Value 'policies.json'
+        $policy = @{}
+        if (Test-Path -LiteralPath $policyFile) {
+          try {
+            $policy = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json -AsHashtable
+          } catch {
+            $policy = @{}
+          }
+        }
+        if (-not $policy.ContainsKey('policies')) { $policy['policies'] = @{} }
+        $policy['policies']['ExtensionSettings'] = $settings
+        $json = $policy | ConvertTo-Json -Depth 10
+        [System.IO.File]::WriteAllText($policyFile, $json, [System.Text.UTF8Encoding]::new($false))
+        Write-Host "Wrote $($settings.Count) extensions to $($entry.Key) policies.json"
+      }
+
 # TODO: Browser config
 # TODO: Set default browser
