@@ -7,8 +7,7 @@ metadata:
 resources:
 ##############################################################################
 # Fonts
-# TODO: Migrate to https://github.com/chocolatey-community/Chocolatey-Module if they support DSC 3
-# TODO: Or replace font install with WinGet when they add font support (https://github.com/ryanoasis/nerd-fonts/issues/1935)
+# TODO: Replace font install with WinGet when they add font support (https://github.com/ryanoasis/nerd-fonts/issues/1935)
 ##############################################################################
 
 - name: InstallChocolatey
