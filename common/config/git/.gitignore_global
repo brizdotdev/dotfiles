@@ -1,2 +1,4 @@
 .personal/
 .vscode/sessions.json
+
+**/.claude/settings.local.json
