@@ -1,0 +1,112 @@
+[bootstrap.packages]
+"apt:fish" = "latest"
+"apt:git" = "latest"
+"apt:sed" = "latest"
+"apt:7zip" = "latest"
+"apt:poppler-utils" = "latest"
+"apt:poppler-data" = "latest"
+"apt:build-essential" = "latest"
+
+"apk:fish" = "latest"
+"apk:git" = "latest"
+"apk:sed" = "latest"
+"apk:7zip" = "latest"
+"apk:poppler" = "latest"
+"apk:poppler-data" = "latest"
+"apk:build-base" = "latest"
+
+"pacman:fish" = "latest"
+"pacman:git" = "latest"
+"pacman:sed" = "latest"
+"pacman:7zip" = "latest"
+"pacman:poppler" = "latest"
+"pacman:poppler-data" = "latest"
+"pacman:base-devel" = "latest"
+
+[tools]
+# Lang
+bun = "latest"
+dotnet = "latest"
+node = "latest"
+go = "latest"
+python = "latest"
+rust = "latest"
+uv = "latest"
+
+# AI
+claude = "latest"
+opencode = "latest"
+pi = "latest"
+# TODO: Skills and MCP
+
+# Git
+delta = "latest"
+github-cli = "latest"
+glab = "latest"
+hunk = "latest"
+lazygit = "latest"
+
+# Yazi and deps
+yazi = "latest"
+ffmpeg = "latest"
+resvg = "latest"
+# TODO Utils for file preview
+
+# Utils
+"cargo:xan" = "latest"
+"pipx:posting" = "latest"
+"pipx:sqlit-tui" = "latest"
+atuin = "latest"
+bat = "latest"
+bat-extras = "latest"
+bitwarden = "latest"
+btop = "latest"
+croc = "latest"
+doggo = "latest"
+duf = "latest"
+dust = "latest"
+eza = "latest"
+fastfetch = "latest"
+fd = "latest"
+fx = "latest"
+fzf = "latest"
+glow = "latest"
+gum = "latest"
+herdr = "latest"
+hyperfine = "latest"
+imagemagick = "latest"
+jq = "latest"
+neovim = "latest"
+oha = "latest"
+qsv = "latest"
+ripgrep = "latest"
+sd = "latest"
+starship = "latest"
+television = "latest"
+tmux = "latest"
+viddy = "latest"
+yq = "latest"
+yt-dlp = "latest"
+zoxide = "latest"
+
+[settings]
+dotfiles.root = "~/.dotfiles"
+dotfiles.default_mode = "symlink"
+
+[dotfiles]
+# Git
+"~/.gitconfig" = "common/config/git/.gitconfig"
+"~/.gitignore_global" = "common/config/git/.gitignore_global"
+# Editors
+"~/.vimrc" = "common/config/vim/.vimrc"
+"~/.config/nvim" = "common/config/nvim"
+# Shell & prompt
+"~/.bashrc" = "linux/config/bash/bashrc"
+"~/.config/starship.toml" = "common/config/starship/starship.toml"
+# Terminal
+"~/.tmux.conf" = "linux/config/tmux/.tmux.conf"
+"~/.tmux/plugins/tpm" = "linux/config/tmux/tpm"
+# Tools
+"~/.config/lazygit/config.yml" = "common/config/lazygit/config.yml"
+"~/.curlrc" = "common/config/curl/.curlrc"
+"~/.claude/settings.json" = "common/config/claude/settings.json"
