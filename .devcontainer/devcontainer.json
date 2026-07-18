@@ -14,11 +14,12 @@
 				"christian-kohler.path-intellisense",
 				"eamodio.gitlens",
 				"ms-vscode.powershell-preview",
-        "bungcip.better-toml",
-        "davidanson.vscode-markdownlint",
-        "gordonlarrigan.vscode-kanbn",
-        "redhat.ansible",
-        "redhat.vscode-yaml"
+				"bungcip.better-toml",
+				"davidanson.vscode-markdownlint",
+				"gordonlarrigan.vscode-kanbn",
+				"redhat.ansible",
+				"redhat.vscode-yaml",
+				"hverlin.mise-vscode"
 			]
 		}
 	},
