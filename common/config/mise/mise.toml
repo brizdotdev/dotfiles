@@ -26,7 +26,7 @@
 [tools]
 # Lang
 bun = "latest"
-dotnet = "latest"
+# dotnet = "latest"
 node = "latest"
 go = "latest"
 python = "latest"
@@ -95,18 +95,18 @@ dotfiles.default_mode = "symlink"
 
 [dotfiles]
 # Git
-"~/.gitconfig" = "common/config/git/.gitconfig"
-"~/.gitignore_global" = "common/config/git/.gitignore_global"
+"~/.gitconfig" = "~/.dotfiles/common/config/git/.gitconfig"
+"~/.gitignore_global" = "~/.dotfiles/common/config/git/.gitignore_global"
 # Editors
-"~/.vimrc" = "common/config/vim/.vimrc"
-"~/.config/nvim" = "common/config/nvim"
+"~/.vimrc" = "~/.dotfiles/common/config/vim/.vimrc"
+# "~/.config/nvim" = "~/.dotfiles/common/config/nvim"
 # Shell & prompt
-"~/.bashrc" = "linux/config/bash/bashrc"
-"~/.config/starship.toml" = "common/config/starship/starship.toml"
+# "~/.bashrc" = "~/.dotfiles/linux/config/bash/bashrc"
+"~/.config/starship.toml" = "~/.dotfiles/common/config/starship/starship.toml"
 # Terminal
-"~/.tmux.conf" = "linux/config/tmux/.tmux.conf"
-"~/.tmux/plugins/tpm" = "linux/config/tmux/tpm"
+"~/.tmux.conf" = "~/.dotfiles/linux/config/tmux/.tmux.conf"
+"~/.tmux/plugins/tpm" = "~/.dotfiles/linux/config/tmux/tpm"
 # Tools
-"~/.config/lazygit/config.yml" = "common/config/lazygit/config.yml"
-"~/.curlrc" = "common/config/curl/.curlrc"
-"~/.claude/settings.json" = "common/config/claude/settings.json"
+"~/.config/lazygit/config.yml" = "~/.dotfiles/common/config/lazygit/config.yml"
+"~/.curlrc" = "~/.dotfiles/common/config/curl/.curlrc"
+"~/.claude/settings.json" = "~/.dotfiles/common/config/claude/settings.json"
