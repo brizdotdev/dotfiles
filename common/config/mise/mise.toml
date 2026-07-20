@@ -111,3 +111,5 @@ dotfiles.default_mode = "symlink"
 "~/.curlrc" = "~/.dotfiles/common/config/curl/.curlrc"
 "~/.claude/settings.json" = "~/.dotfiles/common/config/claude/settings.json"
 "~/.config/hunk/config.toml" = "~/.dotfiles/common/config/hunk/config.toml"
+# Kanata
+"~/.config/kanata/kanata.kbd" = "~/.dotfiles/common/config/kanata/laptop.kbd"
