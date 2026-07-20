@@ -116,3 +116,6 @@ dotfiles.default_mode = "symlink"
 "~/.config/yazi/" = "~/.dotfiles/common/config/yazi/"
 # Kanata
 "~/.config/kanata/kanata.kbd" = "~/.dotfiles/common/config/kanata/laptop.kbd"
+# xdg-desktop-portal
+"~/.config/xdg-desktop-portal/portals.conf" = "~/.dotfiles/linux/config/xdg-desktop-portal/portals.conf"
+"~/.config/xdg-desktop-portal-termfilechooser/config" = "~/.dotfiles/linux/config/xdg-desktop-portal-termfilechooser/config"

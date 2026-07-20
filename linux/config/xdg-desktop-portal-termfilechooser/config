@@ -1,0 +1,6 @@
+[filechooser]
+cmd = yazi-wrapper.sh
+default_dir = $HOME
+env = TERMCMD='uwsm-app -- xdg-terminal-exec --title=xdg-filechooser'
+open_mode = suggested
+save_mode = last
