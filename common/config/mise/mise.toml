@@ -113,5 +113,6 @@ dotfiles.default_mode = "symlink"
 "~/.config/opencode/opencode.json" = "~/.dotfiles/common/config/opencode/opencode.json"
 "~/.config/opencode/tui.json" = "~/.dotfiles/common/config/opencode/tui.json"
 "~/.config/hunk/config.toml" = "~/.dotfiles/common/config/hunk/config.toml"
+"~/.config/yazi/" = "~/.dotfiles/common/config/yazi/"
 # Kanata
 "~/.config/kanata/kanata.kbd" = "~/.dotfiles/common/config/kanata/laptop.kbd"

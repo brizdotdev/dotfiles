@@ -1,0 +1,23 @@
+#:schema https://yazi-rs.github.io/schemas/yazi.json
+
+[opener]
+edit = [
+	{ run = '${EDITOR:-vi} %s', desc = '$EDITOR', for = 'unix', block = true },
+]
+code = [
+	{ run = 'code %s', desc = 'VS Code', for = 'unix', orphan = true },
+]
+
+[open]
+rules = [
+	# Folder
+	{ url = '*/', use = ['edit', 'open', 'reveal'] },
+	# Text
+	{ mime = 'text/*', use = ['edit', 'code', 'reveal'] },
+	# Image
+	{ mime = 'image/*', use = ['open', 'reveal'] },
+	# Archive
+	{ mime = 'application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}', use = ['extract', 'reveal'] },
+	# Fallback
+	{ url = '*', use = ['open', 'reveal'] },
+]
