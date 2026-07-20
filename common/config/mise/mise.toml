@@ -110,6 +110,8 @@ dotfiles.default_mode = "symlink"
 "~/.config/lazygit/config.yml" = "~/.dotfiles/common/config/lazygit/config.yml"
 "~/.curlrc" = "~/.dotfiles/common/config/curl/.curlrc"
 "~/.claude/settings.json" = "~/.dotfiles/common/config/claude/settings.json"
+"~/.config/opencode/opencode.json" = "~/.dotfiles/common/config/opencode/opencode.json"
+"~/.config/opencode/tui.json" = "~/.dotfiles/common/config/opencode/tui.json"
 "~/.config/hunk/config.toml" = "~/.dotfiles/common/config/hunk/config.toml"
 # Kanata
 "~/.config/kanata/kanata.kbd" = "~/.dotfiles/common/config/kanata/laptop.kbd"
