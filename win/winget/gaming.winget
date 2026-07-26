@@ -19,6 +19,8 @@ resources:
   - Discord
   metadata:
     description: Ensure Discord does not start on login
+    winget:
+      securityContext: elevated
   properties:
     keyPath: HKLM\Software\Microsoft\Windows\CurrentVersion\Run
     valueName: Discord
