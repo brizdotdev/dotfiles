@@ -9,7 +9,6 @@ resources:
 # PowerShell
 ##############################################################################
 
-
 - name: Terminal
   type: Microsoft.WinGet/Package
   properties:
@@ -25,6 +24,15 @@ resources:
     description: Install PowerShell 7
   properties:
     id: Microsoft.PowerShell
+    source: winget
+    installMode: silent
+
+- name: Starship
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Starship
+  properties:
+    id: Starship.Starship
     source: winget
     installMode: silent
 
@@ -83,6 +91,33 @@ resources:
       $profileAllHosts = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\profile.ps1'
       $config = @{
         $profileAllHosts = "${WinGetConfigRoot}\..\config\PowerShell\profile.ps1"
+      }
+      New-SymlinkConfig -Config $config
+
+- name: StarshipSettings
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure Starship is configured
+  properties:
+    getScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $starshipConfig = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.config\starship.toml'
+      $config = @{
+        $starshipConfig = "${WinGetConfigRoot}\..\..\common\config\starship\starship.toml"
+      }
+      return Get-SymlinkConfigResult -Config $config
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $starshipConfig = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.config\starship.toml'
+      $config = @{
+        $starshipConfig = "${WinGetConfigRoot}\..\..\common\config\starship\starship.toml"
+      }
+      return Test-SymlinkConfig -Config $config
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $starshipConfig = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.config\starship.toml'
+      $config = @{
+        $starshipConfig = "${WinGetConfigRoot}\..\..\common\config\starship\starship.toml"
       }
       New-SymlinkConfig -Config $config
 
