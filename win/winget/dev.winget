@@ -283,6 +283,30 @@ resources:
     id: sharkdp.bat
     source: winget
 
+- name: vivid
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install vivid
+  properties:
+    id: sharkdp.vivid
+    source: winget
+
+- name: pastel
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install pastel
+  properties:
+    id: sharkdp.pastel
+    source: winget
+
+- name: hyperfine
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install hyperfine
+  properties:
+    id: sharkdp.hyperfine
+    source: winget
+
 - name: yazi
   type: Microsoft.WinGet/Package
   metadata:
