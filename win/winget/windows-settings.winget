@@ -1,3 +1,7 @@
+##############################################################################
+# Settings
+# Windows general settings and options
+##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
   winget:
@@ -5,413 +9,30 @@ metadata:
       identifier: dscv3
 
 resources:
-- name: WindowsSettings
-  type: Microsoft.Windows.Settings/WindowsSettings
-  metadata:
-    description: Configure Windows
-  properties:
-    AppColorMode: "Dark"
-    SystemColorMode: "Dark"
-    TaskbarAlignment: "Middle"
 
-- name: PowerSettings
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Disable hibernation, disable sleep, set display timeout, and disable sleep on lid close
-    winget:
-      securityContext: elevated
-  properties:
-    getScript: |
-      return @{ Result = @{
-      LidClose = (powercfg /query SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936)
-      SleepTimeout = (powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE)
-      MonitorTimeout = (powercfg /query SCHEME_CURRENT SUB_VIDEO VIDEOIDLE)
-      } }
-    testScript: |
-      return $false
-    setScript: |
-      powercfg /hibernate off
-      powercfg /change standby-timeout-ac 0
-      powercfg /change standby-timeout-dc 0
-      powercfg /change monitor-timeout-ac 5
-      powercfg /change monitor-timeout-dc 5
-      powercfg -setacvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
-      powercfg -setdcvalueindex SCHEME_CURRENT 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
-
-- name: AdvertisingInfo
+# TODO: https://github.com/microsoft/winget-dsc/blob/main/resources/Microsoft.Windows.Settings/Microsoft.Windows.Settings.psm1
+- name: DeveloperMode
   type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable advertising ID for experiences across apps
   properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo
-    valueName: Enabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: DisableLaunchTracking
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable application launch tracking
-  properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-    valueName: Start-TrackProgs
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: DisableSmartscreenStore
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable SmartScreen Filter for Store Apps
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost
-    valueName: EnableWebContentEvaluation
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: DisableKeyLogging
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable key logging and transmission to Microsoft
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Input\TIPC
-    valueName: Enabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: LanguageOptOut
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Opt-out from websites accessing language list
-  properties:
-    keyPath: HKCU\Control Panel\International\User Profile
-    valueName: HttpAcceptLanguageOptOut
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock
+    valueName: AllowDevelopmentWithoutDevLicense
     valueData:
       DWord: 1
-    _exist: true
-
-- name: RestrictTextCollection
-  type: Microsoft.Windows/Registry
   metadata:
-    description: Restrict implicit text collection
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\InputPersonalization
-    valueName: RestrictImplicitTextCollection
-    valueData:
-      DWord: 1
-    _exist: true
+    description: Enable Developer Mode (sideload + dev features)
+    securityContext: elevated
 
-- name: SuggestedContent338393
-  type: Microsoft.Windows/Registry
+- name: AdvancedSettings
+  type: Microsoft.WinGet/Package
   metadata:
-    description: Disable suggested content in settings app (338393)
+    description: Install Advanced Settings
   properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
-    valueName: SubscribedContent-338393Enabled
-    valueData:
-      DWord: 0
-    _exist: true
+    id: 9N8MHTPHNGVV
+    source: msstore
+    installMode: silent
+    acceptAgreements: true
 
-- name: SuggestedContent338394
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable suggested content in settings app (338394)
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
-    valueName: SubscribedContent-338394Enabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: SuggestedContent338396
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable suggested content in settings app (338396)
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
-    valueName: SubscribedContent-338396Enabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: SuggestedContent353694
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable suggested content in settings app (353694)
-  properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
-    valueName: SubscribedContent-353694Enabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: SuggestedContent353696
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable suggested content in settings app (353696)
-  properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
-    valueName: SubscribedContent-353696Enabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: SilentInstalledApps
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable tips and suggestions for welcome and what's new
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
-    valueName: SilentInstalledAppsEnabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: SuggestedApps338388
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable auto installing suggested apps
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
-    valueName: SubscribedContent-338388Enabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: TipsSuggestions338389
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable tips and suggestions when using Windows
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
-    valueName: SubscribedContent-338389Enabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: DisableCloudOptimizedContent
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable cloud optimized content
-    winget:
-      securityContext: elevated
-  properties:
-    keyPath: HKLM\Software\Policies\Microsoft\Windows\CloudContent
-    valueName: DisableCloudOptimizedContent
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: StartConfigurePins
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Start Menu pinned list to empty
-    winget:
-      securityContext: elevated
-  properties:
-    keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start
-    valueName: ConfigureStartPins
-    valueData:
-      String: "{\"pinnedList\":[]}"
-    _exist: true
-
-- name: DisableSearchSuggestions
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable search box suggestions in Start Menu
-  properties:
-    keyPath: HKCU\Software\Policies\Microsoft\Windows\Explorer
-    valueName: DisableSearchBoxSuggestions
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: StartVisiblePlaces
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Hide recommended places in Start Menu
-  properties:
-    getScript: |
-      $val = (Get-ItemProperty -Path 'Registry::HKCU\Software\Microsoft\Windows\CurrentVersion\Start' -Name 'VisiblePlaces' -ErrorAction SilentlyContinue).VisiblePlaces
-      return @{ Result = [Convert]::ToBase64String($val) }
-    testScript: |
-      $val = (Get-ItemProperty -Path 'Registry::HKCU\Software\Microsoft\Windows\CurrentVersion\Start' -Name 'VisiblePlaces' -ErrorAction SilentlyContinue).VisiblePlaces
-      return ($null -ne $val -and $val.Length -eq 0)
-    setScript: |
-      Set-ItemProperty -Path 'Registry::HKCU\Software\Microsoft\Windows\CurrentVersion\Start' -Name 'VisiblePlaces' -Value ([byte[]](,)) -Type Binary -Force
-
-- name: RestrictInkCollection
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Restrict implicit ink collection
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\InputPersonalization
-    valueName: RestrictImplicitInkCollection
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: HarvestContacts
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable harvesting contacts for input personalization
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore
-    valueName: HarvestContacts
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: PrivacyPolicy
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Reject personalization privacy policy
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Personalization\Settings
-    valueName: AcceptedPrivacyPolicy
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: OnlineSpeechPrivacy
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable online speech privacy acceptance
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Speech_OneCore\Settings\OnlineSpeechPrivacy
-    valueName: HasAccepted
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: DenyAccountInfo
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Deny apps access to account info
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation
-    valueName: Value
-    valueData:
-      String: Deny
-    _exist: true
-
-- name: DenyContacts
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Deny apps access to contacts
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\contacts
-    valueName: Value
-    valueData:
-      String: Deny
-    _exist: true
-
-- name: DenyCalendar
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Deny apps access to calendar
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appointments
-    valueName: Value
-    valueData:
-      String: Deny
-    _exist: true
-
-- name: DenyPhoneCall
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Deny apps permission to make phone calls
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\phoneCall
-    valueName: Value
-    valueData:
-      String: Deny
-    _exist: true
-
-- name: DenyCallHistory
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Deny apps access to call history
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\phoneCallHistory
-    valueName: Value
-    valueData:
-      String: Deny
-    _exist: true
-
-- name: DenyAppDiagnostics
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Deny apps access to diagnostics of other apps
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics
-    valueName: Value
-    valueData:
-      String: Deny
-    _exist: true
-
-- name: DenyLocation
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Deny apps access to location
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location
-    valueName: Value
-    valueData:
-      String: Deny
-    _exist: true
-
-- name: NoFeedback
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable Windows feedback requests
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Siuf\Rules
-    valueName: NumberOfSIUFInPeriod
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: TelemetryAllow
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set telemetry to minimum (AllowTelemetry)
-    winget:
-      securityContext: elevated
-  properties:
-    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection
-    valueName: AllowTelemetry
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: TelemetryMax
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set telemetry to minimum (MaxTelemetryAllowed)
-    winget:
-      securityContext: elevated
-  properties:
-    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection
-    valueName: MaxTelemetryAllowed
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: TailoredExperiences
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable tailored experiences with diagnostic data
-  properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Privacy
-    valueName: TailoredExperiencesWithDiagnosticDataEnabled
-    valueData:
-      DWord: 0
-    _exist: true
-
+# File Explorer
 - name: ExplorerLaunchTo
   type: Microsoft.Windows/Registry
   metadata:
@@ -478,17 +99,6 @@ resources:
       DWord: 1
     _exist: true
 
-- name: ClassicContextMenu
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Restore classic right-click context menu in Windows 11
-  properties:
-    keyPath: HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32
-    valueName: "\"\""
-    valueData:
-      String: "\"\""
-    _exist: true
-
 - name: HideOfficeFiles
   type: Microsoft.Windows/Registry
   metadata:
@@ -496,87 +106,6 @@ resources:
   properties:
     keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer
     valueName: ShowCloudFilesInQuickAccess
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: HideDesktopIcons
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Hide desktop icons
-  properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
-    valueName: NoDesktop
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: HideSearch
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Hide Search button from taskbar
-  properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Search
-    valueName: SearchboxTaskbarMode
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: HideTaskView
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Hide Task View button from taskbar
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-    valueName: ShowTaskViewButton
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: HideWidgets
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Hide Widgets button from taskbar
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-    valueName: TaskbarDa
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: HideChat
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Hide Chat button from taskbar
-  properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-    valueName: TaskbarMn
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: DisableChatAutoInstall
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable Chat auto install
-    winget:
-      securityContext: elevated
-  properties:
-    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications
-    valueName: ConfigureChatAutoInstall
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: DisableNewsAndInterests
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable News and Interests
-    winget:
-      securityContext: elevated
-  properties:
-    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Dsh
-    valueName: AllowNewsAndInterests
     valueData:
       DWord: 0
     _exist: true
@@ -603,50 +132,29 @@ resources:
       DWord: 0
     _exist: true
 
-- name: TitlebarColor
+- name: HideOneDriveExplorer
   type: Microsoft.Windows/Registry
   metadata:
-    description: Disable theme colors on titlebar
+    description: Hide OneDrive from Explorer navigation pane
   properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\DWM
-    valueName: ColorPrevalence
+    keyPath: HKCU\Software\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}
+    valueName: System.IsPinnedToNameSpaceTree
     valueData:
       DWord: 0
     _exist: true
 
-- name: NoAccentColor
+- name: NoShowFrequent
   type: Microsoft.Windows/Registry
   metadata:
-    description: Turn off accent color on Start and taskbar
+    description: Hide frequent folders in Quick access
   properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize
-    valueName: ColorPrevalence
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer
+    valueName: ShowFrequent
     valueData:
       DWord: 0
     _exist: true
 
-- name: StartNoRecentlyAdded
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: "Start: Hide recently added apps from Start"
-  properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Start
-    valueName: ShowRecentList
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: StartNoRecommendedTips
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: "Start: Disable Recommended Tips, Shortcuts, New Apps and more"
-  properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-    valueName: Start_IrisRecommendations
-    valueData:
-      DWord: 0
-    _exist: true
-
+# Windows Update
 - name: NoAutoRestart
   type: Microsoft.Windows/Registry
   metadata:
@@ -684,45 +192,6 @@ resources:
     valueName: NoAutoRebootWithLoggedOnUsers
     valueData:
       DWord: 1
-    _exist: true
-
-- name: EdgeHideFirstRun
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Hide Microsoft Edge first run experience
-    winget:
-      securityContext: elevated
-  properties:
-    keyPath: HKLM\Software\Policies\Microsoft\Edge
-    valueName: HideFirstRunExperience
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: EdgeDisableBackgroundMode
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable Microsoft Edge background mode
-    winget:
-      securityContext: elevated
-  properties:
-    keyPath: HKLM\Software\Policies\Microsoft\Edge\Recommended
-    valueName: BackgroundModeEnabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: EdgeDisableStartupBoost
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable Microsoft Edge startup boost
-    winget:
-      securityContext: elevated
-  properties:
-    keyPath: HKLM\Software\Policies\Microsoft\Edge\Recommended
-    valueName: StartupBoostEnabled
-    valueData:
-      DWord: 0
     _exist: true
 
 - name: NoExpeditedReboot
@@ -764,6 +233,256 @@ resources:
       DWord: 0
     _exist: true
 
+# Microsoft Edge
+- name: EdgeHideFirstRun
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Microsoft Edge first run experience
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Policies\Microsoft\Edge
+    valueName: HideFirstRunExperience
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: EdgeDisableBackgroundMode
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Microsoft Edge background mode
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Policies\Microsoft\Edge\Recommended
+    valueName: BackgroundModeEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeDisableStartupBoost
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Microsoft Edge startup boost
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Policies\Microsoft\Edge\Recommended
+    valueName: StartupBoostEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Edge debloat (adapted from winutil WPFTweaksEdgeDebloat)
+- name: EdgeNoDesktopShortcut
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge desktop shortcut creation on update
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\EdgeUpdate
+    valueName: CreateDesktopShortcutDefault
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoPersonalizationReporting
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge personalization/advertising reporting
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: PersonalizationReportingEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeBlockCopilotExtension
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Block install of the Edge Copilot extension
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallBlocklist
+    valueName: "1"
+    valueData:
+      String: ofefcgjbeghpigppfmkologfjadafddi
+    _exist: true
+
+- name: EdgeNoRecommendations
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge recommendations and promotional content
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: ShowRecommendationsEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoUserFeedback
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge user feedback prompts
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: UserFeedbackAllowed
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeDoNotTrack
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Send Do Not Track requests from Edge
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: ConfigureDoNotTrack
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: EdgeNoAlternateErrorPages
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge alternate (suggestion) error pages
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: AlternateErrorPagesEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoCollections
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge Collections feature
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: EdgeCollectionsEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoShoppingAssistant
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge shopping assistant
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: EdgeShoppingAssistantEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoInsiderPromotion
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge Insider promotion
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: MicrosoftEdgeInsiderPromotionEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoMicrosoftRewards
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Microsoft Rewards in Edge
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: ShowMicrosoftRewards
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoWebWidget
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge web widget
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: WebWidgetAllowed
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoDiagnosticData
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Edge diagnostic data to off
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: DiagnosticData
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoAssetDelivery
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge asset delivery service (themes/content)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: EdgeAssetDeliveryServiceEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoWalletDonation
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge wallet donation feature
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: WalletDonationEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoDefaultBrowserCampaign
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge default browser campaign prompts
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: DefaultBrowserSettingsCampaignEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Accessibility
 - name: DisableNarratorHotkey
   type: Microsoft.Windows/Registry
   metadata:
@@ -775,6 +494,18 @@ resources:
       DWord: 0
     _exist: true
 
+- name: DisableStickyKeys
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Sticky Keys prompt
+  properties:
+    keyPath: HKCU\Control Panel\Accessibility\StickyKeys
+    valueName: Flags
+    valueData:
+      String: "10"
+    _exist: true
+
+# Multitasking
 - name: DisableSnapAssist
   type: Microsoft.Windows/Registry
   metadata:
@@ -786,24 +517,36 @@ resources:
       DWord: 0
     _exist: true
 
-- name: NoTrackDocs
+- name: DisableAltTabTabs
   type: Microsoft.Windows/Registry
   metadata:
-    description: Hide recently used files in Quick access
+    description: Disable showing tabs in Alt+Tab
   properties:
-    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-    valueName: Start_TrackDocs
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: AltTabSettings
     valueData:
-      DWord: 0
+      DWord: 1
     _exist: true
 
-- name: NoShowFrequent
+- name: DisallowShaking
   type: Microsoft.Windows/Registry
   metadata:
-    description: Hide frequent folders in Quick access
+    description: Disable Aero Shake (shake window to minimize others)
   properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer
-    valueName: ShowFrequent
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: DisallowShaking
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Startup
+- name: NoStartupDelay
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Remove app launch delay after logon
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize
+    valueName: StartupDelayInMSec
     valueData:
       DWord: 0
     _exist: true
@@ -817,6 +560,15 @@ resources:
     valueName: OneDriveSetup
     _exist: false
 
+- name: DisableLogitechDownloadAssistant
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Logitech Download Assistant
+  properties:
+    keyPath: HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+    valueName: Logitech Download Assistant
+    _exist: false
+
 - name: ClipboardHistory
   type: Microsoft.Windows/Registry
   metadata:
@@ -828,6 +580,7 @@ resources:
       DWord: 1
     _exist: true
 
+# Clock
 - name: ClockItime
   type: Microsoft.Windows/Registry
   metadata:
@@ -836,7 +589,7 @@ resources:
     keyPath: HKCU\Control Panel\International
     valueName: iTime
     valueData:
-      String: 1
+      String: "1"
     _exist: true
 
 - name: ClockShortTime
@@ -896,6 +649,85 @@ resources:
       DWord: 0
     _exist: true
 
+# System
+- name: RealTimeIsUniversal
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set hardware clock to UTC (dual boot)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation
+    valueName: RealTimeIsUniversal
+    valueData:
+      QWord: 1
+    _exist: true
+
+- name: VerboseBSOD
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Show detailed information on blue screen
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SYSTEM\CurrentControlSet\Control\CrashControl
+    valueName: DisplayParameters
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: BSODNoEmoticon
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable sad-face emoticon on blue screen
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SYSTEM\CurrentControlSet\Control\CrashControl
+    valueName: DisableEmoticon
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Block OEM software auto-install via Windows Update drivers (e.g. Razer Synapse)
+- name: NoDriverSearchWindowsUpdate
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Do not search Windows Update for device drivers
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching
+    valueName: SearchOrderConfig
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableDeviceCoInstallers
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable device co-installers (blocks OEM software auto-install)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Installer
+    valueName: DisableCoInstallers
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Mouse
+- name: MouseSensitivity
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set mouse sensitivity to 13
+  properties:
+    keyPath: HKCU\Control Panel\Mouse
+    valueName: MouseSensitivity
+    valueData:
+      String: "13"
+    _exist: true
+
 - name: MouseSpeed
   type: Microsoft.Windows/Registry
   metadata:
@@ -904,7 +736,7 @@ resources:
     keyPath: HKCU\Control Panel\Mouse
     valueName: MouseSpeed
     valueData:
-      String: 0
+      String: "0"
     _exist: true
 
 - name: MouseThreshold1
@@ -915,7 +747,7 @@ resources:
     keyPath: HKCU\Control Panel\Mouse
     valueName: MouseThreshold1
     valueData:
-      String: 0
+      String: "0"
     _exist: true
 
 - name: MouseThreshold2
@@ -926,64 +758,176 @@ resources:
     keyPath: HKCU\Control Panel\Mouse
     valueName: MouseThreshold2
     valueData:
-      String: 0
+      String: "0"
     _exist: true
 
-- name: TaskbarEndTask
+# Touchpad
+- name: TouchpadAAPThreshold
   type: Microsoft.Windows/Registry
   metadata:
-    description: Show End Task button in taskbar context menu
+    description: Set touchpad AAP threshold
   properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings
-    valueName: TaskbarEndTask
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: AAPThreshold
+    valueData:
+      DWord: 2
+    _exist: true
+
+- name: TouchpadCursorSpeed
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad cursor speed
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: CursorSpeed
+    valueData:
+      DWord: 12
+    _exist: true
+
+- name: TouchpadEnableEdgy
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable touchpad edgy gestures
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: EnableEdgy
     valueData:
       DWord: 1
     _exist: true
 
-- name: DisableStickyKeys
+- name: TouchpadFeedbackIntensity
   type: Microsoft.Windows/Registry
   metadata:
-    description: Disable Sticky Keys prompt
+    description: Set touchpad feedback intensity
   properties:
-    keyPath: HKCU\Control Panel\Accessibility\StickyKeys
-    valueName: Flags
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: FeedbackIntensity
     valueData:
-      String: 10
+      DWord: 50
     _exist: true
 
-- name: AnimateWindows
+- name: TouchpadClickForceSensitivity
   type: Microsoft.Windows/Registry
   metadata:
-    description: Disable window animations when minimizing and maximizing
+    description: Set touchpad click force sensitivity
   properties:
-    keyPath: HKCU\Control Panel\Desktop\WindowMetrics
-    valueName: MinAnimate
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: ClickForceSensitivity
     valueData:
-      String: 0
+      DWord: 50
     _exist: true
 
-- name: DisableAltTabTabs
+- name: TouchpadHonorMouseAccelSetting
   type: Microsoft.Windows/Registry
   metadata:
-    description: Disable showing tabs in Alt+Tab
+    description: Honor mouse acceleration setting on touchpad
   properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-    valueName: AltTabSettings
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: DisableBingSearch
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable Bing search integration
-  properties:
-    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Search
-    valueName: BingSearchEnabled
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: HonorMouseAccelSetting
     valueData:
       DWord: 0
     _exist: true
 
+- name: TouchpadRightClickZoneWidth
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad right-click zone width
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: RightClickZoneWidth
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TouchpadRightClickZoneHeight
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad right-click zone height
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: RightClickZoneHeight
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TouchpadEdgeAutoPanningEnabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable touchpad edge auto panning
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: EdgeAutoPanningEnabled
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: TouchpadBoostedPanningEnabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable touchpad boosted panning
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: BoostedPanningEnabled
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: TouchpadPanSensitivity
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad pan sensitivity
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: PanSensitivity
+    valueData:
+      DWord: 50
+    _exist: true
+
+- name: TouchpadZoomSensitivity
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad zoom sensitivity
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: ZoomSensitivity
+    valueData:
+      DWord: 50
+    _exist: true
+
+- name: TouchpadSingleFingerPanningMode
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad single finger panning mode
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: SingleFingerPanningMode
+    valueData:
+      DWord: 2
+    _exist: true
+
+- name: TouchpadPressureAutoPanningEnabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable touchpad pressure auto panning
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: PressureAutoPanningEnabled
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: TouchpadThreeFingerTapEnabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable touchpad three-finger tap
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: ThreeFingerTapEnabled
+    valueData:
+      DWord: 4
+    _exist: true
+
+# Microsoft Store
 - name: DisableWindowsStoreBackgroundNcb
   type: Microsoft.Windows/Registry
   metadata:
@@ -1049,373 +993,3 @@ resources:
     valueData:
       DWord: 0
     _exist: true
-
-- name: InstallBibataCursor
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Install Bibata cursor
-    winget:
-      securityContext: elevated
-  properties:
-    getScript: |
-      return $false
-    testScript: |
-      if (Get-ChildItem -Path "$env:WINDIR\Cursors" -Directory -Filter "Bibata*" -ErrorAction SilentlyContinue | Select-Object -First 1) {
-      return $true
-      }
-      return $false
-    setScript: |
-      cd "$env:TEMP"
-      curl.exe -L -O https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.6/Bibata-Modern-Classic-Windows.zip
-      if (Test-Path -Path Bibata) {
-      Remove-Item -Path Bibata -Force -Recurse
-      }
-      New-Item -Path .\Bibata -ItemType Directory -Force
-      Expand-Archive -Path Bibata-Modern-Classic-Windows.zip -DestinationPath .\Bibata
-      $cursors = Get-ChildItem -Path .\Bibata
-      foreach ($cursor in $cursors) {
-      $installPath = Join-Path -Path $cursor.FullName -ChildPath "install.inf"
-      Start-Process "$installPath" -Verb "Install"
-      }
-
-- name: SetBibataCursorSchemeName
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor scheme name (default value)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: "\"\""
-    valueData:
-      String: "Bibata-Modern-Classic-Small Cursors"
-    _exist: true
-
-- name: SetBibataCursorSchemeSource
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor scheme source
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: "\"Scheme Source\""
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: SetBibataCursorBaseSize
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor base size
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: CursorBaseSize
-    valueData:
-      DWord: 32
-    _exist: true
-
-- name: SetBibataCursorContactVisualization
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor contact visualization
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: ContactVisualization
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: SetBibataCursorGestureVisualization
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor gesture visualization
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: GestureVisualization
-    valueData:
-      DWord: 31
-    _exist: true
-
-- name: SetBibataCursorAppStarting
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor AppStarting (busy/working)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: AppStarting
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Work.ani\""
-    _exist: true
-
-- name: SetBibataCursorArrow
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Arrow (normal select)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Arrow
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Pointer.cur\""
-    _exist: true
-
-- name: SetBibataCursorCrosshair
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Crosshair (precision select)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Crosshair
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Cross.cur\""
-    _exist: true
-
-- name: SetBibataCursorHand
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Hand (link select)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Hand
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Link.cur\""
-    _exist: true
-
-- name: SetBibataCursorHelp
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Help (help select)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Help
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Help.cur\""
-    _exist: true
-
-- name: SetBibataCursorIbeam
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor IBeam (text select)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: IBeam
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Text.cur\""
-    _exist: true
-
-- name: SetBibataCursorNo
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor No (unavailable)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: "\"No\""
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Unavailable.cur\""
-    _exist: true
-
-- name: SetBibataCursorNwpen
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor NWPen (handwriting)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: NWPen
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Handwriting.cur\""
-    _exist: true
-
-- name: SetBibataCursorSizeAll
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor SizeAll (move)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: SizeAll
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Move.cur\""
-    _exist: true
-
-- name: SetBibataCursorSizeNesw
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor SizeNESW (diagonal resize 2)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: SizeNESW
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Dgn2.cur\""
-    _exist: true
-
-- name: SetBibataCursorSizeNs
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor SizeNS (vertical resize)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: SizeNS
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Vert.cur\""
-    _exist: true
-
-- name: SetBibataCursorSizeNwse
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor SizeNWSE (diagonal resize 1)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: SizeNWSE
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Dgn1.cur\""
-    _exist: true
-
-- name: SetBibataCursorSizeWe
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor SizeWE (horizontal resize)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: SizeWE
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Horz.cur\""
-    _exist: true
-
-- name: SetBibataCursorUpArrow
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor UpArrow (alternate select)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: UpArrow
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Alternate.cur\""
-    _exist: true
-
-- name: SetBibataCursorWait
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Wait (busy)
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Wait
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Busy.ani\""
-    _exist: true
-
-- name: SetBibataCursorPrecisionhair
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor precisionhair
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: precisionhair
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Cross.cur\""
-    _exist: true
-
-- name: SetBibataCursorGrab
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Grab
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Grab
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Move.cur\""
-    _exist: true
-
-- name: SetBibataCursorGrabbing
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Grabbing
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Grabbing
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Grabbing.cur\""
-    _exist: true
-
-- name: SetBibataCursorPin
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Pin
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Pin
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Pin.cur\""
-    _exist: true
-
-- name: SetBibataCursorPerson
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Person
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Person
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Person.cur\""
-    _exist: true
-
-- name: SetBibataCursorPan
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Pan
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Pan
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Pan.cur\""
-    _exist: true
-
-- name: SetBibataCursorZoomIn
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Zoom-in
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Zoom-in
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Zoom-in.cur\""
-    _exist: true
-
-- name: SetBibataCursorZoomOut
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Set Bibata cursor Zoom-out
-  properties:
-    keyPath: HKCU\Control Panel\Cursors
-    valueName: Zoom-out
-    valueData:
-      String: "\"%SystemRoot%\\\\Cursors\\\\Bibata-Modern-Classic-Small Cursors\\\\Zoom-out.cur\""
-    _exist: true
-
-- name: RefreshCursor
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Refresh cursor scheme via SystemParametersInfo
-  properties:
-    getScript: |
-      return @{ Result = "cursor refresh" }
-    testScript: |
-      return $false
-    setScript: |
-      $CSharpSig = @'
-      [DllImport("user32.dll", EntryPoint = "SystemParametersInfo")]
-      public static extern bool SystemParametersInfo(
-      uint uiAction,
-      uint uiParam,
-      uint pvParam,
-      uint fWinIni);
-      '@
-      $CursorRefresh = Add-Type -MemberDefinition $CSharpSig -Name WinAPICall -Namespace SystemParamInfo -PassThru
-      $CursorRefresh::SystemParametersInfo(0x0057, 0, $null, 0)
-
-- name: Windowsmediaplayer
-  type: Microsoft.Windows/OptionalFeatureList
-  metadata:
-    description: Disable Windows Media Player
-    winget:
-      securityContext: elevated
-  properties:
-    features:
-    - featureName: WindowsMediaPlayer
-      state: NotPresent
-
-# TODO: https://github.com/oscarmeldgaard/Windows-Privacy-Debloat
