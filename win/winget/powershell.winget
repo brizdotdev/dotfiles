@@ -61,34 +61,22 @@ resources:
     installMode: silent
 
 - name: PowerShellTelemetry
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: OpenDsc.Windows/Environment
   metadata:
     description: Disable PowerShell telemetry
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Get-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT"
-    testScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Test-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
-    setScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Add-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
+    name: POWERSHELL_TELEMETRY_OPTOUT
+    value: "true"
+    scope: User
 
 - name: PowerShellUpdateCheck
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: OpenDsc.Windows/Environment
   metadata:
     description: Disable PowerShell update check
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Get-EnvVar -Name "POWERSHELL_UPDATECHECK"
-    testScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Test-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
-    setScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Add-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
+    name: POWERSHELL_UPDATECHECK
+    value: "false"
+    scope: User
 
 - name: PowerShellSettings
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -145,16 +133,10 @@ resources:
       New-SymlinkConfig -Config $config
 
 - name: SetLessAsPager
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: OpenDsc.Windows/Environment
   metadata:
     description: Ensure Less is set as the default pager
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Get-EnvVar -Name "PAGER" -Value "less"
-    testScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Test-EnvVar -Name "PAGER" -Value "less"
-    setScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Add-EnvVar -Name "PAGER" -Value "less"
+    name: PAGER
+    value: less
+    scope: User

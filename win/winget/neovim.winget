@@ -19,19 +19,13 @@ resources:
     installMode: silent
 
 - name: EditorEnvVar
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: OpenDsc.Windows/Environment
   metadata:
     description: Ensure Neovim is set as EDITOR
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Get-EnvVar -Name "EDITOR" -Value "nvim"
-    testScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Test-EnvVar -Name "EDITOR" -Value "nvim"
-    setScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Add-EnvVar -Name "EDITOR" -Value "nvim"
+    name: EDITOR
+    value: nvim
+    scope: User
 
 - name: NvimSettings
   type: Microsoft.DSC.Transitional/PowerShellScript
