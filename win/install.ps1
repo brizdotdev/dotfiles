@@ -13,6 +13,7 @@ $configMap = @(
         Configs = @(
             "$PSScriptRoot\winget\powershell.winget"
             "$PSScriptRoot\winget\windows-settings.winget"
+            "$PSScriptRoot\winget\windows-settings-personalisation.winget"
             "$PSScriptRoot\winget\power-plan.winget"
             "$PSScriptRoot\winget\browsers.winget"
             "$PSScriptRoot\winget\powertoys.winget"
