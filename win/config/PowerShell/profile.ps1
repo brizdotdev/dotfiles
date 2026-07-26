@@ -113,6 +113,14 @@ Invoke-Expression (&starship init powershell)
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
+if (Get-Command -Name "mise" -ErrorAction SilentlyContinue) {
+    (&mise activate pwsh) | Out-String | Invoke-Expression
+}
+
+if (Get-Command -Name "gh" -ErrorAction SilentlyContinue) {
+    gh completion -s powershell | Out-String | Invoke-Expression
+}
+
 # fastfetch
 
 $null = Register-EngineEvent -SourceIdentifier 'PowerShell.OnIdle' -MaxTriggerCount 1 -Action {
