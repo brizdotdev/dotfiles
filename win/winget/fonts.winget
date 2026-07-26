@@ -182,3 +182,5 @@ resources:
     description: Install Delugia Nerd Font using Chocolatey
   properties:
     name: nerd-fonts-delugiacomplete
+
+# TODO: Maple Mono (https://github.com/subframe7536/maple-font)
