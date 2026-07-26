@@ -36,6 +36,14 @@ resources:
     source: winget
     installMode: silent
 
+- name: Zoxide
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Zoxide
+  properties:
+    id: ajeetdsouza.zoxide
+    source: winget
+    installMode: silent
 
 - name: PowerShellTelemetry
   type: Microsoft.DSC.Transitional/PowerShellScript
