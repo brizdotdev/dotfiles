@@ -17,24 +17,30 @@ resources:
     installMode: silent
   metadata:
     description: Install Windows Terminal
+    winget:
+      securityContext: elevated
 
 - name: PowerShell
   type: Microsoft.WinGet/Package
-  metadata:
-    description: Install PowerShell 7
   properties:
     id: Microsoft.PowerShell
     source: winget
     installMode: silent
+  metadata:
+    description: Install PowerShell 7
+    winget:
+      securityContext: elevated
 
 - name: Starship
   type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Starship
   properties:
     id: Starship.Starship
     source: winget
     installMode: silent
+  metadata:
+    description: Install Starship
+    winget:
+      securityContext: elevated
 
 - name: Zoxide
   type: Microsoft.WinGet/Package
