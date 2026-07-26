@@ -12,6 +12,7 @@ resources:
   properties:
     id: "Microsoft.PowerToys"
     source: "winget"
+    installMode: silent
 
 # CmdPal extensions
 
@@ -22,6 +23,7 @@ resources:
   properties:
     id: "9P5KS8T80MV3"
     source: "msstore"
+    installMode: silent
     acceptAgreements: true
 
 - name: winget_CmdPalExtensionForVSCode
@@ -31,6 +33,7 @@ resources:
   properties:
     id: "9MVLFK6TR4D4"
     source: "msstore"
+    installMode: silent
     acceptAgreements: true
 
 - name: winget_CmdPalExtensionForBrowserTabs
@@ -40,6 +43,7 @@ resources:
   properties:
     id: "9N7BMMLTGFWX"
     source: "msstore"
+    installMode: silent
     acceptAgreements: true
 
 - name: winget_CmdPalExtensionForEverything
@@ -49,6 +53,7 @@ resources:
   properties:
     id: lin-ycv.EverythingCmdPal
     source: "winget"
+    installMode: silent
 
 # Docs: https://learn.microsoft.com/en-us/windows/powertoys/dsc-configure/microsoft-dsc
 

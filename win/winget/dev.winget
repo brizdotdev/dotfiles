@@ -37,6 +37,7 @@ resources:
   properties:
     id: oven-sh.bun
     source: winget
+    installMode: silent
 
 - name: UV
   type: Microsoft.WinGet/Package
@@ -45,6 +46,7 @@ resources:
   properties:
     id: astral-sh.uv
     source: winget
+    installMode: silent
 
 - name: DotNetSDK
   type: Microsoft.WinGet/Package
@@ -53,6 +55,7 @@ resources:
   properties:
     id: Microsoft.DotNet.SDK.10
     source: winget
+    installMode: silent
 
 - name: DotNetSDKPreview
   type: Microsoft.WinGet/Package
@@ -61,6 +64,7 @@ resources:
   properties:
     id: Microsoft.DotNet.SDK.Preview
     source: winget
+    installMode: silent
 
 - name: Rustup
   type: Microsoft.WinGet/Package
@@ -69,6 +73,7 @@ resources:
   properties:
     id: Rustlang.Rustup
     source: winget
+    installMode: silent
 
 - name: RemoveFakePython
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -96,6 +101,7 @@ resources:
   properties:
     id: Microsoft.WSL
     source: winget
+    installMode: silent
 
 - name: VirtualMachinePlatform
   type: Microsoft.Windows/OptionalFeatureList
@@ -127,6 +133,7 @@ resources:
   properties:
     id: Docker.DockerDesktop
     source: winget
+    installMode: silent
 
 ##############################################################################
 # Git
@@ -139,6 +146,7 @@ resources:
   properties:
     id: dandavison.delta
     source: winget
+    installMode: silent
 
 - name: GitConfig
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -178,6 +186,7 @@ resources:
   properties:
     id: sst.opencode
     source: winget
+    installMode: silent
 
 # https://opencode.ai/docs/tools#websearch
 - name: OpenCodeExa
@@ -196,6 +205,7 @@ resources:
   properties:
     id: alexpasmantier.television
     source: winget
+    installMode: silent
 
 - name: jq
   type: Microsoft.WinGet/Package
@@ -204,6 +214,7 @@ resources:
   properties:
     id: stedolan.jq
     source: winget
+    installMode: silent
 
 - name: yq
   type: Microsoft.WinGet/Package
@@ -212,6 +223,7 @@ resources:
   properties:
     id: mikefarah.yq
     source: winget
+    installMode: silent
 
 - name: GitLabCli
   type: Microsoft.WinGet/Package
@@ -220,6 +232,7 @@ resources:
   properties:
     id: GLab.GLab
     source: winget
+    installMode: silent
 
 - name: GitHubCli
   type: Microsoft.WinGet/Package
@@ -228,6 +241,7 @@ resources:
   properties:
     id: github.cli
     source: winget
+    installMode: silent
 
 - name: ripgrep
   type: Microsoft.WinGet/Package
@@ -236,6 +250,7 @@ resources:
   properties:
     id: burntsushi.ripgrep.msvc
     source: winget
+    installMode: silent
 
 - name: xsv
   type: Microsoft.WinGet/Package
@@ -244,6 +259,7 @@ resources:
   properties:
     id: burntsushi.xsv.gnu
     source: winget
+    installMode: silent
 
 - name: lazygit
   type: Microsoft.WinGet/Package
@@ -252,6 +268,7 @@ resources:
   properties:
     id: jesseduffield.lazygit
     source: winget
+    installMode: silent
 
 - name: LazygitSettings
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -284,6 +301,7 @@ resources:
   properties:
     id: sharkdp.fd
     source: winget
+    installMode: silent
 
 - name: bat
   type: Microsoft.WinGet/Package
@@ -292,6 +310,7 @@ resources:
   properties:
     id: sharkdp.bat
     source: winget
+    installMode: silent
 
 - name: vivid
   type: Microsoft.WinGet/Package
@@ -300,6 +319,7 @@ resources:
   properties:
     id: sharkdp.vivid
     source: winget
+    installMode: silent
 
 - name: pastel
   type: Microsoft.WinGet/Package
@@ -308,6 +328,7 @@ resources:
   properties:
     id: sharkdp.pastel
     source: winget
+    installMode: silent
 
 - name: hyperfine
   type: Microsoft.WinGet/Package
@@ -316,6 +337,7 @@ resources:
   properties:
     id: sharkdp.hyperfine
     source: winget
+    installMode: silent
 
 - name: yazi
   type: Microsoft.WinGet/Package
@@ -324,6 +346,7 @@ resources:
   properties:
     id: sxyazi.yazi
     source: winget
+    installMode: silent
 
 - name: Poppler
   type: Microsoft.WinGet/Package
@@ -332,6 +355,7 @@ resources:
   properties:
     id: oschwartz10612.poppler
     source: winget
+    installMode: silent
 
 - name: duf
   type: Microsoft.WinGet/Package
@@ -340,6 +364,7 @@ resources:
   properties:
     id: muesli.duf
     source: winget
+    installMode: silent
 
 - name: Croc
   type: Microsoft.WinGet/Package
@@ -348,6 +373,7 @@ resources:
   properties:
     id: schollz.croc
     source: winget
+    installMode: silent
 
 - name: Glow
   type: Microsoft.WinGet/Package
@@ -356,6 +382,7 @@ resources:
   properties:
     id: charmbracelet.glow
     source: winget
+    installMode: silent
 
 - name: sd
   type: Microsoft.WinGet/Package
@@ -364,6 +391,7 @@ resources:
   properties:
     id: chmln.sd
     source: winget
+    installMode: silent
 
 - name: mise
   type: Microsoft.WinGet/Package
@@ -372,6 +400,7 @@ resources:
   properties:
     id: jdx.mise
     source: winget
+    installMode: silent
 
 - name: MiseShimsPath
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -398,6 +427,7 @@ resources:
   properties:
     id: Microsoft.OpenSSH.Preview
     source: winget
+    installMode: silent
 
 - name: SshAgent
   type: Microsoft.DSC.Transitional/PowerShellScript

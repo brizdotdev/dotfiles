@@ -12,6 +12,7 @@ resources:
   properties:
     id: Microsoft.OneDrive
     source: winget
+    installMode: silent
     _exist: false
 
 - name: TeamsAbsent
@@ -21,6 +22,7 @@ resources:
   properties:
     id: Microsoft.Teams
     source: winget
+    installMode: silent
     _exist: false
 
 - name: TeamsStoreAbsent
@@ -30,4 +32,5 @@ resources:
   properties:
     id: XP8BT8DW290MPQ
     source: msstore
+    installMode: silent
     _exist: false

@@ -17,6 +17,7 @@ resources:
   properties:
     id: Chocolatey.Chocolatey
     source: winget
+    installMode: silent
 
 - name: InstallChocolateyModule
   type: Microsoft.DSC.Transitional/RunCommandOnSet

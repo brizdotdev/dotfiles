@@ -16,6 +16,7 @@ resources:
   properties:
     id: Microsoft.WindowsTerminal
     source: winget
+    installMode: silent
 
 - name: WindowsTerminalSettings
   type: Microsoft.DSC.Transitional/PowerShellScript

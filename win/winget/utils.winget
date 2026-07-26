@@ -16,6 +16,7 @@ resources:
   properties:
     id: voidtools.Everything
     source: winget
+    installMode: silent
 
 - name: 7Zip
   type: Microsoft.WinGet/Package
@@ -24,6 +25,7 @@ resources:
   properties:
     id: 7zip.7zip
     source: winget
+    installMode: silent
 
 - name: PathContains7Zip
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -52,6 +54,7 @@ resources:
   properties:
     id: gerardog.gsudo
     source: winget
+    installMode: silent
 
 - name: OpenSSH
   type: Microsoft.WinGet/Package
@@ -60,6 +63,7 @@ resources:
   properties:
     id: Microsoft.OpenSSH.Preview
     source: winget
+    installMode: silent
 
 - name: LocalSend
   type: Microsoft.WinGet/Package
@@ -68,6 +72,7 @@ resources:
   properties:
     id: LocalSend.LocalSend
     source: winget
+    installMode: silent
 
 - name: Bitwarden
   type: Microsoft.WinGet/Package
@@ -76,6 +81,7 @@ resources:
   properties:
     id: Bitwarden.Bitwarden
     source: winget
+    installMode: silent
 
 - name: BitwardenCli
   type: Microsoft.WinGet/Package
@@ -84,6 +90,7 @@ resources:
   properties:
     id: Bitwarden.Bitwarden.CLI
     source: winget
+    installMode: silent
 
 - name: WindowsClock
   type: Microsoft.WinGet/Package
@@ -92,6 +99,7 @@ resources:
   properties:
     id: 9WZDNCRFJ3PR
     source: msstore
+    installMode: silent
     acceptAgreements: true
 
 - name: WindowsCalculator
@@ -101,6 +109,7 @@ resources:
   properties:
     id: 9WZDNCRFHVN5
     source: msstore
+    installMode: silent
     acceptAgreements: true
 
 - name: WindowsCamera
@@ -110,6 +119,7 @@ resources:
   properties:
     id: 9WZDNCRFJBBG
     source: msstore
+    installMode: silent
     acceptAgreements: true
 
 ##############################################################################
@@ -123,6 +133,7 @@ resources:
   properties:
     id: Spotify.Spotify
     source: winget
+    installMode: silent
 
 - name: mpv
   type: Microsoft.WinGet/Package
@@ -131,6 +142,7 @@ resources:
   properties:
     id: shinchiro.mpv
     source: winget
+    installMode: silent
 
 - name: VLC
   type: Microsoft.WinGet/Package
@@ -139,6 +151,7 @@ resources:
   properties:
     id: VideoLAN.VLC
     source: winget
+    installMode: silent
 
 - name: ytDlp
   type: Microsoft.WinGet/Package
@@ -147,6 +160,7 @@ resources:
   properties:
     id: yt-dlp.yt-dlp
     source: winget
+    installMode: silent
 
 - name: HEIFExtensions
   type: Microsoft.WinGet/Package
@@ -155,6 +169,7 @@ resources:
   properties:
     id: 9PMMSR1CGPWG
     source: msstore
+    installMode: silent
     acceptAgreements: true
 
 - name: WebMediaExtensions
@@ -164,6 +179,7 @@ resources:
   properties:
     id: 9N5TDP8VCMHS
     source: msstore
+    installMode: silent
     acceptAgreements: true
 
 - name: WebPExtensions
@@ -173,6 +189,7 @@ resources:
   properties:
     id: 9PG2DK419DRG
     source: msstore
+    installMode: silent
     acceptAgreements: true
 
 - name: VP9Extensions
@@ -182,6 +199,7 @@ resources:
   properties:
     id: 9N4D0MSMP0PT
     source: msstore
+    installMode: silent
     acceptAgreements: true
 
 - name: AV1Extensions
@@ -191,4 +209,5 @@ resources:
   properties:
     id: 9MVZQVXJBQ9V
     source: msstore
+    installMode: silent
     acceptAgreements: true

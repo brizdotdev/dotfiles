@@ -12,6 +12,7 @@ resources:
   properties:
     id: Discord.Discord
     source: winget
+    installMode: silent
 
 - name: DiscordStartup
   type: Microsoft.Windows/Registry
@@ -33,6 +34,7 @@ resources:
   properties:
     id: Hawaii_Beach.TinyNvidiaUpdateChecker
     source: winget
+    installMode: silent
 
 - name: Steam
   type: Microsoft.WinGet/Package
@@ -41,6 +43,7 @@ resources:
   properties:
     id: Valve.Steam
     source: winget
+    installMode: silent
 
 - name: GOGGalaxy
   type: Microsoft.WinGet/Package
@@ -49,3 +52,4 @@ resources:
   properties:
     id: GOG.Galaxy
     source: winget
+    installMode: silent

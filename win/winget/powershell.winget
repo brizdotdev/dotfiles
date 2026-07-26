@@ -52,6 +52,7 @@ resources:
   properties:
     id: eza-community.eza
     source: winget
+    installMode: silent
 
 - name: PowerShellTelemetry
   type: Microsoft.DSC.Transitional/PowerShellScript
