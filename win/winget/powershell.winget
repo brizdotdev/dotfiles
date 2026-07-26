@@ -45,6 +45,14 @@ resources:
     source: winget
     installMode: silent
 
+- name: Eza
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install eza
+  properties:
+    id: eza-community.eza
+    source: winget
+
 - name: PowerShellTelemetry
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:

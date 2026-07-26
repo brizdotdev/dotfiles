@@ -69,14 +69,6 @@ resources:
     id: LocalSend.LocalSend
     source: winget
 
-- name: Eza
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install eza
-  properties:
-    id: eza-community.eza
-    source: winget
-
 - name: Bitwarden
   type: Microsoft.WinGet/Package
   metadata:

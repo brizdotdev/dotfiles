@@ -76,13 +76,7 @@ Set-Alias -Name "ex" -Value explorer
 Set-Alias -Name "lg" -Value lazygit
 Set-Alias -Name "cat" -Value bat
 Set-Alias -Name "mkdir" -Value mkdir.exe
-if (Get-Command -Name "lsd" -ErrorAction SilentlyContinue) {
-    Set-Alias -Name "ls" -Value lsd
-}
-elseif (Get-Command -Name "exa" -ErrorAction SilentlyContinue) {
-    Set-Alias -Name "ls" -Value exa
-}
-
+Set-Alias -Name "ls" -Value eza
 
 ################################################################################
 # PSReadLine
