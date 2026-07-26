@@ -6,16 +6,6 @@ metadata:
 
 resources:
 
-- name: DeveloperMode
-  type: Microsoft.Windows/Registry
-  properties:
-    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock
-    valueName: AllowDevelopmentWithoutDevLicense
-    valueData:
-      DWord: 1
-  metadata:
-    description: Enable Developer Mode (sideload + dev features)
-    securityContext: elevated
 
 - name: HostsEnvVar
   type: OpenDsc.Windows/Environment
