@@ -105,6 +105,16 @@ foreach ($package in $packages) {
     Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $package | Remove-AppxProvisionedPackage -Online
 }
 
+# Widgets (adapted from winutil WPFTweaksWidget)
+# Sometimes if you don't stop the Widgets process the removal may fail
+Get-Process -Name "*Widget*" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+Get-AppxPackage -Name "Microsoft.WidgetsPlatformRuntime" -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+Get-AppxPackage -Name "MicrosoftWindows.Client.WebExperience" -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+Get-AppxProvisionedPackage -Online | Where-Object DisplayName -in @("Microsoft.WidgetsPlatformRuntime", "MicrosoftWindows.Client.WebExperience") | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
+# Restart Explorer so the Widgets taskbar button disappears (winutil Invoke-WinUtilExplorerUpdate -action "restart")
+Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
+Write-Host -ForegroundColor Green "Removed widgets"
+
 $capabilities = @(
     "Language.Handwriting",
     "Browser.InternetExplorer",
