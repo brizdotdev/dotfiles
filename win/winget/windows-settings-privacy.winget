@@ -1,0 +1,593 @@
+##############################################################################
+# Privacy
+# This configuration disables telemetry, tracking, and other privacy-invasive features in Windows.
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+
+resources:
+
+# Advertising & suggestions
+- name: AdvertisingInfo
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable advertising ID for experiences across apps
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo
+    valueName: Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: SuggestedContent338393
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable suggested content in settings app (338393)
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SubscribedContent-338393Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: SuggestedContent338394
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable suggested content in settings app (338394)
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SubscribedContent-338394Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: SuggestedContent338396
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable suggested content in settings app (338396)
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SubscribedContent-338396Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: SuggestedContent353694
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable suggested content in settings app (353694)
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SubscribedContent-353694Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: SuggestedContent353696
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable suggested content in settings app (353696)
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SubscribedContent-353696Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: SilentInstalledApps
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable tips and suggestions for welcome and what's new
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SilentInstalledAppsEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: SuggestedApps338388
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable auto installing suggested apps
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SubscribedContent-338388Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TipsSuggestions338389
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable tips and suggestions when using Windows
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SubscribedContent-338389Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableCloudOptimizedContent
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable cloud optimized content
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Policies\Microsoft\Windows\CloudContent
+    valueName: DisableCloudOptimizedContent
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: StartNoRecommendedTips
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Disable Recommended Tips, Shortcuts, New Apps and more"
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: Start_IrisRecommendations
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableSearchSuggestions
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable search box suggestions in Start Menu
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKCU\Software\Policies\Microsoft\Windows\Explorer
+    valueName: DisableSearchBoxSuggestions
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableBingSearch
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Bing search integration
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Search
+    valueName: BingSearchEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableNewsAndInterests
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable News and Interests
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Dsh
+    valueName: AllowNewsAndInterests
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: WPFTweaksPreventDeviceMetadataFromNetwork
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Prevent Device Companion Apps
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Device Metadata
+    valueName: PreventDeviceMetadataFromNetwork
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Tracking & data collection
+- name: DisableLaunchTracking
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable application launch tracking
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: Start-TrackProgs
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableSmartscreenStore
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable SmartScreen Filter for Store Apps
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost
+    valueName: EnableWebContentEvaluation
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableKeyLogging
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable key logging and transmission to Microsoft
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Input\TIPC
+    valueName: Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: LanguageOptOut
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Opt-out from websites accessing language list
+  properties:
+    keyPath: HKCU\Control Panel\International\User Profile
+    valueName: HttpAcceptLanguageOptOut
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: RestrictTextCollection
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Restrict implicit text collection
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\InputPersonalization
+    valueName: RestrictImplicitTextCollection
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: RestrictInkCollection
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Restrict implicit ink collection
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\InputPersonalization
+    valueName: RestrictImplicitInkCollection
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HarvestContacts
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable harvesting contacts for input personalization
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore
+    valueName: HarvestContacts
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: PrivacyPolicy
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Reject personalization privacy policy
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Personalization\Settings
+    valueName: AcceptedPrivacyPolicy
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: OnlineSpeechPrivacy
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable online speech privacy acceptance
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Speech_OneCore\Settings\OnlineSpeechPrivacy
+    valueName: HasAccepted
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: NoTrackDocs
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide recently used files in Quick access
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: Start_TrackDocs
+    valueData:
+      DWord: 0
+    _exist: true
+
+# App permissions
+- name: DenyAccountInfo
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Deny apps access to account info
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\userAccountInformation
+    valueName: Value
+    valueData:
+      String: Deny
+    _exist: true
+
+- name: DenyContacts
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Deny apps access to contacts
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\contacts
+    valueName: Value
+    valueData:
+      String: Deny
+    _exist: true
+
+- name: DenyCalendar
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Deny apps access to calendar
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appointments
+    valueName: Value
+    valueData:
+      String: Deny
+    _exist: true
+
+- name: DenyPhoneCall
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Deny apps permission to make phone calls
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\phoneCall
+    valueName: Value
+    valueData:
+      String: Deny
+    _exist: true
+
+- name: DenyCallHistory
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Deny apps access to call history
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\phoneCallHistory
+    valueName: Value
+    valueData:
+      String: Deny
+    _exist: true
+
+- name: DenyAppDiagnostics
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Deny apps access to diagnostics of other apps
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\appDiagnostics
+    valueName: Value
+    valueData:
+      String: Deny
+    _exist: true
+
+- name: DenyLocation
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Deny apps access to location
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location
+    valueName: Value
+    valueData:
+      String: Deny
+    _exist: true
+
+# Telemetry & feedback
+- name: NoFeedback
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Windows feedback requests
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Siuf\Rules
+    valueName: NumberOfSIUFInPeriod
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TelemetryAllow
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set telemetry to minimum (AllowTelemetry)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection
+    valueName: AllowTelemetry
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TelemetryMax
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set telemetry to minimum (MaxTelemetryAllowed)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection
+    valueName: MaxTelemetryAllowed
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TelemetryPolicy
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set telemetry to minimum (DataCollection GPO path)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection
+    valueName: AllowTelemetry
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TailoredExperiences
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable tailored experiences with diagnostic data
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Privacy
+    valueName: TailoredExperiencesWithDiagnosticDataEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Activity history (adapted from winutil WPFTweaksActivity)
+- name: DisableActivityFeed
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable activity feed (Timeline)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\System
+    valueName: EnableActivityFeed
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: NoPublishUserActivities
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Do not publish user activities to Microsoft
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\System
+    valueName: PublishUserActivities
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: NoUploadUserActivities
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Do not upload user activities to Microsoft
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\System
+    valueName: UploadUserActivities
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Location tracking (adapted from winutil WPFTweaksLocation)
+- name: DenyLocationMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Deny location access for all users (machine-wide consent store)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location
+    valueName: Value
+    valueData:
+      String: Deny
+    _exist: true
+
+- name: DisableLocationSensor
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable location sensor permission
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}
+    valueName: SensorPermissionState
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableMapsAutoUpdate
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable offline maps auto-update
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SYSTEM\Maps
+    valueName: AutoUpdateEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableConsumerFeatures
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Windows consumer features (auto-installed sponsored apps)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent
+    valueName: DisableWindowsConsumerFeatures
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableDeliveryOptimization
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Delivery Optimization P2P update sharing
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization
+    valueName: DODownloadMode
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Windows AI (adapted from winutil WPFTweaksWindowsAI)
+- name: HideAISettingsPage
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide AI components page in Settings
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
+    valueName: SettingsPageVisibility
+    valueData:
+      String: hide:aicomponents
+    _exist: true
+
+- name: DisableNotepadAI
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Notepad AI features
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\WindowsNotepad
+    valueName: DisableAIFeatures
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Microsoft Store recommended search results (adapted from winutil WPFTweaksDisableStoreSearch)
+- name: DisableStoreSearchRecommendations
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Deny access to Store LocalState db (no Store app suggestions in Start search)
+  properties:
+    getScript: |
+      $db = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+      return @{ StoreDbExists = (Test-Path -LiteralPath $db) }
+    testScript: |
+      $db = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+      if (-not (Test-Path -LiteralPath $db)) { return $true }
+      $acl = Get-Acl -LiteralPath $db
+      return [bool]($acl.Access | Where-Object {
+        $_.IdentityReference.Value -match 'Everyone' -and
+        $_.AccessControlType -eq 'Deny' -and
+        $_.FileSystemRights -match 'FullControl'
+      })
+    setScript: |
+      $db = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
+      if (Test-Path -LiteralPath $db) {
+        icacls.exe $db /deny Everyone:F
+      }
