@@ -105,13 +105,16 @@ Set-PSReadlineKeyHandler -Chord CTRL+Tab -Function TabCompleteNext
 # Set encoding to UTF-8
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
-function Invoke-Starship-TransientFunction {
-    &starship module character
+if (Get-Command -Name "starship" -ErrorAction SilentlyContinue) {
+    function Invoke-Starship-TransientFunction {
+        &starship module character
+    }
+    Invoke-Expression (&starship init powershell)
 }
 
-Invoke-Expression (&starship init powershell)
-
-Invoke-Expression (& { (zoxide init powershell | Out-String) })
+if (Get-Command -Name "zoxide" -ErrorAction SilentlyContinue) {
+    Invoke-Expression (& { (zoxide init powershell | Out-String) })
+}
 
 if (Get-Command -Name "mise" -ErrorAction SilentlyContinue) {
     (&mise activate pwsh) | Out-String | Invoke-Expression
