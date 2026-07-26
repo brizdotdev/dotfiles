@@ -80,6 +80,19 @@ resources:
       - /hibernate
       - off
 
+- name: DisableHibernateOption
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide hibernate option from power flyout
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings
+    valueName: ShowHibernateOption
+    valueData:
+      DWord: 0
+    _exist: true
+
 - name: DisableStandbyOnAC
   type: Microsoft.DSC.Transitional/RunCommandOnSet
   metadata:
