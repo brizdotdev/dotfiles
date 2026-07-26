@@ -179,6 +179,16 @@ resources:
     id: sst.opencode
     source: winget
 
+# https://opencode.ai/docs/tools#websearch
+- name: OpenCodeExa
+  type: OpenDsc.Windows/Environment
+  metadata:
+    description: Enable websearch tool for OpenCode
+  properties:
+    name: OPENCODE_ENABLE_EXA
+    value: 1
+    scope: User
+
 - name: Television
   type: Microsoft.WinGet/Package
   metadata:
