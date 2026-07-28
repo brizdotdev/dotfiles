@@ -60,6 +60,101 @@ resources:
     source: winget
     installMode: silent
 
+- name: ChangeScreenResolutionModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the ChangeScreenResolution module is installed from the PowerShell Gallery
+  properties:
+    getScript: |
+      $module = Get-InstalledPSResource -Name ChangeScreenResolution -ErrorAction SilentlyContinue
+      $version = if ($module) { $module.Version.ToString() } else { $null }
+      return @{ installed = [bool]$module; version = $version }
+    testScript: |
+      $module = Get-InstalledPSResource -Name ChangeScreenResolution -ErrorAction SilentlyContinue
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name ChangeScreenResolution `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
+
+- name: PoshGitModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the posh-git module is installed from the PowerShell Gallery
+  properties:
+    getScript: |
+      $module = Get-InstalledPSResource -Name posh-git -ErrorAction SilentlyContinue
+      $version = if ($module) { $module.Version.ToString() } else { $null }
+      return @{ installed = [bool]$module; version = $version }
+    testScript: |
+      $module = Get-InstalledPSResource -Name posh-git -ErrorAction SilentlyContinue
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name posh-git `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
+
+- name: DockerCompletionModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the DockerCompletion module is installed from the PowerShell Gallery
+  properties:
+    getScript: |
+      $module = Get-InstalledPSResource -Name DockerCompletion -ErrorAction SilentlyContinue
+      $version = if ($module) { $module.Version.ToString() } else { $null }
+      return @{ installed = [bool]$module; version = $version }
+    testScript: |
+      $module = Get-InstalledPSResource -Name DockerCompletion -ErrorAction SilentlyContinue
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name DockerCompletion `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
+
+- name: CompletionPredictorModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the CompletionPredictor module is installed from the PowerShell Gallery
+  properties:
+    getScript: |
+      $module = Get-InstalledPSResource -Name CompletionPredictor -ErrorAction SilentlyContinue
+      $version = if ($module) { $module.Version.ToString() } else { $null }
+      return @{ installed = [bool]$module; version = $version }
+    testScript: |
+      $module = Get-InstalledPSResource -Name CompletionPredictor -ErrorAction SilentlyContinue
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name CompletionPredictor `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
+
+- name: PSFzfModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the PSFzf module is installed from the PowerShell Gallery
+  properties:
+    getScript: |
+      $module = Get-InstalledPSResource -Name PSFzf -ErrorAction SilentlyContinue
+      $version = if ($module) { $module.Version.ToString() } else { $null }
+      return @{ installed = [bool]$module; version = $version }
+    testScript: |
+      $module = Get-InstalledPSResource -Name PSFzf -ErrorAction SilentlyContinue
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name PSFzf `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
+
 - name: PowerShellTelemetry
   type: OpenDsc.Windows/Environment
   metadata:
