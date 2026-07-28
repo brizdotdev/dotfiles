@@ -16,8 +16,9 @@ completedColumns:
 - [kanata](tasks/kanata.md)
 - [nix](tasks/nix.md)
 - [template-engine](tasks/template-engine.md)
-- [configure-lsd](tasks/configure-lsd.md)
 - [configure-fastfetch](tasks/configure-fastfetch.md)
+- [fish-or-zsh](tasks/fish-or-zsh.md)
+- [add-ai-skills-and-mcp-servers](tasks/add-ai-skills-and-mcp-servers.md)
 
 ## Todo
 
