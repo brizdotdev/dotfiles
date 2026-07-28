@@ -18,6 +18,9 @@ completedColumns:
 - [configure-fastfetch](tasks/configure-fastfetch.md)
 - [configure-yazi](tasks/configure-yazi.md)
 - [add-ai-tools](tasks/add-ai-tools.md)
+- [configure-fzf](tasks/configure-fzf.md)
+- [configure-herdr](tasks/configure-herdr.md)
+- [open-code-plugins-and-config](tasks/open-code-plugins-and-config.md)
 
 ## Todo
 
