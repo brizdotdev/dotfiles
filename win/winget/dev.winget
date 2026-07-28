@@ -14,7 +14,7 @@ resources:
   properties:
     name: HOSTS
     value: C:\Windows\System32\drivers\etc\hosts
-    scope: User
+    _scope: User
 
 ##############################################################################
 # Languages
@@ -186,7 +186,7 @@ resources:
   properties:
     name: OPENCODE_ENABLE_EXA
     value: 1
-    scope: User
+    _scope: User
 
 - name: Television
   type: Microsoft.WinGet/Package

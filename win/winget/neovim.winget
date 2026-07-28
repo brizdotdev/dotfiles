@@ -25,7 +25,7 @@ resources:
   properties:
     name: EDITOR
     value: nvim
-    scope: User
+    _scope: User
 
 - name: NvimSettings
   type: Microsoft.DSC.Transitional/PowerShellScript

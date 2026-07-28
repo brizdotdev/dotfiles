@@ -162,7 +162,7 @@ resources:
   properties:
     name: POWERSHELL_TELEMETRY_OPTOUT
     value: "true"
-    scope: User
+    _scope: User
 
 - name: PowerShellUpdateCheck
   type: OpenDsc.Windows/Environment
@@ -171,7 +171,7 @@ resources:
   properties:
     name: POWERSHELL_UPDATECHECK
     value: "false"
-    scope: User
+    _scope: User
 
 - name: PowerShellSettings
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -234,4 +234,4 @@ resources:
   properties:
     name: PAGER
     value: less
-    scope: User
+    _scope: User
