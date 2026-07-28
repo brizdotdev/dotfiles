@@ -27,3 +27,16 @@ run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"'
 on   = [ "g", "." ]
 run  = 'cd ~/.dotfiles'
 desc = "Go to dotfiles"
+
+# Go to temp folder
+[[mgr.prepend_keymap]]
+on   = [ "g", "t" ]
+for  = "unix"
+run  = 'cd /tmp'
+desc = "Go to temp folder"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "t" ]
+for  = "windows"
+run  = 'cd %temp%'
+desc = "Go to temp folder"
