@@ -6,6 +6,8 @@ metadata:
 
 resources:
 
+# TODO: Integrate https://github.com/microsoft/WindowsDeveloperConfig
+# TODO: Move some stuff to mise
 
 - name: HostsEnvVar
   type: OpenDsc.Windows/Environment
@@ -409,29 +411,6 @@ resources:
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $shimsPath = "$env:LocalAppData\mise\shims"
       Add-EnvPath -Paths @($shimsPath)
-
-- name: OpenSSHPreview
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install OpenSSH
-  properties:
-    id: Microsoft.OpenSSH.Preview
-    source: winget
-    installMode: silent
-
-- name: SshAgent
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Ensure the OpenSSH Authentication Agent service is running and set to automatic
-  properties:
-    getScript: |
-      Get-Service ssh-agent | Select-Object -ExpandProperty Status
-    testScript: |
-      $service = Get-Service ssh-agent
-      return $service.Status -eq 'Running' -and $service.StartType -eq 'Automatic'
-    setScript: |
-      Set-Service ssh-agent -StartupType Automatic
-      Start-Service ssh-agent
 
 - name: InstallFx
   type: Microsoft.DSC.Transitional/PowerShellScript

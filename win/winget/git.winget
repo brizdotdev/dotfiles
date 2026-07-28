@@ -6,7 +6,6 @@ metadata:
 
 resources:
 
-# TODO: Add override params once available: /SP /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /NOCANCEL /LOG /Components="gitlfs,scalar,windowsterminal,assoc,assoc_sh" /o:PathOption=BashOnly /o:SSHOption=ExternalOpenSSH /o:CURLOption=WinSSL /o:BashTerminalOption=ConHost /o:DefaultBranchOption=main
 # https://github.com/microsoft/winget-cli/issues/3401
 - type: Microsoft.WinGet/Package
   name: Git
@@ -16,6 +15,64 @@ resources:
     installMode: silent
   metadata:
     description: Install Git
+    winget:
+      securityContext: elevated
+
+- type: Microsoft.WinGet/Package
+  name: OpenSSH
+  properties:
+    id: Microsoft.OpenSSH.Preview
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install Microsoft OpenSSH Preview (external SSH client for Git)
+    winget:
+      securityContext: elevated
+
+- name: SshAgent
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
+  dependsOn:
+    - OpenSSH
+  metadata:
+    description: Ensure the OpenSSH Authentication Agent service is running and set to automatic
+  properties:
+    getScript: |
+      Get-Service ssh-agent | Select-Object -ExpandProperty Status
+    testScript: |
+      $service = Get-Service ssh-agent
+      return $service.Status -eq 'Running' -and $service.StartType -eq 'Automatic'
+    setScript: |
+      Set-Service ssh-agent -StartupType Automatic
+      Start-Service ssh-agent
+
+- name: GitSystemConfig
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
+  dependsOn:
+  - Git
+  - OpenSSH
+  metadata:
+    description: Apply Git for Windows installer options via git config --system (https://gitforwindows.org/silent-or-unattended-installation.html)
+    winget:
+      securityContext: elevated
+  properties:
+    testScript: |
+      $git = 'C:\Program Files\Git\cmd\git.exe'
+      if (-not (Test-Path $git)) { return $false }
+      $sslBackend    = & $git config --system --get http.sslBackend 2>$null
+      $sslCAInfo     = & $git config --system --get http.sslCAInfo 2>$null
+      $sshCommand    = & $git config --system --get core.sshCommand 2>$null
+      $defaultBranch = & $git config --system --get init.defaultBranch 2>$null
+      $symlinks      = & $git config --system --get core.symlinks 2>$null
+      $global:LASTEXITCODE = 0
+      return ($sslBackend -eq 'schannel' -and -not $sslCAInfo -and $sshCommand -eq '"/c/Program Files/OpenSSH/ssh.exe"' -and $defaultBranch -eq 'main' -and $symlinks -eq 'true')
+    setScript: |
+      $git = 'C:\Program Files\Git\cmd\git.exe'
+      & $git config --system http.sslBackend schannel
+      & $git config --system --unset-all http.sslCAInfo 2>$null
+      & $git config --system core.sshCommand '"/c/Program Files/OpenSSH/ssh.exe"'
+      & $git config --system init.defaultBranch main
+      & $git config --system core.symlinks true
+      $global:LASTEXITCODE = 0
 
 - name: GitPath
   type: Microsoft.DSC.Transitional/WindowsPowerShellScript
@@ -24,18 +81,6 @@ resources:
   metadata:
     description: Ensure Git is in the PATH for the current user
   properties:
-    getScript: |
-      $gitInstallPath = 'C:\Program Files\Git'
-      $pathsToAdd = @(
-        (Join-Path -Path $gitInstallPath -ChildPath 'bin'),
-        (Join-Path -Path $gitInstallPath -ChildPath 'cmd'),
-        (Join-Path -Path $gitInstallPath -ChildPath 'mingw64\bin'),
-        (Join-Path -Path $gitInstallPath -ChildPath 'usr\bin')
-      )
-      $currentPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User)
-      $splitPath = @($currentPath -split ';' | Where-Object { $_ })
-      $missingPaths = @($pathsToAdd | Where-Object { $splitPath -notcontains $_ })
-      return $missingPaths.Count -eq 0
     testScript: |
       $gitInstallPath = 'C:\Program Files\Git'
       $pathsToAdd = @(
