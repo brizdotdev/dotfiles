@@ -9,19 +9,49 @@ resources:
 # https://github.com/microsoft/winget-cli/issues/3401
 # https://github.com/microsoft/vscode/blob/main/build/win32/code.iss
 - name: InstallVSCode
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Install Visual Studio Code
   properties:
     getScript: |
-      @{ Result = & winget list --id Microsoft.VisualStudioCode --exact --quiet 2>$null }
+      @{ Result = & winget list --id Microsoft.VisualStudioCode --exact 2>$null }
     testScript: |
-      $result = & winget list --id Microsoft.VisualStudioCode --exact --quiet 2>$null
+      $result = & winget list --id Microsoft.VisualStudioCode --exact 2>$null
       return $LASTEXITCODE -eq 0
     setScript: |
       winget install --silent Microsoft.VisualStudioCode --override '/SILENT /mergetasks="!runcode,addcontextmenufiles,addcontextmenufolders,associatewithfiles,addtopath"'
 
-- name: vscodevimvim
+# TODO: When PowerShell 7+ ships Microsoft.PowerShell.PSResourceGet v1.3.0, change it for built-in DSC resource module
+# https://github.com/microsoft/WindowsDeveloperConfig/blob/0cd8dda905529e8408747fb3e01ea1382cbd335f/src/Workloads/powershell/configuration.winget#L36-L63
+- name: InstallVSCodeDscModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  dependsOn:
+    - PowerShell
+  metadata:
+    description: Install the Microsoft.VSCode.Dsc prerelease resource module
+  properties:
+    getScript: |
+      $module = Get-InstalledPSResource -Name Microsoft.VSCode.Dsc -ErrorAction SilentlyContinue |
+        Where-Object { $_.Version.ToString() -eq '0.1.6-alpha' -and $_.PrivateData.PSData.Prerelease -eq 'alpha' } |
+        Select-Object -First 1
+      $version = if ($module) { $module.Version.ToString() } else { $null }
+      return @{ installed = [bool]$module; version = $version }
+    testScript: |
+      $module = Get-InstalledPSResource -Name Microsoft.VSCode.Dsc -ErrorAction SilentlyContinue |
+        Where-Object { $_.Version.ToString() -eq '0.1.6-alpha' -and $_.PrivateData.PSData.Prerelease -eq 'alpha' } |
+        Select-Object -First 1
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name Microsoft.VSCode.Dsc `
+        -Version 0.1.6-alpha `
+        -Prerelease `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
+
+
+- name: vscodevim
   type: Microsoft.VSCode.Dsc/VSCodeExtension
   dependsOn:
   - InstallVSCode
@@ -33,17 +63,21 @@ resources:
     Name: vscodevim.vim
 
 - name: VSCodePath
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   dependsOn:
   - InstallVSCode
   metadata:
     description: Ensure Visual Studio Code is in the path
   properties:
+    getScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $pathsToAdd = @("$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin")
+      return @{ Result = Test-EnvPath -Paths $pathsToAdd }
     testScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $pathsToAdd = @("$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin")
       return Test-EnvPath -Paths $pathsToAdd
     setScript: |
-      . "${WinGetConfigRoot}\..\Utils.ps1"
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $pathsToAdd = @("$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin")
       Add-EnvPath -Paths $pathsToAdd
