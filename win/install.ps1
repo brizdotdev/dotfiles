@@ -112,6 +112,7 @@ function Get-Inputs{
         $SetDefaultBrowser = $True
         $Browser = gum choose --header "Select default browser" Firefox Chrome LibreWolf
     }
+    $CodingAgent = gum input --header "Coding agent (e.g. claude, opencode)" --placeholder "claude"
     return [PSCustomObject]@{
         SelectedOptions = $selectedOptions
         SelectedExtras = $selectedExtras
@@ -120,6 +121,7 @@ function Get-Inputs{
         GitConfigureSigning = $GitConfigureSigning
         SetDefaultBrowser = $SetDefaultBrowser
         Browser = $Browser
+        CodingAgent = $CodingAgent
     }
 }
 
@@ -170,6 +172,10 @@ if ($inputs.ImportSSHKey) {
 }
 if ($inputs.SetDefaultBrowser) {
     & "$PSScriptRoot\scripts\Set-DefaultBrowser.ps1" -Browser $inputs.Browser
+}
+if ($inputs.CodingAgent -ne "") {
+    [Environment]::SetEnvironmentVariable("CODING_AGENT", $inputs.CodingAgent, "User")
+    $env:CODING_AGENT = $inputs.CodingAgent
 }
 Write-Host -ForegroundColor Green "Done!"
 Read-Host
