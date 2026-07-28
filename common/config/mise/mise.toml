@@ -37,7 +37,7 @@ uv = "latest"
 claude = "latest"
 opencode = "latest"
 pi = "latest"
-# TODO: Skills and MCP
+apm = "latest"
 
 # Git
 delta = "latest"
@@ -50,10 +50,10 @@ lazygit = "latest"
 yazi = "latest"
 ffmpeg = "latest"
 resvg = "latest"
-# TODO Utils for file preview
 
 # Utils
 "cargo:xan" = "latest"
+"github:1broseidon/ketch" = "latest"
 "pipx:posting" = "latest"
 "pipx:sqlit-tui" = "latest"
 atuin = "latest"
@@ -92,6 +92,7 @@ zoxide = "latest"
 [settings]
 dotfiles.root = "~/.dotfiles"
 dotfiles.default_mode = "symlink"
+github.credential_command = "gh auth token"
 
 [dotfiles]
 # Git
@@ -113,6 +114,7 @@ dotfiles.default_mode = "symlink"
 "~/.config/opencode/opencode.json" = "~/.dotfiles/common/config/opencode/opencode.json"
 "~/.config/opencode/tui.json" = "~/.dotfiles/common/config/opencode/tui.json"
 "~/.config/hunk/config.toml" = "~/.dotfiles/common/config/hunk/config.toml"
+"~/.apm/apm.yml" = "~/.dotfiles/common/config/apm/apm.yml"
 "~/.config/yazi/" = "~/.dotfiles/common/config/yazi/"
 # Kanata
 "~/.config/kanata/kanata.kbd" = "~/.dotfiles/common/config/kanata/laptop.kbd"
