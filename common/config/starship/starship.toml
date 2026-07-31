@@ -14,17 +14,14 @@ $singularity\
 $kubernetes\
 $directory\
 $vcsh\
-$git_branch\
-$git_commit\
-$git_state\
-$git_metrics\
-$git_status\
-$hg_branch\
+$vcs\
 $docker_context\
 $package\
+$bun\
 $c\
 $cmake\
 $cobol\
+$cpp\
 $daml\
 $dart\
 $direnv\
@@ -34,12 +31,14 @@ $elixir\
 $elm\
 $erlang\
 $golang\
+$gradle\
 $haskell\
 $helm\
 $java\
 $julia\
 $kotlin\
 $lua\
+$maven\
 $nim\
 $nodejs\
 $ocaml\
@@ -70,6 +69,7 @@ $gcloud\
 $openstack\
 $azure\
 $env_var\
+$mise\
 $crystal\
 $custom\
 $sudo\
@@ -121,6 +121,7 @@ style = "fg:202 bg:235"
 threshold=100
 
 [bun]
+symbol = " "
 format = '[](fg:235 bg:none)[$symbol($version )](fg:white bg:235)[](fg:235 bg:none)'
 
 [c]
@@ -135,6 +136,11 @@ format = "[](fg:235 bg:none)[ $duration]($style)[](fg:235 bg:none)"
 symbol = "⬢ "
 style = "blue"
 format = '[](fg:235 bg:none)[$symbol($version )](fg:27 bg:235)[](fg:235 bg:none)'
+
+[cpp]
+symbol = " "
+format = "[](fg:235 bg:none)[$symbol($version(-$name))](fg:#00599c bg:235)[](fg:235 bg:none)"
+disabled = false
 
 [deno]
 format = '[](fg:235 bg:none)[$symbol($version )](fg:white bg:235)[](fg:235 bg:none)'
@@ -207,6 +213,10 @@ behind = "[⇣ ${count} ](fg:green bg:235)"
 symbol = "   "
 format = "[](fg:235 bg:none)[$symbol($version)](fg:#67d0de bg:235)[](fg:235 bg:none)"
 
+[gradle]
+symbol = " "
+format = "[](fg:235 bg:none)[$symbol($version)](fg:cyan bg:235)[](fg:235 bg:none)"
+
 [hostname]
 ssh_only = false
 format = "[](fg:235 bg:none)[  $hostname]($style)[](fg:235 bg:none)"
@@ -221,12 +231,25 @@ format = "[](fg:235 bg:none)[$symbol($version)](fg:#f58b11 bg:235)[](fg:23
 symbol = "   "
 format = "[](fg:235 bg:none)[$symbol($version)](fg:#02017d bg:235)[](fg:235 bg:none)"
 
+[maven]
+symbol = " "
+format = "[](fg:235 bg:none)[$symbol($version)](fg:#c71a36 bg:235)[](fg:235 bg:none)"
+
 [memory_usage]
 symbol = ""
 format = "[](fg:235 bg:none)[$symbol$ram( | $swap)]($style)[](fg:235 bg:none)"
 style = "fg:243 bg:235"
 disabled = false
 threshold = 90
+
+[mise]
+symbol = "󰭼 "
+healthy_symbol = " "
+unhealthy_symbol = " "
+format = "[](fg:235 bg:none)[$symbol$health](fg:#8f5ce8 bg:235)[](fg:235 bg:none)"
+detect_files = ['mise.toml', 'mise.local.toml', '.mise.toml', '.mise.local.toml', '.config/mise.toml']
+detect_folders = ['.mise', '.config/mise' ]
+disabled = false
 
 [nix_shell]
 symbol = " "
@@ -316,6 +339,11 @@ style_user = "fg:yellow bg:235"
 style_root = "fg:red bg:235"
 format = "[](fg:235 bg:none)[ $user]($style)[](fg:235 bg:none)"
 show_always = true
+
+[vcs]
+order = ["git", "hg"]
+git_modules = "$git_branch$git_commit$git_state$git_metrics$git_status"
+hg_modules = "$hg_branch"
 
 [zig]
 format = "[](fg:235 bg:none)[$symbol($version)](fg:#ef9f1c bg:235)[](fg:235 bg:none)"
