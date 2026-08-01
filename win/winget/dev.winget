@@ -104,6 +104,16 @@ resources:
     source: winget
     installMode: silent
 
+- name: WindowsSandbox
+  type: Microsoft.Windows/WindowsFeatureList
+  metadata:
+    description: Enable Windows Sandbox
+    securityContext: elevated
+  properties:
+    features:
+      - featureName: Containers-DisposableClientVM
+        state: Installed
+
 ##############################################################################
 # Git
 ##############################################################################
