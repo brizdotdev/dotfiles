@@ -164,8 +164,19 @@ function Install-SelectedItems {
             Write-Host -ForegroundColor Green "Configuration installed: $config"
         }
         foreach ($script in $selectedConfig.Scripts) {
-            if ($script -match 'Remove-Bloatware' -and -not $isAdmin) {
-                Write-Warning "Skipping $script because the script is not running as Administrator."
+            if ($script -match 'Remove-Bloatware') {
+                $launchArgs = @('-NoProfile','-ExecutionPolicy','Bypass','-File',$script)
+                if (-not $isAdmin) {
+                    Write-Host -ForegroundColor Cyan "Not elevated; relaunching $script via UAC (Windows PowerShell 5.1)..."
+                    $p = Start-Process powershell.exe -Verb RunAs -PassThru -Wait -ArgumentList $launchArgs
+                }
+                elseif ($PSVersionTable.PSEdition -ne 'Desktop') {
+                    Write-Host -ForegroundColor Cyan "DISM requires Windows PowerShell 5.1; relaunching $script..."
+                    & powershell.exe @launchArgs
+                }
+                else {
+                    & $script
+                }
                 continue
             }
             & $script
