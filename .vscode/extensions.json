@@ -8,6 +8,7 @@
         "gordonlarrigan.vscode-kanbn",
         "redhat.ansible",
         "redhat.vscode-yaml",
-        "ms-vscode.powershell"
+        "ms-vscode.powershell",
+        "hverlin.mise-vscode"
     ]
 }

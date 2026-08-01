@@ -22,6 +22,8 @@ completedColumns:
 - [configure-herdr](tasks/configure-herdr.md)
 - [open-code-plugins-and-config](tasks/open-code-plugins-and-config.md)
 - [espanso](tasks/espanso.md)
+- [fish-or-zsh](tasks/fish-or-zsh.md)
+- [add-ai-skills-and-mcp-servers](tasks/add-ai-skills-and-mcp-servers.md)
 
 ## Todo
 
