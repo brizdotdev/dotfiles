@@ -98,9 +98,13 @@ FX_SHOW_SIZE = "true"
 FX_LINE_NUMBERS = "true"
 
 [settings]
-dotfiles.root = "~/.dotfiles"
 dotfiles.default_mode = "symlink"
+dotfiles.root = "~/.dotfiles"
+experimental = true
 github.credential_command = "gh auth token"
+
+[settings.pipx]
+uvx = true
 
 [dotfiles]
 # Git
