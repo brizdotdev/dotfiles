@@ -13,8 +13,7 @@ resources:
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Set power mode to best performance on AC via powrprof.dll
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     getScript: |
       Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
@@ -45,8 +44,7 @@ resources:
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Set power mode to balanced on battery via powrprof.dll
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     getScript: |
       Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
@@ -77,8 +75,7 @@ resources:
   type: Microsoft.DSC.Transitional/RunCommandOnSet
   metadata:
     description: Disable hibernation
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     executable: powercfg
     arguments:
@@ -89,8 +86,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Hide hibernate option from power flyout
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings
     valueName: ShowHibernateOption
@@ -102,8 +98,7 @@ resources:
   type: Microsoft.DSC.Transitional/RunCommandOnSet
   metadata:
     description: Disable standby timeout on AC
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     executable: powercfg
     arguments:
@@ -115,8 +110,7 @@ resources:
   type: Microsoft.DSC.Transitional/RunCommandOnSet
   metadata:
     description: Disable standby timeout on battery
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     executable: powercfg
     arguments:
@@ -128,8 +122,7 @@ resources:
   type: Microsoft.DSC.Transitional/RunCommandOnSet
   metadata:
     description: Set display timeout to 5 minutes on AC
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     executable: powercfg
     arguments:
@@ -141,8 +134,7 @@ resources:
   type: Microsoft.DSC.Transitional/RunCommandOnSet
   metadata:
     description: Set display timeout to 5 minutes on battery
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     executable: powercfg
     arguments:
@@ -154,8 +146,7 @@ resources:
   type: Microsoft.DSC.Transitional/RunCommandOnSet
   metadata:
     description: Disable sleep on lid close on AC
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     executable: powercfg
     arguments:
@@ -169,8 +160,7 @@ resources:
   type: Microsoft.DSC.Transitional/RunCommandOnSet
   metadata:
     description: Disable sleep on lid close on battery
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     executable: powercfg
     arguments:

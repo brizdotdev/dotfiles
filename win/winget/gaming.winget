@@ -25,8 +25,7 @@ resources:
   - Discord
   metadata:
     description: Ensure Discord does not start on login
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\Microsoft\Windows\CurrentVersion\Run
     valueName: Discord
@@ -139,8 +138,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Give foreground apps longer CPU quantums for responsiveness
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\System\CurrentControlSet\Control\PriorityControl
     valueName: Win32PrioritySeparation
@@ -152,8 +150,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Reduce background CPU reservation for active game/multimedia
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile
     valueName: SystemResponsiveness
@@ -165,8 +162,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Keep network throttling at default 10 (better DPC latency for gaming)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile
     valueName: NetworkThrottlingIndex
@@ -178,8 +174,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Give games higher CPU scheduling priority
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games
     valueName: Priority
@@ -191,8 +186,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Assign high-priority scheduling category to games
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games
     valueName: Scheduling Category
@@ -204,8 +198,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Give games higher GPU scheduling priority
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games
     valueName: GPU Priority
@@ -217,8 +210,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Enable hardware-accelerated GPU scheduling (reduces latency on supported drivers)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\System\CurrentControlSet\Control\GraphicsDrivers
     valueName: HwSchMode
@@ -230,8 +222,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable legacy NVIDIA image-sharpening flag (modern drivers use Control Panel)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\NVIDIA Corporation\Global\FTS
     valueName: EnableGR535
@@ -243,8 +234,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Game DVR via machine-wide policy
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR
     valueName: AllowGameDVR

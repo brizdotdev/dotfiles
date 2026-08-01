@@ -202,8 +202,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable cloud optimized content
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\Policies\Microsoft\Windows\CloudContent
     valueName: DisableCloudOptimizedContent
@@ -259,8 +258,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Do not allow web search from Windows Desktop Search
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search
     valueName: DisableWebSearch
@@ -272,8 +270,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Don't search the web or display web results in Search
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search
     valueName: ConnectedSearchUseWeb
@@ -285,8 +282,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Cortana
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search
     valueName: AllowCortana
@@ -298,8 +294,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable News and Interests
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Dsh
     valueName: AllowNewsAndInterests
@@ -311,8 +306,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Prevent Device Companion Apps
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Device Metadata
     valueName: PreventDeviceMetadataFromNetwork
@@ -525,8 +519,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set telemetry to minimum (AllowTelemetry)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection
     valueName: AllowTelemetry
@@ -538,8 +531,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set telemetry to minimum (MaxTelemetryAllowed)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection
     valueName: MaxTelemetryAllowed
@@ -551,8 +543,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set telemetry to minimum (DataCollection GPO path)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection
     valueName: AllowTelemetry
@@ -576,8 +567,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable activity feed (Timeline)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\System
     valueName: EnableActivityFeed
@@ -589,8 +579,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Do not publish user activities to Microsoft
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\System
     valueName: PublishUserActivities
@@ -602,8 +591,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Do not upload user activities to Microsoft
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\System
     valueName: UploadUserActivities
@@ -616,8 +604,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Deny location access for all users (machine-wide consent store)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location
     valueName: Value
@@ -629,8 +616,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable location sensor permission
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}
     valueName: SensorPermissionState
@@ -642,8 +628,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable offline maps auto-update
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SYSTEM\Maps
     valueName: AutoUpdateEnabled
@@ -655,8 +640,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Windows consumer features (auto-installed sponsored apps)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent
     valueName: DisableWindowsConsumerFeatures
@@ -668,8 +652,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Turn off cloud consumer account state content (subscription/benefit status fetched from cloud)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent
     valueName: DisableConsumerAccountStateContent
@@ -681,8 +664,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Delivery Optimization P2P update sharing
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization
     valueName: DODownloadMode
@@ -695,8 +677,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable WiFi Sense hotspot reporting
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting
     valueName: Value
@@ -708,8 +689,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable auto-connect to WiFi Sense suggested hotspots
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots
     valueName: Value
@@ -734,8 +714,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Hide AI components page in Settings
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
     valueName: SettingsPageVisibility
@@ -747,8 +726,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Notepad AI features
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\WindowsNotepad
     valueName: DisableAIFeatures
@@ -761,8 +739,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Paint Cocreator AI feature
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
     valueName: DisableCocreator
@@ -774,8 +751,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Paint Generative Fill AI feature
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
     valueName: DisableGenerativeFill
@@ -787,8 +763,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Paint Image Creator AI feature
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
     valueName: DisableImageCreator
@@ -800,8 +775,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Paint Generative Erase AI feature
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
     valueName: DisableGenerativeErase
@@ -813,8 +787,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Paint Remove Background AI feature
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
     valueName: DisableRemoveBackground
@@ -838,8 +811,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Turn off Windows Copilot (machine policy)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot
     valueName: TurnOffWindowsCopilot
@@ -862,8 +834,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable AI data analysis / Recall indexing (machine policy)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI
     valueName: DisableAIDataAnalysis
@@ -886,8 +857,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Click to Do (machine policy)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI
     valueName: DisableClickToDo

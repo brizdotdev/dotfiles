@@ -60,8 +60,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Hide Start category view, forcing grid as the default view
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\Software\Policies\Microsoft\Windows\Explorer
     valueName: HideCategoryView
@@ -139,8 +138,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: "Start: Hide Recommended section (machine policy)"
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer
     valueName: HideRecommendedSection
@@ -152,8 +150,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: "Start: Hide Recommended section (MDM/CSP)"
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start
     valueName: HideRecommendedSection
@@ -165,8 +162,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: "Start: Set education environment flag (hides Recommended section)"
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Education
     valueName: IsEducationEnvironment
@@ -178,8 +174,7 @@ resources:
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: "Start: Clean Win11 Start menu (empty pinned list and clear start*.bin caches)"
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     getScript: |
       $key = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
@@ -227,8 +222,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Remove "Pin to Start" from the context menu
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Classes\Folder\shellex\ContextMenuHandlers\PintoStartScreen
     _exist: false
@@ -237,8 +231,7 @@ resources:
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: "Add 'Take Ownership' to context menu for files, folders, and drives"
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     getScript: |
       return @{ TakeOwnershipExists = (Test-Path -LiteralPath 'Registry::HKEY_CLASSES_ROOT\*\shell\TakeOwnership') }
@@ -386,8 +379,7 @@ Windows Registry Editor Version 5.00
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Pin Explorer, LibreWolf, and VS Code to the taskbar in order
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     getScript: |
       $key = 'HKCU:\Software\Policies\Microsoft\Windows\Explorer'
@@ -760,8 +752,7 @@ Windows Registry Editor Version 5.00
   type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Install Bibata cursor
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     getScript: |
       return $false

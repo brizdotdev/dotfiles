@@ -20,8 +20,7 @@ resources:
     installMode: silent
   metadata:
     description: Install Git
-    winget:
-      securityContext: elevated
+    securityContext: elevated
 
 - type: Microsoft.WinGet/Package
   name: OpenSSH
@@ -31,8 +30,7 @@ resources:
     installMode: silent
   metadata:
     description: Install Microsoft OpenSSH Preview (external SSH client for Git)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
 
 - name: SshAgent
   type: Microsoft.DSC.Transitional/WindowsPowerShellScript
@@ -57,8 +55,7 @@ resources:
   - OpenSSH
   metadata:
     description: Apply Git for Windows installer options via git config --system (https://gitforwindows.org/silent-or-unattended-installation.html)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     testScript: |
       $git = 'C:\Program Files\Git\cmd\git.exe'

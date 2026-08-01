@@ -17,8 +17,7 @@ resources:
   type: Microsoft.WinGet/Package
   metadata:
     description: Install Everything
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     id: voidtools.Everything
     source: winget
@@ -28,8 +27,7 @@ resources:
   type: Microsoft.WinGet/Package
   metadata:
     description: Install 7-Zip
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     id: 7zip.7zip
     source: winget
@@ -59,8 +57,7 @@ resources:
   type: Microsoft.WinGet/Package
   metadata:
     description: Install gsudo
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     id: gerardog.gsudo
     source: winget
@@ -70,8 +67,7 @@ resources:
   type: Microsoft.WinGet/Package
   metadata:
     description: Install OpenSSH
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     id: Microsoft.OpenSSH.Preview
     source: winget
@@ -151,8 +147,7 @@ resources:
   type: Microsoft.WinGet/Package
   metadata:
     description: Install mpv
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     id: shinchiro.mpv
     source: winget
@@ -162,8 +157,7 @@ resources:
   type: Microsoft.WinGet/Package
   metadata:
     description: Install VLC
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     id: VideoLAN.VLC
     source: winget

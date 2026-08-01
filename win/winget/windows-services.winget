@@ -19,8 +19,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Connected User Experiences and Telemetry service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: DiagTrack
     startType: Disabled
@@ -29,8 +28,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Windows Error Reporting service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: WerSvc
     startType: Disabled
@@ -39,8 +37,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Program Compatibility Assistant service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: PcaSvc
     startType: Disabled
@@ -50,8 +47,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Retail Demo service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: RetailDemo
     startType: Disabled
@@ -60,8 +56,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Windows Insider Service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: wisvc
     startType: Disabled
@@ -71,8 +66,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Fax service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: Fax
     startType: Disabled
@@ -81,8 +75,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Windows Media Player Network Sharing service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: WMPNetworkSvc
     startType: Disabled
@@ -92,8 +85,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Parental Controls (Family Safety) service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: WpcMonSvc
     startType: Disabled
@@ -102,8 +94,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable SMS Router service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: SmsRouter
     startType: Disabled
@@ -112,8 +103,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Phone Service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: PhoneSvc
     startType: Disabled
@@ -123,8 +113,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Wallet Service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: WalletService
     startType: Disabled
@@ -133,8 +122,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Secure Element Manager (NFC payments) service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: SEMgrSvc
     startType: Disabled
@@ -144,8 +132,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Offline Maps service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: MapsBroker
     startType: Disabled
@@ -155,8 +142,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Windows Mixed Reality OpenXR service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: MixedRealityOpenXRSvc
     startType: Disabled
@@ -166,8 +152,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Xbox Live Auth Manager service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: XblAuthManager
     startType: Disabled
@@ -176,8 +161,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Xbox Live Game Save service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: XblGameSave
     startType: Disabled
@@ -186,8 +170,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Xbox Live Networking service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: XboxNetApiSvc
     startType: Disabled
@@ -197,8 +180,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Geolocation service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: lfsvc
     startType: Disabled
@@ -208,8 +190,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Smart Card Resource Manager service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: SCardSvr
     startType: Disabled
@@ -218,8 +199,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Smart Card Device Enumeration service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: ScDeviceEnum
     startType: Disabled
@@ -228,8 +208,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Smart Card Removal Policy service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: SCPolicySvc
     startType: Disabled
@@ -239,8 +218,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Internet Connection Sharing (mobile hotspot) service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: icssvc
     startType: Disabled
@@ -250,8 +228,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Touch Keyboard and Pen service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: TabletInputService
     startType: Disabled
@@ -261,8 +238,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable OneSyncSvc (per-user mail/contacts/calendar sync template). Breaks Mail, Calendar, and People UWP apps.
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: OneSyncSvc
     startType: Disabled
@@ -272,8 +248,7 @@ resources:
   type: Microsoft.Windows/Service
   metadata:
     description: Disable Windows Subsystem for Android infrastructure service
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   properties:
     name: WSAIFabricSvc
     startType: Disabled

@@ -41,8 +41,7 @@ resources:
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Install Firefox and LibreWolf extensions via enterprise policy (normal_installed)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   dependsOn:
     - MozillaFirefox
     - LibreWolf
@@ -185,8 +184,7 @@ resources:
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Install Google Chrome extensions via enterprise policy (normal_installed)
-    winget:
-      securityContext: elevated
+    securityContext: elevated
   dependsOn:
     - GoogleChrome
   properties:

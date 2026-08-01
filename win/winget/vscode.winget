@@ -62,8 +62,6 @@ resources:
   - InstallVSCode
   metadata:
     description: Install VS Code Vim extension
-    winget:
-      securityContext: current
   properties:
     Name: vscodevim.vim
 
