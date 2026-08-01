@@ -2,8 +2,14 @@
 # Setup script for my dotfiles
 ################################################################################
 
+param(
+    [switch]$Reconfigure
+)
+
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+
+$answersPath = "$PSScriptRoot\install.answers.json"
 
 $configMap = @(
     [PSCustomObject]@{
@@ -94,28 +100,41 @@ function Initialize-Requirements {
     }
 }
 
-function Get-Inputs{
+function Get-Inputs {
+    param (
+        [object]$Saved
+    )
+
+    if ($null -ne $Saved) {
+        Write-Host -ForegroundColor Cyan "Using saved answers."
+        return $Saved
+    }
+
     $configOptions = @($configMap.Name)
     $preselectedOptions = ($configMap | Where-Object { $_.PSObject.Properties['Preselected'] -and $_.Preselected -eq $True } | Select-Object -ExpandProperty Name) -join ','
-    $selectedOptions = gum choose --header "Select configuration to apply" --no-limit --selected "$preselectedOptions" $configOptions
-    $selectedExtras = gum choose --header "Select extras to install" --no-limit $extras.Keys
+    $selectedOptionsRaw = gum choose --header "Select configuration to apply" --no-limit --selected "$preselectedOptions" $configOptions
+    $selectedExtrasRaw = gum choose --header "Select extras to install" --no-limit --height ($extras.Count + 2) $extras.Keys
     $ImportSSHKey = $False
-    if (gum confirm "Import SSH Key from Yubikey?") {
+    gum confirm "Import SSH Key from Yubikey?"; if ($LASTEXITCODE -eq 0) {
         $ImportSSHKey = $True
     }
     $GitUserEmail = gum input --header "Git email address"
     $GitConfigureSigning = $False
-    if (gum confirm "Configure commit signing?") {
+    gum confirm "Configure commit signing?"; if ($LASTEXITCODE -eq 0) {
         $GitConfigureSigning = $True
     }
     $SetDefaultBrowser = $False
     $Browser = $null
-    if (gum confirm "Set a default browser?") {
+    gum confirm "Set a default browser?"; if ($LASTEXITCODE -eq 0) {
         $SetDefaultBrowser = $True
         $Browser = gum choose --header "Select default browser" @('Firefox', 'Chrome', 'LibreWolf')
     }
     $CodingAgent = gum input --header "Coding agent (e.g. claude, opencode)" --placeholder "claude"
-    return [PSCustomObject]@{
+
+    $selectedOptions = if ($selectedOptionsRaw) { @($selectedOptionsRaw -split "`n" | Where-Object { $_ }) } else { @() }
+    $selectedExtras = if ($selectedExtrasRaw) { @($selectedExtrasRaw -split "`n" | Where-Object { $_ }) } else { @() }
+
+    $result = [PSCustomObject]@{
         SelectedOptions = $selectedOptions
         SelectedExtras = $selectedExtras
         ImportSSHKey = $ImportSSHKey
@@ -125,6 +144,10 @@ function Get-Inputs{
         Browser = $Browser
         CodingAgent = $CodingAgent
     }
+
+    $result | ConvertTo-Json -Depth 5 | Set-Content -Path $answersPath
+    Write-Host -ForegroundColor Cyan "Saved answers to $answersPath"
+    return $result
 }
 
 function Install-SelectedItems {
@@ -172,7 +195,42 @@ function Set-GitConfiguration {
 
 $env:DOTFILES_ROOT = Split-Path -Parent $PSScriptRoot
 Initialize-Requirements
-$inputs = Get-Inputs
+
+$saved = $null
+if (-not $Reconfigure -and (Test-Path $answersPath)) {
+    $saved = Get-Content $answersPath -Raw | ConvertFrom-Json
+    Write-Host -ForegroundColor Cyan "Loaded saved answers from $answersPath"
+}
+
+$inputs = Get-Inputs -Saved $saved
+
+$extrasLine = if ($inputs.SelectedExtras) { ($inputs.SelectedExtras | ForEach-Object { "- $_" }) -join "`n" } else { "- (none)" }
+$browserLine = if ($inputs.SetDefaultBrowser) { "- $($inputs.Browser)" } else { "- (not set)" }
+$agentLine = if ($inputs.CodingAgent) { "- $($inputs.CodingAgent)" } else { "- (none)" }
+$optionsLine = ($inputs.SelectedOptions | ForEach-Object { "- $_" }) -join "`n"
+
+$summary = @(
+    "### Configuration",
+    $optionsLine
+    "### Extras",
+    $extrasLine
+    "### Git",
+    "- Email: $($inputs.GitUserEmail)",
+    "- Commit signing: $($inputs.GitConfigureSigning)"
+    "### SSH",
+    "- Import from Yubikey: $($inputs.ImportSSHKey)"
+    "### Default browser",
+    $browserLine
+    "### Coding agent",
+    $agentLine
+) -join "`n`n"
+
+gum format $summary
+gum confirm "Proceed with these settings?"; if ($LASTEXITCODE -ne 0) {
+    Write-Host -ForegroundColor Yellow "Aborted."
+    exit 1
+}
+
 Install-SelectedItems -SelectedOptions $inputs.SelectedOptions -SelectedExtras $inputs.SelectedExtras
 Set-GitConfiguration -GitUserEmail $inputs.GitUserEmail -GitConfigureSigning $inputs.GitConfigureSigning
 if ($inputs.ImportSSHKey) {
