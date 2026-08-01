@@ -134,9 +134,15 @@ function Install-SelectedItems {
     foreach ($option in $SelectedOptions) {
         $selectedConfig = $configMap | Where-Object { $_.Name -eq $option }
         foreach ($config in $selectedConfig.Configs) {
+            Write-Host -ForegroundColor Blue "Installing configuration: $config"
             winget configure --suppress-initial-details --accept-configuration-agreements --disable-interactivity $config
+            Write-Host -ForegroundColor Green "Configuration installed: $config"
         }
         foreach ($script in $selectedConfig.Scripts) {
+            if ($script -match 'Remove-Bloatware' -and -not $isAdmin) {
+                Write-Warning "Skipping $script because the script is not running as Administrator."
+                continue
+            }
             & $script
         }
     }
