@@ -211,7 +211,13 @@ function New-Symlink {
 		[string]$Target
 	)
 	if (Test-Path -Path $Path) {
-		Remove-Item -Path $Path -Force
+		$item = Get-Item -Path $Path -Force
+		if ($item.PSIsContainer -and -not $item.LinkType) {
+			Remove-Item -Path $Path -Recurse -Force
+		}
+		else {
+			Remove-Item -Path $Path -Force
+		}
 	}
 	$parentDir = Split-Path -Path $Path -Parent
 	if (-not (Test-Path -Path $parentDir)) {
