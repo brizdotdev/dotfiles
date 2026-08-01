@@ -49,7 +49,6 @@ ffmpeg = "latest"
 resvg = "latest"
 
 # Utils
-"cargo:xan" = "latest"
 "github:1broseidon/ketch" = "latest"
 "github:BurntSushi/xsv" = "latest"
 "github:sharkdp/vivid" = "latest"
@@ -57,11 +56,9 @@ resvg = "latest"
 "github:agavra/tuicr" = "latest"
 "pipx:posting" = "latest"
 "pipx:sqlit-tui" = "latest"
-atuin = "latest"
+
 bat = "latest"
-bat-extras = "latest"
 bitwarden = "latest"
-btop = "latest"
 croc = "latest"
 doggo = "latest"
 duf = "latest"
@@ -73,9 +70,7 @@ fx = "latest"
 fzf = "latest"
 glow = "latest"
 gum = "latest"
-herdr = "latest"
 hyperfine = "latest"
-imagemagick = "latest"
 jq = "latest"
 neovim = "latest"
 oha = "latest"
@@ -84,11 +79,18 @@ ripgrep = "latest"
 sd = "latest"
 starship = "latest"
 television = "latest"
-tmux = "latest"
-viddy = "latest"
 yq = "latest"
 yt-dlp = "latest"
 zoxide = "latest"
+
+atuin = { version = "latest", os = ["linux", "macos"] }
+"cargo:xan" = { version = "latest", os = ["linux", "macos"] }
+bat-extras = { version = "latest", os = ["linux", "macos"] }
+btop = { version = "latest", os = ["linux", "macos"] }
+herdr = { version = "latest", os = ["linux", "macos"] }
+imagemagick = { version = "latest", os = ["linux", "macos"] }
+tmux = { version = "latest", os = ["linux", "macos"] }
+viddy = { version = "latest", os = ["linux", "macos"] }
 
 [env]
 FX_THEME = "9"
