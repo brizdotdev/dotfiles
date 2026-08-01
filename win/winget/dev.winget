@@ -30,51 +30,6 @@ resources:
 # Languages
 ##############################################################################
 
-- name: Bun
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Bun
-  properties:
-    id: oven-sh.bun
-    source: winget
-    installMode: silent
-
-- name: UV
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install UV
-  properties:
-    id: astral-sh.uv
-    source: winget
-    installMode: silent
-
-- name: DotNetSDK
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install .NET SDK
-  properties:
-    id: Microsoft.DotNet.SDK.10
-    source: winget
-    installMode: silent
-
-- name: DotNetSDKPreview
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install .NET SDK (preview)
-  properties:
-    id: Microsoft.DotNet.SDK.Preview
-    source: winget
-    installMode: silent
-
-- name: Rustup
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Rustup
-  properties:
-    id: Rustlang.Rustup
-    source: winget
-    installMode: silent
-
 - name: RemoveFakePython
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
@@ -192,15 +147,6 @@ resources:
 # Utils
 ##############################################################################
 
-- name: OpenCode
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install OpenCode
-  properties:
-    id: sst.opencode
-    source: winget
-    installMode: silent
-
 # https://opencode.ai/docs/tools#websearch
 - name: OpenCodeExa
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -216,78 +162,6 @@ resources:
     setScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Add-EnvVar -Name "OPENCODE_ENABLE_EXA" -Value "1"
-
-- name: Television
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Television
-  properties:
-    id: alexpasmantier.television
-    source: winget
-    installMode: silent
-
-- name: jq
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install jq
-  properties:
-    id: stedolan.jq
-    source: winget
-    installMode: silent
-
-- name: yq
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install yq
-  properties:
-    id: mikefarah.yq
-    source: winget
-    installMode: silent
-
-- name: GitLabCli
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install GitLab CLI
-  properties:
-    id: GLab.GLab
-    source: winget
-    installMode: silent
-
-- name: GitHubCli
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install GitHub CLI
-  properties:
-    id: github.cli
-    source: winget
-    installMode: silent
-
-- name: ripgrep
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install ripgrep
-  properties:
-    id: burntsushi.ripgrep.msvc
-    source: winget
-    installMode: silent
-
-- name: xsv
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install xsv
-  properties:
-    id: burntsushi.xsv.gnu
-    source: winget
-    installMode: silent
-
-- name: lazygit
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Lazygit
-  properties:
-    id: jesseduffield.lazygit
-    source: winget
-    installMode: silent
 
 - name: LazygitSettings
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -313,102 +187,12 @@ resources:
       }
       New-SymlinkConfig -Config $config
 
-- name: fd
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install fd
-  properties:
-    id: sharkdp.fd
-    source: winget
-    installMode: silent
-
-- name: bat
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install bat
-  properties:
-    id: sharkdp.bat
-    source: winget
-    installMode: silent
-
-- name: vivid
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install vivid
-  properties:
-    id: sharkdp.vivid
-    source: winget
-    installMode: silent
-
-- name: pastel
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install pastel
-  properties:
-    id: sharkdp.pastel
-    source: winget
-    installMode: silent
-
-- name: hyperfine
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install hyperfine
-  properties:
-    id: sharkdp.hyperfine
-    source: winget
-    installMode: silent
-
-- name: yazi
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Yazi
-  properties:
-    id: sxyazi.yazi
-    source: winget
-    installMode: silent
-
 - name: Poppler
   type: Microsoft.WinGet/Package
   metadata:
     description: Install Poppler (Yazi PDF Preview)
   properties:
     id: oschwartz10612.poppler
-    source: winget
-    installMode: silent
-
-- name: duf
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install duf
-  properties:
-    id: muesli.duf
-    source: winget
-    installMode: silent
-
-- name: Croc
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Croc
-  properties:
-    id: schollz.croc
-    source: winget
-    installMode: silent
-
-- name: Glow
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Glow
-  properties:
-    id: charmbracelet.glow
-    source: winget
-    installMode: silent
-
-- name: sd
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install sd
-  properties:
-    id: chmln.sd
     source: winget
     installMode: silent
 
@@ -439,36 +223,3 @@ resources:
       $shimsPath = "$env:LocalAppData\mise\shims"
       Add-EnvPath -Paths @($shimsPath)
 
-- name: InstallFx
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Install fx
-  properties:
-    getScript: |
-      return Get-Command fx -ErrorAction SilentlyContinue
-    testScript: |
-      $fxInstalled = Test-Path -Path "$env:LocalAppData\Microsoft\WindowsApps\fx.exe" -PathType Leaf
-      return $fxInstalled
-    setScript: |
-      curl.exe -L https://github.com/antonmedv/fx/releases/latest/download/fx_windows_amd64.exe -o "$env:LocalAppData\Microsoft\WindowsApps\fx.exe"
-
-- name: ConfigureFx
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Configure fx
-  properties:
-    getScript: |
-      return @{
-        Theme = [Environment]::GetEnvironmentVariable('FX_THEME', 'User')
-        ShowSize = [Environment]::GetEnvironmentVariable('FX_SHOW_SIZE', 'User')
-        LineNumbers = [Environment]::GetEnvironmentVariable('FX_LINE_NUMBERS', 'User')
-      }
-    testScript: |
-      $themeMatches = [Environment]::GetEnvironmentVariable('FX_THEME', 'User') -eq '9'
-      $showSizeMatches = [Environment]::GetEnvironmentVariable('FX_SHOW_SIZE', 'User') -eq 'true'
-      $lineNumbersMatch = [Environment]::GetEnvironmentVariable('FX_LINE_NUMBERS', 'User') -eq 'true'
-      return $themeMatches -and $showSizeMatches -and $lineNumbersMatch
-    setScript: |
-      [Environment]::SetEnvironmentVariable('FX_THEME', '9', 'User')
-      [Environment]::SetEnvironmentVariable('FX_SHOW_SIZE', 'true', 'User')
-      [Environment]::SetEnvironmentVariable('FX_LINE_NUMBERS', 'true', 'User')
