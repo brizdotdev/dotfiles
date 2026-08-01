@@ -697,18 +697,6 @@ resources:
       DWord: 0
     _exist: true
 
-# Office AI Training (adapted from Winhance privacy-office-ai-training)
-- name: DisableOfficeAITraining
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Block Office AI training data collection from your usage
-  properties:
-    keyPath: HKCU\Software\Policies\Microsoft\office\16.0\common\ai\training
-    valueName: optionalconnectedexperiencesenabled
-    valueData:
-      DWord: 0
-    _exist: true
-
 # Windows AI (adapted from winutil WPFTweaksWindowsAI)
 - name: HideAISettingsPage
   type: Microsoft.Windows/Registry
@@ -842,17 +830,6 @@ resources:
       DWord: 1
     _exist: true
 
-- name: DisableAIDataAnalysisUser
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable AI data analysis / Recall indexing (user policy)
-  properties:
-    keyPath: HKCU\Software\Policies\Microsoft\Windows\WindowsAI
-    valueName: DisableAIDataAnalysis
-    valueData:
-      DWord: 1
-    _exist: true
-
 - name: DisableClickToDoMachine
   type: Microsoft.Windows/Registry
   metadata:
@@ -860,17 +837,6 @@ resources:
     securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI
-    valueName: DisableClickToDo
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: DisableClickToDoUser
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable Click to Do (user policy)
-  properties:
-    keyPath: HKCU\Software\Policies\Microsoft\Windows\WindowsAI
     valueName: DisableClickToDo
     valueData:
       DWord: 1

@@ -28,8 +28,6 @@ resources:
 # https://github.com/microsoft/WindowsDeveloperConfig/blob/0cd8dda905529e8408747fb3e01ea1382cbd335f/src/Workloads/powershell/configuration.winget#L36-L63
 - name: InstallVSCodeDscModule
   type: Microsoft.DSC.Transitional/PowerShellScript
-  dependsOn:
-    - PowerShell
   metadata:
     description: Install the Microsoft.VSCode.Dsc prerelease resource module
   properties:

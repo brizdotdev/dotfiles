@@ -242,6 +242,7 @@ resources:
         }
         Remove-ItemProperty -LiteralPath $path -Name HideIfEnabled -ErrorAction SilentlyContinue
         Set-ItemProperty -LiteralPath $path -Name HiddenByDefault -Value 0 -Type DWord
+      }
 
 # Windows Update
 - name: NoAutoRestart

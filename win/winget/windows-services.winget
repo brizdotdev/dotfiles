@@ -61,16 +61,6 @@ resources:
     name: wisvc
     startType: Disabled
 
-# Legacy features
-- name: DisableFax
-  type: Microsoft.Windows/Service
-  metadata:
-    description: Disable Fax service
-    securityContext: elevated
-  properties:
-    name: Fax
-    startType: Disabled
-
 - name: DisableWMPNetworkSvc
   type: Microsoft.Windows/Service
   metadata:
@@ -135,16 +125,6 @@ resources:
     securityContext: elevated
   properties:
     name: MapsBroker
-    startType: Disabled
-
-# Mixed Reality
-- name: DisableMixedRealityOpenXRSvc
-  type: Microsoft.Windows/Service
-  metadata:
-    description: Disable Windows Mixed Reality OpenXR service
-    securityContext: elevated
-  properties:
-    name: MixedRealityOpenXRSvc
     startType: Disabled
 
 # Xbox services
@@ -221,16 +201,6 @@ resources:
     securityContext: elevated
   properties:
     name: icssvc
-    startType: Disabled
-
-# Touch & pen
-- name: DisableTabletInputService
-  type: Microsoft.Windows/Service
-  metadata:
-    description: Disable Touch Keyboard and Pen service
-    securityContext: elevated
-  properties:
-    name: TabletInputService
     startType: Disabled
 
 # Per-user sync (mail/contacts/calendar)
