@@ -34,7 +34,6 @@ $configMap = @(
             "$PSScriptRoot\winget\git.winget"
             "$PSScriptRoot\winget\fonts.winget"
             "$PSScriptRoot\winget\neovim.winget"
-            "$PSScriptRoot\winget\sandbox.winget"
         )
     }
     [PSCustomObject]@{
