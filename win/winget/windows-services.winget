@@ -1,0 +1,279 @@
+##############################################################################
+# Windows Services
+# Disables unnecessary Windows services to reduce background activity,
+# telemetry, and resource usage.
+#
+# Uses the Microsoft.Windows/Service DSC resource. Start type values:
+#   Automatic | AutomaticDelayedStart | Manual | Disabled
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+
+resources:
+
+# Telemetry & diagnostics
+- name: DisableDiagTrack
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Connected User Experiences and Telemetry service
+    winget:
+      securityContext: elevated
+  properties:
+    name: DiagTrack
+    startType: Disabled
+
+- name: DisableWerSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Windows Error Reporting service
+    winget:
+      securityContext: elevated
+  properties:
+    name: WerSvc
+    startType: Disabled
+
+- name: DisablePcaSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Program Compatibility Assistant service
+    winget:
+      securityContext: elevated
+  properties:
+    name: PcaSvc
+    startType: Disabled
+
+# Retail & Insider
+- name: DisableRetailDemo
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Retail Demo service
+    winget:
+      securityContext: elevated
+  properties:
+    name: RetailDemo
+    startType: Disabled
+
+- name: DisableWisvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Windows Insider Service
+    winget:
+      securityContext: elevated
+  properties:
+    name: wisvc
+    startType: Disabled
+
+# Legacy features
+- name: DisableFax
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Fax service
+    winget:
+      securityContext: elevated
+  properties:
+    name: Fax
+    startType: Disabled
+
+- name: DisableWMPNetworkSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Windows Media Player Network Sharing service
+    winget:
+      securityContext: elevated
+  properties:
+    name: WMPNetworkSvc
+    startType: Disabled
+
+# Family & telephony
+- name: DisableWpcMonSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Parental Controls (Family Safety) service
+    winget:
+      securityContext: elevated
+  properties:
+    name: WpcMonSvc
+    startType: Disabled
+
+- name: DisableSmsRouter
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable SMS Router service
+    winget:
+      securityContext: elevated
+  properties:
+    name: SmsRouter
+    startType: Disabled
+
+- name: DisablePhoneSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Phone Service
+    winget:
+      securityContext: elevated
+  properties:
+    name: PhoneSvc
+    startType: Disabled
+
+# NFC & payments
+- name: DisableWalletService
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Wallet Service
+    winget:
+      securityContext: elevated
+  properties:
+    name: WalletService
+    startType: Disabled
+
+- name: DisableSEMgrSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Secure Element Manager (NFC payments) service
+    winget:
+      securityContext: elevated
+  properties:
+    name: SEMgrSvc
+    startType: Disabled
+
+# Offline maps
+- name: DisableMapsBroker
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Offline Maps service
+    winget:
+      securityContext: elevated
+  properties:
+    name: MapsBroker
+    startType: Disabled
+
+# Mixed Reality
+- name: DisableMixedRealityOpenXRSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Windows Mixed Reality OpenXR service
+    winget:
+      securityContext: elevated
+  properties:
+    name: MixedRealityOpenXRSvc
+    startType: Disabled
+
+# Xbox services
+- name: DisableXblAuthManager
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Xbox Live Auth Manager service
+    winget:
+      securityContext: elevated
+  properties:
+    name: XblAuthManager
+    startType: Disabled
+
+- name: DisableXblGameSave
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Xbox Live Game Save service
+    winget:
+      securityContext: elevated
+  properties:
+    name: XblGameSave
+    startType: Disabled
+
+- name: DisableXboxNetApiSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Xbox Live Networking service
+    winget:
+      securityContext: elevated
+  properties:
+    name: XboxNetApiSvc
+    startType: Disabled
+
+# Location
+- name: DisableLfsvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Geolocation service
+    winget:
+      securityContext: elevated
+  properties:
+    name: lfsvc
+    startType: Disabled
+
+# Smart card
+- name: DisableSCardSvr
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Smart Card Resource Manager service
+    winget:
+      securityContext: elevated
+  properties:
+    name: SCardSvr
+    startType: Disabled
+
+- name: DisableScDeviceEnum
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Smart Card Device Enumeration service
+    winget:
+      securityContext: elevated
+  properties:
+    name: ScDeviceEnum
+    startType: Disabled
+
+- name: DisableSCPolicySvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Smart Card Removal Policy service
+    winget:
+      securityContext: elevated
+  properties:
+    name: SCPolicySvc
+    startType: Disabled
+
+# Internet Connection Sharing
+- name: DisableIcsSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Internet Connection Sharing (mobile hotspot) service
+    winget:
+      securityContext: elevated
+  properties:
+    name: icssvc
+    startType: Disabled
+
+# Touch & pen
+- name: DisableTabletInputService
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Touch Keyboard and Pen service
+    winget:
+      securityContext: elevated
+  properties:
+    name: TabletInputService
+    startType: Disabled
+
+# Per-user sync (mail/contacts/calendar)
+- name: DisableOneSyncSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable OneSyncSvc (per-user mail/contacts/calendar sync template). Breaks Mail, Calendar, and People UWP apps.
+    winget:
+      securityContext: elevated
+  properties:
+    name: OneSyncSvc
+    startType: Disabled
+
+# Windows Subsystem for Android
+- name: DisableWSAIFabricSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Windows Subsystem for Android infrastructure service
+    winget:
+      securityContext: elevated
+  properties:
+    name: WSAIFabricSvc
+    startType: Disabled
