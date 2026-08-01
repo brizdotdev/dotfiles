@@ -110,7 +110,7 @@ function Get-Inputs{
     $Browser = $null
     if (gum confirm "Set a default browser?") {
         $SetDefaultBrowser = $True
-        $Browser = gum choose --header "Select default browser" Firefox Chrome LibreWolf
+        $Browser = gum choose --header "Select default browser" @('Firefox', 'Chrome', 'LibreWolf')
     }
     $CodingAgent = gum input --header "Coding agent (e.g. claude, opencode)" --placeholder "claude"
     return [PSCustomObject]@{
