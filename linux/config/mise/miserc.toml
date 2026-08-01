@@ -1,0 +1,22 @@
+# Linux/macOS-only dotfiles managed via mise.
+# This file uses Tera templates (supported in .miserc.toml, unlike mise.toml)
+# to conditionally apply platform-specific dotfiles.
+# Empty lines produced by false conditions are ignored by TOML.
+
+[dotfiles]
+{% if os() != "windows" %}
+# Terminal
+"~/.tmux.conf" = "~/.dotfiles/linux/config/tmux/.tmux.conf"
+"~/.tmux/plugins/tpm" = "~/.dotfiles/linux/config/tmux/tpm"
+# Lazygit (Linux/macOS uses XDG config path)
+"~/.config/lazygit/config.yml" = "~/.dotfiles/common/config/lazygit/config.yml"
+{% endif %}
+{% if os() == "windows" %}
+# Lazygit (Windows uses LOCALAPPDATA, not ~/.config)
+'{{ env.LOCALAPPDATA }}\lazygit\config.yml' = "~/.dotfiles/common/config/lazygit/config.yml"
+{% endif %}
+{% if os() == "linux" %}
+# xdg-desktop-portal
+"~/.config/xdg-desktop-portal/portals.conf" = "~/.dotfiles/linux/config/xdg-desktop-portal/portals.conf"
+"~/.config/xdg-desktop-portal-termfilechooser/config" = "~/.dotfiles/linux/config/xdg-desktop-portal-termfilechooser/config"
+{% endif %}

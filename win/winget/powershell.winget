@@ -1,114 +1,214 @@
-# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+##############################################################################
+# PowerShell & shell
+# Installs PowerShell 7, shell tools (Starship, zoxide, eza) and PowerShell
+# modules, sets shell environment variables, and symlinks profile configs
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
 
-properties:
-  configurationVersion: 0.2.0
-  resources:
+resources:
+##############################################################################
+# PowerShell
+##############################################################################
 
-  ##############################################################################
-  # PowerShell
-  ##############################################################################
+- name: Terminal
+  type: Microsoft.WinGet/Package
+  properties:
+    id: Microsoft.WindowsTerminal
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install Windows Terminal
+    securityContext: elevated
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-microsoft-powershell
-    directives:
-      description: Install Microsoft PowerShell
-      securityContext: elevated
-    settings:
-      id: Microsoft.WindowsPowerShell
-      source: winget
+- name: PowerShell
+  type: Microsoft.WinGet/Package
+  properties:
+    id: Microsoft.PowerShell
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install PowerShell 7
+    securityContext: elevated
 
-  - resource: xPSDesiredStateConfiguration/xScript
-    id: envvar-powershell-telemetry
-    directives:
-      description: Disable PowerShell telemetry
-    settings:
-      GetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Get-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT"
-      TestScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Test-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
-      SetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Add-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
+- name: Starship
+  type: Microsoft.WinGet/Package
+  properties:
+    id: Starship.Starship
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install Starship
+    securityContext: elevated
 
-  - resource: xPSDesiredStateConfiguration/xScript
-    id: envvar-powershell-updatecheck
-    directives:
-      description: Disable PowerShell update check
-    settings:
-      GetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Get-EnvVar -Name "POWERSHELL_UPDATECHECK"
-      TestScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Test-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
-      SetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Add-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
+- name: Zoxide
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Zoxide
+  properties:
+    id: ajeetdsouza.zoxide
+    source: winget
+    installMode: silent
 
-  - resource: xPSDesiredStateConfiguration/xScript
-    id: powershell-settings
-    directives:
-      description: Ensure PowerShell is configured
-      securityContext: elevated
-    settings:
-      GetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $config = @{
-          "$PROFILE.CurrentUserAllHosts" = "$env:DOTFILES\win\config\PowerShell\profile.ps1"
-        }
-        return Get-SymlinkConfigResult -Config $config
-      TestScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $config = @{
-          "$PROFILE.CurrentUserAllHosts" = "$env:DOTFILES\win\config\PowerShell\profile.ps1"
-        }
-        return Test-SymlinkConfig -Config $config
-      SetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $config = @{
-          "$PROFILE.CurrentUserAllHosts" = "$env:DOTFILES\win\config\PowerShell\profile.ps1"
-        }
-        New-SymlinkConfig -Config $config
+- name: Eza
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install eza
+  properties:
+    id: eza-community.eza
+    source: winget
+    installMode: silent
 
-  - resource: xPSDesiredStateConfiguration/xScript
-    id: envvar-pager-less
-    directives:
-      description: Ensure Less is set as the default pager
-    settings:
-      GetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Get-EnvVar -Name "PAGER" -Value "less"
-      TestScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Test-EnvVar -Name "PAGER" -Value "less"
-      SetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Add-EnvVar -Name "PAGER" -Value "less"
+- name: ChangeScreenResolutionModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the ChangeScreenResolution module is installed from the PowerShell Gallery
+  properties:
+    testScript: |
+      $module = Get-InstalledPSResource -Name ChangeScreenResolution -ErrorAction SilentlyContinue
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name ChangeScreenResolution `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
 
-  # TODO:
-  # winget install --silent Starship.Starship
-  # winget install --silent ajeetdsouza.zoxide
-  # winget install --silent junegunn.fzf
-  # winget install --silent Fastfetch-cli.Fastfetch
-  # Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
+- name: PoshGitModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the posh-git module is installed from the PowerShell Gallery
+  properties:
+    testScript: |
+      $module = Get-InstalledPSResource -Name posh-git -ErrorAction SilentlyContinue
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name posh-git `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
 
-  # pwsh.exe -c "Install-Module -Name posh-git -Scope CurrentUser -Force"
-  # pwsh.exe -c "Install-Module -Name Terminal-Icons -Scope CurrentUser -Force"
-  # pwsh.exe -c "Install-Module -Name DockerCompletion -Scope CurrentUser -Force"
-  # pwsh.exe -c "Install-Module -Name PSFzf -Scope CurrentUser -Force"
-  # pwsh.exe -c "Install-Module -Name PSReadLine -Scope CurrentUser -AllowPrerelease -Force"
-  # pwsh.exe -c "Install-Module -Name CompletionPredictor -Scope CurrentUser -AllowPrerelease -Force"
-  # pwsh.exe -c "Install-Module -Name ChangeScreenResolution -Scope CurrentUser -Force"
-  # pwsh.exe -c "Install-Module -Name VirtualDesktop -Scope CurrentUser -Force"
+- name: DockerCompletionModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the DockerCompletion module is installed from the PowerShell Gallery
+  properties:
+    testScript: |
+      $module = Get-InstalledPSResource -Name DockerCompletion -ErrorAction SilentlyContinue
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name DockerCompletion `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
 
-  # TODO: Symlink profile.ps1
-  # $PowerShellFolder = pwsh.exe -NoLogo -NonInteractive -NoProfile -c 'New-Item -Path $PROFILE -ItemType "file" -Force | Out-Null; $(Get-Item -Path "$PROFILE").Directory.FullName'
-  # $PowerShellDotfilesFolder = "$env:DOTFILES\win\config\PowerShell"
-  # New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.pwsh_history" -Target "$env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt"
+- name: CompletionPredictorModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the CompletionPredictor module is installed from the PowerShell Gallery
+  properties:
+    testScript: |
+      $module = Get-InstalledPSResource -Name CompletionPredictor -ErrorAction SilentlyContinue
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name CompletionPredictor `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
 
-  # TODO: Symlink Starship config
-  # $StarshipFolder = "$env:USERPROFILE\.config\"
-  # $StarshipFile = "$StarshipFolder\starship.toml"
-  # New-Item -ItemType SymbolicLink -Path $StarshipFile -Target "$env:DOTFILES\common\config\starship\starship.toml"
+- name: PSFzfModule
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure the PSFzf module is installed from the PowerShell Gallery
+  properties:
+    testScript: |
+      $module = Get-InstalledPSResource -Name PSFzf -ErrorAction SilentlyContinue
+      return [bool]$module
+    setScript: |
+      Install-PSResource -Name PSFzf `
+        -Repository PSGallery `
+        -TrustRepository `
+        -AcceptLicense `
+        -Scope CurrentUser
+
+- name: PowerShellTelemetry
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Disable PowerShell telemetry
+  properties:
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Test-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Add-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
+
+- name: PowerShellUpdateCheck
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Disable PowerShell update check
+  properties:
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Test-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Add-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
+
+- name: PowerShellSettings
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure PowerShell is configured
+  properties:
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $profileAllHosts = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\profile.ps1'
+      $config = @{
+        $profileAllHosts = "${WinGetConfigRoot}\..\config\PowerShell\profile.ps1"
+      }
+      return Test-SymlinkConfig -Config $config
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $profileAllHosts = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\profile.ps1'
+      $config = @{
+        $profileAllHosts = "${WinGetConfigRoot}\..\config\PowerShell\profile.ps1"
+      }
+      New-SymlinkConfig -Config $config
+
+- name: StarshipSettings
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure Starship is configured
+  properties:
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $starshipConfig = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.config\starship.toml'
+      $config = @{
+        $starshipConfig = "${WinGetConfigRoot}\..\..\common\config\starship\starship.toml"
+      }
+      return Test-SymlinkConfig -Config $config
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $starshipConfig = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.config\starship.toml'
+      $config = @{
+        $starshipConfig = "${WinGetConfigRoot}\..\..\common\config\starship\starship.toml"
+      }
+      New-SymlinkConfig -Config $config
+
+- name: SetLessAsPager
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure Less is set as the default pager
+  properties:
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Test-EnvVar -Name "PAGER" -Value "less"
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Add-EnvVar -Name "PAGER" -Value "less"

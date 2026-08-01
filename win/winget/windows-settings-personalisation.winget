@@ -1,0 +1,1069 @@
+
+##############################################################################
+# Personalization
+# Settings related to looks and appearance
+##############################################################################
+
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+
+resources:
+# https://github.com/microsoft/WindowsDeveloperConfig/blob/0cd8dda905529e8408747fb3e01ea1382cbd335f/windows-dev-config/dev-config.winget#L223-L247
+- type: Microsoft.DSC.Transitional/PowerShellScript
+  name: DarkTheme
+  properties:
+    testScript: |
+      $regPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+      $apps   = Get-ItemPropertyValue $regPath -Name AppsUseLightTheme    -EA SilentlyContinue
+      $system = Get-ItemPropertyValue $regPath -Name SystemUsesLightTheme -EA SilentlyContinue
+      return ($apps -eq 0 -and $system -eq 0)
+    setScript: |
+      $regPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize'
+      Set-ItemProperty -Path $regPath -Name "AppsUseLightTheme" -Value 0
+      Set-ItemProperty -Path $regPath -Name "SystemUsesLightTheme" -Value 0
+  metadata:
+    description: Sets dark theme
+
+# Start Menu
+
+- name: StartVisiblePlaces
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide recommended places in Start Menu
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Start
+    valueName: VisiblePlaces
+    valueData:
+      Binary:
+        - 0
+
+- name: StartDisplayIconsAsGrid
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Display icons as grid in Start Menu (hint; StartMenuExperienceHost may overwrite)
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Start
+    valueName: AllAppsViewMode
+    valueData:
+      DWord: 1
+
+# https://learn.microsoft.com/windows/configuration/start/policy-settings (Hide category view, 24H2+KB5067036 / 25H2)
+- name: StartHideCategoryView
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Start category view, forcing grid as the default view
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Policies\Microsoft\Windows\Explorer
+    valueName: HideCategoryView
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Only honored on builds >= 26300 (25H2 Insider); inert on earlier builds
+- name: StartShowPinnedSection
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide pinned section in Start Menu
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Start
+    valueName: ShowPinnedSection
+    valueData:
+      DWord: 0
+
+- name: StartNoRecentlyAdded
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide recently added apps from Start"
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Start
+    valueName: ShowRecentList
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: HideRecentlyAddedAppsPolicy
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide recently added apps (policy)"
+  properties:
+    keyPath: HKCU\Software\Policies\Microsoft\Windows\Explorer
+    valueName: NoStartMenuRecentlyInstalledApps
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideMostUsedApps
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide most used apps list (policy)"
+  properties:
+    keyPath: HKCU\Software\Policies\Microsoft\Windows\Explorer
+    valueName: NoStartMenuMFUprogramsList
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideFrequentListWin11
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide most used apps list (Win11)"
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Start
+    valueName: ShowFrequentList
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: HideRecommendedSectionMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide Recommended section (machine policy)"
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer
+    valueName: HideRecommendedSection
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideRecommendedSectionMDM
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide Recommended section (MDM/CSP)"
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start
+    valueName: HideRecommendedSection
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideRecommendedSectionEducation
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Set education environment flag (hides Recommended section)"
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Education
+    valueName: IsEducationEnvironment
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: CleanStartMenuWin11
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: "Start: Clean Win11 Start menu (empty pinned list and clear start*.bin caches)"
+    securityContext: elevated
+  properties:
+    testScript: |
+      $key = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      if (-not (Test-Path -LiteralPath $key)) { return $false }
+      $val = (Get-ItemProperty -LiteralPath $key -Name 'ConfigureStartPins' -ErrorAction SilentlyContinue).ConfigureStartPins
+      return ($val -eq '{"pinnedList":[]}')
+    setScript: |
+      $json = '{"pinnedList":[]}'
+      $key1 = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      $key2 = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+      New-Item -Path $key1 -ItemType 'Directory' -ErrorAction SilentlyContinue | Out-Null
+      Set-ItemProperty -LiteralPath $key1 -Name 'ConfigureStartPins' -Value $json -Type 'String'
+      New-Item -Path $key2 -ItemType 'Directory' -ErrorAction SilentlyContinue | Out-Null
+      Set-ItemProperty -LiteralPath $key2 -Name 'ConfigureStartPins' -Value $json -Type 'String'
+      $systemAccounts = @('Public','Default','All Users','Default User')
+      Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' |
+          Where-Object { $_.PSChildName -like 'S-1-5-21-*' } |
+          ForEach-Object {
+              $profilePath = (Get-ItemProperty $_.PSPath -Name 'ProfileImagePath' -ErrorAction SilentlyContinue).ProfileImagePath
+              if ($profilePath -and ((Split-Path $profilePath -Leaf) -notin $systemAccounts)) {
+                  Remove-Item "$profilePath\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start*.bin" -Force -ErrorAction SilentlyContinue
+              }
+          }
+      Stop-Process -Name 'StartMenuExperienceHost' -Force -ErrorAction SilentlyContinue
+
+- name: ClassicContextMenu
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Restore classic right-click context menu in Windows 11
+  properties:
+    keyPath: HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32
+    valueName: "InprocServer32"
+    valueData:
+      String: ""
+    _exist: true
+
+- name: RemovePinToStartContextMenu
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Remove "Pin to Start" from the context menu
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Classes\Folder\shellex\ContextMenuHandlers\PintoStartScreen
+    _exist: false
+
+- name: HideDesktopIcons
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide desktop icons
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+    valueName: NoDesktop
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Taskbar
+- name: TaskbarAlignmentCenter
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Center taskbar alignment
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: TaskbarAl
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideSearch
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Search button from taskbar
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Search
+    valueName: SearchboxTaskbarMode
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: HideTaskView
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Task View button from taskbar
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: ShowTaskViewButton
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: HideWidgets
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Widgets button from taskbar
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: TaskbarDa
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: HideChat
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Chat button from taskbar
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: TaskbarMn
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TaskbarEndTask
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Show End Task button in taskbar context menu
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings
+    valueName: TaskbarEndTask
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: LastActiveClick
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Taskbar icon click opens last active window
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: LastActiveClick
+    valueData:
+      DWord: 1
+    _exist: true
+
+# https://learn.microsoft.com/windows/configuration/taskbar/pinned-apps
+# https://learn.microsoft.com/windows-hardware/customize/desktop/customize-the-windows-11-taskbar
+- name: TaskbarLayout
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Pin Explorer, LibreWolf, and VS Code to the taskbar in order
+    securityContext: elevated
+  properties:
+    testScript: |
+      $ErrorActionPreference = 'Stop'
+      $layoutFile = Join-Path $env:ProgramData 'TaskbarLayout\TaskbarLayoutModification.xml'
+      if (-not (Test-Path -LiteralPath $layoutFile)) { return $false }
+      $content = [System.IO.File]::ReadAllText($layoutFile)
+      function Find-AppShortcut([string]$exeName) {
+        $shell = New-Object -ComObject WScript.Shell
+        $dirs = @(
+          [Environment]::GetFolderPath('CommonStartMenu'),
+          [Environment]::GetFolderPath('StartMenu')
+        )
+        foreach ($dir in $dirs) {
+          if (-not (Test-Path -LiteralPath $dir)) { continue }
+          foreach ($link in Get-ChildItem -LiteralPath $dir -Recurse -Filter *.lnk -ErrorAction SilentlyContinue) {
+            try { $target = $shell.CreateShortcut($link.FullName).TargetPath } catch { continue }
+            if ($target -and ($target -replace '\\', '/') -like "*/$exeName") { return $link.FullName }
+          }
+        }
+        return $null
+      }
+      $libre = Find-AppShortcut 'librewolf.exe'
+      if ($libre -and $content -notmatch [regex]::Escape($libre)) { return $false }
+      $vscode = Find-AppShortcut 'code.exe'
+      if ($vscode -and $content -notmatch [regex]::Escape($vscode)) { return $false }
+      return $true
+    setScript: |
+      $ErrorActionPreference = 'Stop'
+      $key = 'HKCU:\Software\Policies\Microsoft\Windows\Explorer'
+      $layoutDir = Join-Path $env:ProgramData 'TaskbarLayout'
+      $layoutFile = Join-Path $layoutDir 'TaskbarLayoutModification.xml'
+
+      function Find-AppShortcut([string]$exeName) {
+        $shell = New-Object -ComObject WScript.Shell
+        $dirs = @(
+          [Environment]::GetFolderPath('CommonStartMenu'),
+          [Environment]::GetFolderPath('StartMenu')
+        )
+        foreach ($dir in $dirs) {
+          if (-not (Test-Path -LiteralPath $dir)) { continue }
+          foreach ($link in Get-ChildItem -LiteralPath $dir -Recurse -Filter *.lnk -ErrorAction SilentlyContinue) {
+            try { $target = $shell.CreateShortcut($link.FullName).TargetPath } catch { continue }
+            if ($target -and ($target -replace '\\', '/') -like "*/$exeName") { return $link.FullName }
+          }
+        }
+        return $null
+      }
+
+      $librePath = Find-AppShortcut 'librewolf.exe'
+      if (-not $librePath) {
+        $librePath = Join-Path ([Environment]::GetFolderPath('StartMenu')) 'Programs\LibreWolf.lnk'
+      }
+
+      $vscodePath = Find-AppShortcut 'code.exe'
+      if (-not $vscodePath) {
+        $vscodePath = Join-Path ([Environment]::GetFolderPath('StartMenu')) 'Programs\Visual Studio Code\Visual Studio Code.lnk'
+      }
+
+      $xml = @(
+        '<LayoutModificationTemplate xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification" xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" xmlns:taskbar="http://schemas.microsoft.com/Start/2014/TaskbarLayout" Version="1">'
+        '  <CustomTaskbarLayoutCollection PinListPlacement="Replace">'
+        '    <defaultlayout:TaskbarLayout>'
+        '      <taskbar:TaskbarPinList>'
+        '        <taskbar:DesktopApp DesktopApplicationID="Microsoft.Windows.Explorer" />'
+        "        <taskbar:DesktopApp DesktopApplicationLinkPath=`"$librePath`" />"
+        "        <taskbar:DesktopApp DesktopApplicationLinkPath=`"$vscodePath`" />"
+        '      </taskbar:TaskbarPinList>'
+        '    </defaultlayout:TaskbarLayout>'
+        '  </CustomTaskbarLayoutCollection>'
+        '</LayoutModificationTemplate>'
+      ) -join [Environment]::NewLine
+
+      if (-not (Test-Path -LiteralPath $layoutDir)) {
+        New-Item -ItemType Directory -Path $layoutDir -Force | Out-Null
+      }
+      [System.IO.File]::WriteAllText($layoutFile, $xml, [System.Text.UTF8Encoding]::new($false))
+
+      if (-not (Test-Path -LiteralPath $key)) {
+        New-Item -Path $key -Force | Out-Null
+      }
+      Set-ItemProperty -LiteralPath $key -Name 'StartLayoutFile' -Value $layoutFile -Type String
+      Set-ItemProperty -LiteralPath $key -Name 'LockedStartLayout' -Value 1 -Type DWord
+
+      # Restart Explorer so it loads the layout while the lock is active.
+      Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
+      while (Get-Process -Name explorer -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 100 }
+      Start-Process explorer
+
+      # Give Explorer time to apply the locked layout, then unlock so the user
+      # can customize afterward. Mirrors the UnlockStartLayout scheduled task
+      # used by the unattend generator (see resource/UnlockStartLayout.vbs).
+      Start-Sleep -Seconds 3
+      Set-ItemProperty -LiteralPath $key -Name 'LockedStartLayout' -Value 0 -Type DWord
+
+# Colors
+- name: TitlebarColor
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable theme colors on titlebar
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\DWM
+    valueName: ColorPrevalence
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: NoAccentColor
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Turn off accent color on Start and taskbar
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize
+    valueName: ColorPrevalence
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Night Light
+- name: NightLightState
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Night Light on/off state
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.bluelightreductionstate\windows.data.bluelightreduction.bluelightreductionstate
+    valueName: Data
+    valueData:
+      Binary:
+        - 67
+        - 66
+        - 1
+        - 0
+        - 10
+        - 2
+        - 1
+        - 0
+        - 42
+        - 6
+        - 131
+        - 251
+        - 130
+        - 211
+        - 6
+        - 42
+        - 43
+        - 14
+        - 21
+        - 67
+        - 66
+        - 1
+        - 0
+        - 16
+        - 0
+        - 208
+        - 10
+        - 2
+        - 198
+        - 20
+        - 168
+        - 129
+        - 156
+        - 209
+        - 147
+        - 187
+        - 198
+        - 238
+        - 1
+        - 0
+        - 0
+        - 0
+        - 0
+    _exist: true
+
+- name: NightLightSettings
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Night Light settings
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.settings\windows.data.bluelightreduction.settings
+    valueName: Data
+    valueData:
+      Binary:
+        - 67
+        - 66
+        - 1
+        - 0
+        - 10
+        - 2
+        - 1
+        - 0
+        - 42
+        - 6
+        - 131
+        - 251
+        - 130
+        - 211
+        - 6
+        - 42
+        - 43
+        - 14
+        - 35
+        - 67
+        - 66
+        - 1
+        - 0
+        - 2
+        - 1
+        - 202
+        - 20
+        - 14
+        - 21
+        - 0
+        - 202
+        - 30
+        - 14
+        - 7
+        - 0
+        - 207
+        - 40
+        - 184
+        - 68
+        - 202
+        - 50
+        - 14
+        - 17
+        - 46
+        - 25
+        - 0
+        - 202
+        - 60
+        - 14
+        - 7
+        - 46
+        - 30
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+    _exist: true
+
+# Animations
+- name: AnimateWindows
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable window animations when minimizing and maximizing
+  properties:
+    keyPath: HKCU\Control Panel\Desktop\WindowMetrics
+    valueName: MinAnimate
+    valueData:
+      String: "0"
+    _exist: true
+
+- name: DisableAnimations
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable UI animations via UserPreferencesMask
+  properties:
+    keyPath: HKCU\Control Panel\Desktop
+    valueName: UserPreferencesMask
+    valueData:
+      Binary:
+        - 144
+        - 18
+        - 7
+        - 128
+        - 16
+        - 0
+        - 0
+        - 0
+    _exist: true
+
+- name: MenuShowDelay
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Faster menu show delay (200ms)
+  properties:
+    keyPath: HKCU\Control Panel\Desktop
+    valueName: MenuShowDelay
+    valueData:
+      String: "200"
+    _exist: true
+
+# Visual effects - best performance extras (adapted from winutil WPFTweaksDisplay)
+- name: NoDragFullWindows
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Do not show window contents while dragging
+  properties:
+    keyPath: HKCU\Control Panel\Desktop
+    valueName: DragFullWindows
+    valueData:
+      String: "0"
+    _exist: true
+
+- name: KeyboardDelayFast
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Shortest keyboard repeat delay
+  properties:
+    keyPath: HKCU\Control Panel\Keyboard
+    valueName: KeyboardDelay
+    valueData:
+      String: "0"
+    _exist: true
+
+- name: NoListviewAlphaSelect
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable translucent selection rectangle in Explorer
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: ListviewAlphaSelect
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: NoListviewShadow
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable drop shadows for icon labels on desktop
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: ListviewShadow
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: NoTaskbarAnimations
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable taskbar animations
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: TaskbarAnimations
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: VisualFXCustom
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set visual effects to custom (required for individual effect toggles)
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects
+    valueName: VisualFXSetting
+    valueData:
+      DWord: 3
+    _exist: true
+
+- name: NoAeroPeek
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Aero Peek desktop preview
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\DWM
+    valueName: EnableAeroPeek
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Cursors
+- name: InstallBibataCursor
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
+  metadata:
+    description: Install Bibata cursor
+    securityContext: elevated
+  properties:
+    testScript: |
+      if (Get-ChildItem -Path "$env:WINDIR\Cursors" -Directory -Filter "Bibata*" -ErrorAction SilentlyContinue | Select-Object -First 1) {
+        return $true
+      }
+      return $false
+    setScript: |
+      cd "$env:TEMP"
+      curl.exe --silent --fail -L -O https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.6/Bibata-Modern-Classic-Windows.zip | Out-Null
+      if (Test-Path -Path Bibata) {
+        Remove-Item -Path Bibata -Force -Recurse
+      }
+      New-Item -Path .\Bibata -ItemType Directory -Force
+      Expand-Archive -Path Bibata-Modern-Classic-Windows.zip -DestinationPath .\Bibata
+      $cursors = Get-ChildItem -Path .\Bibata
+      foreach ($cursor in $cursors) {
+        $installPath = Join-Path -Path $cursor.FullName -ChildPath "install.inf"
+        Start-Process "$installPath" -Verb "Install"
+      }
+
+- name: SetBibataCursorSchemeName
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor scheme name (default value)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: "\"\""
+    valueData:
+      String: "Bibata-Modern-Classic-Small Cursors"
+    _exist: true
+
+- name: SetBibataCursorSchemeSource
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor scheme source
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: "\"Scheme Source\""
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: SetBibataCursorBaseSize
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor base size
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: CursorBaseSize
+    valueData:
+      DWord: 32
+    _exist: true
+
+- name: SetBibataCursorContactVisualization
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor contact visualization
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: ContactVisualization
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: SetBibataCursorGestureVisualization
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor gesture visualization
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: GestureVisualization
+    valueData:
+      DWord: 31
+    _exist: true
+
+- name: SetBibataCursorAppStarting
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor AppStarting (busy/working)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: AppStarting
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Work.ani"
+    _exist: true
+
+- name: SetBibataCursorArrow
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Arrow (normal select)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Arrow
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Pointer.cur"
+    _exist: true
+
+- name: SetBibataCursorCrosshair
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Crosshair (precision select)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Crosshair
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Cross.cur"
+    _exist: true
+
+- name: SetBibataCursorHand
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Hand (link select)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Hand
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Link.cur"
+    _exist: true
+
+- name: SetBibataCursorHelp
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Help (help select)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Help
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Help.cur"
+    _exist: true
+
+- name: SetBibataCursorIbeam
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor IBeam (text select)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: IBeam
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Text.cur"
+    _exist: true
+
+- name: SetBibataCursorNo
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor No (unavailable)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: No
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Unavailable.cur"
+    _exist: true
+
+- name: SetBibataCursorNwpen
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor NWPen (handwriting)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: NWPen
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Handwriting.cur"
+    _exist: true
+
+- name: SetBibataCursorSizeAll
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor SizeAll (move)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: SizeAll
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Move.cur"
+    _exist: true
+
+- name: SetBibataCursorSizeNesw
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor SizeNESW (diagonal resize 2)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: SizeNESW
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Dgn2.cur"
+    _exist: true
+
+- name: SetBibataCursorSizeNs
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor SizeNS (vertical resize)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: SizeNS
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Vert.cur"
+    _exist: true
+
+- name: SetBibataCursorSizeNwse
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor SizeNWSE (diagonal resize 1)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: SizeNWSE
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Dgn1.cur"
+    _exist: true
+
+- name: SetBibataCursorSizeWe
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor SizeWE (horizontal resize)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: SizeWE
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Horz.cur"
+    _exist: true
+
+- name: SetBibataCursorUpArrow
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor UpArrow (alternate select)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: UpArrow
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Alternate.cur"
+    _exist: true
+
+- name: SetBibataCursorWait
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Wait (busy)
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Wait
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Busy.ani"
+    _exist: true
+
+- name: SetBibataCursorPrecisionhair
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor precisionhair
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: precisionhair
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Cross.cur"
+    _exist: true
+
+- name: SetBibataCursorGrab
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Grab
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Grab
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Move.cur"
+    _exist: true
+
+- name: SetBibataCursorGrabbing
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Grabbing
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Grabbing
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Grabbing.cur"
+    _exist: true
+
+- name: SetBibataCursorPin
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Pin
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Pin
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Pin.cur"
+    _exist: true
+
+- name: SetBibataCursorPerson
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Person
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Person
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Person.cur"
+    _exist: true
+
+- name: SetBibataCursorPan
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Pan
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Pan
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Pan.cur"
+    _exist: true
+
+- name: SetBibataCursorZoomIn
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Zoom-in
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Zoom-in
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Zoom-in.cur"
+    _exist: true
+
+- name: SetBibataCursorZoomOut
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set Bibata cursor Zoom-out
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    keyPath: HKCU\Control Panel\Cursors
+    valueName: Zoom-out
+    valueData:
+      String: "C:\\WINDOWS\\Cursors\\Bibata-Modern-Classic-Small Cursors\\Zoom-out.cur"
+    _exist: true
+
+- name: RefreshCursor
+  type: Microsoft.DSC.Transitional/RunCommandOnSet
+  metadata:
+    description: Refresh cursor scheme via SystemParametersInfo
+  dependsOn:
+    - InstallBibataCursor
+  properties:
+    executable: pwsh
+    arguments:
+      "0": -NoProfile
+      "1": -NoLogo
+      "2": -Command
+      "3": >-
+        $CSharpSig = '[DllImport("user32.dll", EntryPoint = "SystemParametersInfo")] public static extern bool SystemParametersInfo( uint uiAction, uint uiParam, uint pvParam, uint fWinIni);'
+        $CursorRefresh = Add-Type -MemberDefinition $CSharpSig -Name WinAPICall -Namespace SystemParamInfo -PassThru
+        $CursorRefresh::SystemParametersInfo(0x0057, 0, $null, 0)
+      treatAsArray: true

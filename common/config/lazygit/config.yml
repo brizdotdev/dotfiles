@@ -13,3 +13,6 @@ keybinding:
   commits:
     moveDownCommit: "<c-d>" # move commit down one - Changed from <c-j> to <c-d> to avoid conflict with vscode focus group
     moveUpCommit: "<c-u>" # move commit up one - Changed from <c-k> to <c-u> to avoid conflict with vscode focus group
+
+refresher:
+  fetchInterval: 3600

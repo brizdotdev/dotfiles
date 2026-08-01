@@ -12,16 +12,16 @@
             "id": "User.moveFocus.6CD791B"
         },
         {
-            "command": "paste",
-            "id": "User.paste"
-        },
-        {
             "command": 
             {
                 "action": "moveFocus",
                 "direction": "right"
             },
             "id": "User.moveFocus.87C324ED"
+        },
+        {
+            "command": "paste",
+            "id": "User.paste"
         },
         {
             "command": 
@@ -32,8 +32,13 @@
             "id": "User.moveFocus.2A0DA8E0"
         },
         {
-            "command": "find",
-            "id": "User.find"
+            "command": 
+            {
+                "action": "copy",
+                "copyFormatting": "none",
+                "singleLine": false
+            },
+            "id": "User.copy.B5ED5656"
         },
         {
             "command": 
@@ -44,13 +49,8 @@
             "id": "User.moveFocus.F747588A"
         },
         {
-            "command": 
-            {
-                "action": "copy",
-                "copyFormatting": "none",
-                "singleLine": false
-            },
-            "id": "User.copy.B5ED5656"
+            "command": "find",
+            "id": "User.find"
         }
     ],
     "alwaysShowTabs": false,
@@ -69,24 +69,24 @@
             "keys": "ctrl+k"
         },
         {
-            "id": "User.moveFocus.2A0DA8E0",
-            "keys": "ctrl+h"
-        },
-        {
             "id": "User.paste",
             "keys": "ctrl+v"
+        },
+        {
+            "id": "User.moveFocus.2A0DA8E0",
+            "keys": "ctrl+h"
         },
         {
             "id": "User.moveFocus.87C324ED",
             "keys": "ctrl+l"
         },
         {
-            "id": "User.copy.B5ED5656",
-            "keys": "ctrl+c"
-        },
-        {
             "id": "User.find",
             "keys": "ctrl+/"
+        },
+        {
+            "id": "User.copy.B5ED5656",
+            "keys": "ctrl+c"
         },
         {
             "id": "User.moveFocus.F747588A",
@@ -117,10 +117,8 @@
             "keys": "alt+enter"
         }
     ],
-    "largePasteWarning": false,
     "launchMode": "default",
     "minimizeToNotificationArea": false,
-    "multiLinePasteWarning": false,
     "newTabMenu": 
     [
         {
@@ -167,6 +165,11 @@
                 "tabColor": "#161922",
                 "tabTitle": "PowerShell 5",
                 "useAcrylic": true
+            },
+            {
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "name": "Command Prompt"
             }
         ]
     },
@@ -804,6 +807,6 @@
     "trimPaste": true,
     "useAcrylicInTabRow": true,
     "warning.largePaste": false,
-    "warning.multiLinePaste": false,
+    "warning.multiLinePaste": "never",
     "windowingBehavior": "useNew"
 }

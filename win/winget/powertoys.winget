@@ -1,4 +1,9 @@
 # yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.3
+##############################################################################
+# PowerToys
+# Installs PowerToys and Command Palette extensions, and applies per-module
+# PowerToys settings
+##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
   winget:
@@ -12,10 +17,52 @@ resources:
   properties:
     id: "Microsoft.PowerToys"
     source: "winget"
+    installMode: silent
+
+# CmdPal extensions
+
+- name: winget_CmdPalExtensionForBitwarden
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Command Palette Extension for Bitwarden"
+  properties:
+    id: "9P5KS8T80MV3"
+    source: "msstore"
+    installMode: silent
+    acceptAgreements: true
+
+- name: winget_CmdPalExtensionForVSCode
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Command Palette Extension for VSCode"
+  properties:
+    id: "9MVLFK6TR4D4"
+    source: "msstore"
+    installMode: silent
+    acceptAgreements: true
+
+- name: winget_CmdPalExtensionForBrowserTabs
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Command Palette Extension for Browser Tabs"
+  properties:
+    id: "9N7BMMLTGFWX"
+    source: "msstore"
+    installMode: silent
+    acceptAgreements: true
+
+- name: winget_CmdPalExtensionForEverything
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: "Install Command Palette Extension for Everything"
+  properties:
+    id: lin-ycv.EverythingCmdPal
+    source: "winget"
+    installMode: silent
 
 # Docs: https://learn.microsoft.com/en-us/windows/powertoys/dsc-configure/microsoft-dsc
 
-- name: Microsoft.PowerToys/AdvancedPasteSettings-0
+- name: AdvancedPasteSettings-0
   type: Microsoft.PowerToys/AdvancedPasteSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -126,7 +173,7 @@ resources:
           key: ""
           win: false
       name: "AdvancedPaste"
-- name: Microsoft.PowerToys/AlwaysOnTopSettings-0
+- name: AlwaysOnTopSettings-0
   type: Microsoft.PowerToys/AlwaysOnTopSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -135,7 +182,7 @@ resources:
       version: "0.0.1"
       properties:
         frame-accent-color:
-          value: false
+          value: true
         show-in-system-menu:
           value: false
         do-not-activate-on-game-mode:
@@ -145,11 +192,11 @@ resources:
         frame-opacity:
           value: 100
         frame-thickness:
-          value: 3
+          value: 2
         excluded-apps:
           value: ""
         frame-color:
-          value: "#FFC300FF"
+          value: "#FF00E0FF"
         sound-enabled:
           value: true
         frame-enabled:
@@ -157,7 +204,7 @@ resources:
         hotkey:
           value:
             alt: false
-            ctrl: false
+            ctrl: true
             shift: true
             code: 90
             key: ""
@@ -166,7 +213,7 @@ resources:
           value:
             alt: false
             ctrl: true
-            shift: false
+            shift: true
             code: 189
             key: ""
             win: true
@@ -174,12 +221,12 @@ resources:
           value:
             alt: false
             ctrl: true
-            shift: false
+            shift: true
             code: 187
             key: ""
             win: true
       name: "AlwaysOnTop"
-- name: Microsoft.PowerToys/AppSettings-0
+- name: AppSettings-0
   type: Microsoft.PowerToys/AppSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -189,9 +236,9 @@ resources:
       show_tray_icon: true
       startup: true
       show_theme_adaptive_tray_icon: false
-      powertoys_version: "v0.98.1"
+      powertoys_version: "v0.100.2"
       system_theme: "dark"
-      is_elevated: true
+      is_elevated: false
       quick_access_shortcut:
         alt: false
         ctrl: false
@@ -205,16 +252,17 @@ resources:
         File Explorer Preview: true
         QuickAccent: false
         PowerRename: false
+        GrabAndMove: true
         LightSwitch: true
         MousePointerCrosshairs: false
         ZoomIt: true
         AlwaysOnTop: true
-        Workspaces: true
+        Workspaces: false
         NewPlus: false
         ColorPicker: true
         FancyZones: false
-        AdvancedPaste: true
-        PowerToys Run: true
+        AdvancedPaste: false
+        PowerToys Run: false
         EnvironmentVariables: false
         Awake: true
         Measure Tool: true
@@ -223,29 +271,29 @@ resources:
         TextExtractor: true
         MouseHighlighter: false
         PowerDisplay: false
-        CmdPal: false
+        CmdPal: true
         CmdNotFound: false
-        Peek: true
+        Peek: false
         MouseWithoutBorders: false
         RegistryPreview: false
         FindMyMouse: false
-        CropAndLock: true
+        CropAndLock: false
         MouseJump: false
         CursorWrap: false
-        Shortcut Guide: true
-        Image Resizer: false
+        Shortcut Guide: false
+        Image Resizer: true
       ignored_conflict_properties:
         ignored_shortcuts: []
       show_whats_new_after_updates: true
       run_elevated: false
       enable_experimentation: true
-      enable_warnings_elevated_apps: false
+      enable_warnings_elevated_apps: true
       show_new_updates_toast_notification: true
       theme: "system"
       dashboard_sort_order: 0
       download_updates_automatically: true
       enable_quick_access: true
-- name: Microsoft.PowerToys/AwakeSettings-0
+- name: AwakeSettings-0
   type: Microsoft.PowerToys/AwakeSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -260,7 +308,7 @@ resources:
         customTrayTimes: {}
         intervalHours: 2
       name: "Awake"
-- name: Microsoft.PowerToys/ColorPickerSettings-0
+- name: ColorPickerSettings-0
   type: Microsoft.PowerToys/ColorPickerSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -300,27 +348,27 @@ resources:
           HEX:
             Key: true
             Value: "%Rex%Grx%Blx"
-          Decimal:
-            Key: false
-            Value: "%Dv"
           CIEXYZ:
             Key: false
             Value: "XYZ(%Xv, %Yv, %Zv)"
-          HSB:
+          Decimal:
             Key: false
-            Value: "hsb(%Hu, %Sb%, %Br%)"
+            Value: "%Dv"
           CMYK:
             Key: true
             Value: "cmyk(%Cy%, %Ma%, %Ye%, %Bk%)"
-          Oklab:
+          HSB:
             Key: false
-            Value: "oklab(%Lo, %Oa, %Ob)"
+            Value: "hsb(%Hu, %Sb%, %Br%)"
           HWB:
             Key: false
             Value: "hwb(%Hu, %Wh%, %Bn%)"
           HSV:
             Key: true
             Value: "hsv(%Hu, %Sb%, %Va%)"
+          Oklab:
+            Key: false
+            Value: "oklab(%Lo, %Oa, %Ob)"
           RGB:
             Key: true
             Value: "rgb(%Re, %Gr, %Bl)"
@@ -371,7 +419,7 @@ resources:
         changecursor:
           value: false
       name: "ColorPicker"
-- name: Microsoft.PowerToys/CropAndLockSettings-0
+- name: CropAndLockSettings-0
   type: Microsoft.PowerToys/CropAndLockSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -404,7 +452,7 @@ resources:
             key: ""
             win: true
       name: "CropAndLock"
-- name: Microsoft.PowerToys/EnvironmentVariablesSettings-0
+- name: EnvironmentVariablesSettings-0
   type: Microsoft.PowerToys/EnvironmentVariablesSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -415,7 +463,7 @@ resources:
         LaunchAdministrator:
           value: true
       name: "EnvironmentVariables"
-- name: Microsoft.PowerToys/FancyZonesSettings-0
+- name: FancyZonesSettings-0
   type: Microsoft.PowerToys/FancyZonesSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -508,7 +556,7 @@ resources:
         fancyzones_highlight_opacity:
           value: 50
       name: "FancyZones"
-- name: Microsoft.PowerToys/FileLocksmithSettings-0
+- name: FileLocksmithSettings-0
   type: Microsoft.PowerToys/FileLocksmithSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -519,7 +567,7 @@ resources:
         bool_show_extended_menu:
           value: false
       name: "File Locksmith"
-- name: Microsoft.PowerToys/FindMyMouseSettings-0
+- name: FindMyMouseSettings-0
   type: Microsoft.PowerToys/FindMyMouseSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -566,7 +614,7 @@ resources:
         activation_method:
           value: 0
       name: "Find My Mouse"
-- name: Microsoft.PowerToys/HostsSettings-0
+- name: HostsSettings-0
   type: Microsoft.PowerToys/HostsSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -591,7 +639,7 @@ resources:
           value: false
         Encoding: 0
       name: "Hosts"
-- name: Microsoft.PowerToys/ImageResizerSettings-0
+- name: ImageResizerSettings-0
   type: Microsoft.PowerToys/ImageResizerSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -654,7 +702,7 @@ resources:
         imageresizer_jpegQualityLevel:
           value: 90
       name: "ImageResizer"
-- name: Microsoft.PowerToys/KeyboardManagerSettings-0
+- name: KeyboardManagerSettings-0
   type: Microsoft.PowerToys/KeyboardManagerSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -671,7 +719,7 @@ resources:
           code: 0
           key: ""
           win: false
-        useNewEditor: true
+        useNewEditor: false
         DefaultEditorShortcut:
           alt: false
           ctrl: false
@@ -683,7 +731,7 @@ resources:
           value:
           - "default"
       name: "Keyboard Manager"
-- name: Microsoft.PowerToys/MeasureToolSettings-0
+- name: MeasureToolSettings-0
   type: Microsoft.PowerToys/MeasureToolSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -710,7 +758,7 @@ resources:
           key: ""
           win: true
         ContinuousCapture:
-          value: false
+          value: true
         PixelTolerance:
           value: 0
         DrawFeetOnCross:
@@ -720,7 +768,7 @@ resources:
         DefaultMeasureStyle:
           value: 0
       name: "Measure Tool"
-- name: Microsoft.PowerToys/MouseHighlighterSettings-0
+- name: MouseHighlighterSettings-0
   type: Microsoft.PowerToys/MouseHighlighterSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -761,7 +809,7 @@ resources:
         left_button_click_color:
           value: "#3505E1FF"
       name: "MouseHighlighter"
-- name: Microsoft.PowerToys/MouseJumpSettings-0
+- name: MouseJumpSettings-0
   type: Microsoft.PowerToys/MouseJumpSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -800,7 +848,7 @@ resources:
         border_thickness: 6
         preview_type: "Compact"
       name: "MouseJump"
-- name: Microsoft.PowerToys/MousePointerCrosshairsSettings-0
+- name: MousePointerCrosshairsSettings-0
   type: Microsoft.PowerToys/MousePointerCrosshairsSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -863,7 +911,7 @@ resources:
         crosshairs_border_size:
           value: 1
       name: "MousePointerCrosshairs"
-- name: Microsoft.PowerToys/PeekSettings-0
+- name: PeekSettings-0
   type: Microsoft.PowerToys/PeekSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -891,10 +939,12 @@ resources:
           code: 32
           key: ""
           win: false
+        ShowFilePreviewTooltip:
+          value: true
         CloseAfterLosingFocus:
           value: false
       name: "Peek"
-- name: Microsoft.PowerToys/PowerAccentSettings-0
+- name: PowerAccentSettings-0
   type: Microsoft.PowerToys/PowerAccentSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -916,7 +966,7 @@ resources:
         start_selection_from_the_left: false
         do_not_activate_on_game_mode: true
       name: "QuickAccent"
-- name: Microsoft.PowerToys/PowerOCRSettings-0
+- name: PowerOCRSettings-0
   type: Microsoft.PowerToys/PowerOCRSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -940,7 +990,7 @@ resources:
           key: ""
           win: true
       name: "TextExtractor"
-- name: Microsoft.PowerToys/PowerRenameSettings-0
+- name: PowerRenameSettings-0
   type: Microsoft.PowerToys/PowerRenameSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -961,7 +1011,7 @@ resources:
         int_max_mru_size:
           value: 0
       name: "PowerRename"
-- name: Microsoft.PowerToys/RegistryPreviewSettings-0
+- name: RegistryPreviewSettings-0
   type: Microsoft.PowerToys/RegistryPreviewSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -971,7 +1021,7 @@ resources:
       properties:
         default_reg_app: false
       name: "RegistryPreview"
-- name: Microsoft.PowerToys/ShortcutGuideSettings-0
+- name: ShortcutGuideSettings-0
   type: Microsoft.PowerToys/ShortcutGuideSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -979,8 +1029,6 @@ resources:
     settings:
       version: "1.0"
       properties:
-        press_time_for_taskbar_icon_shortcuts:
-          value: 900
         DefaultOpenShortcutGuide:
           alt: false
           ctrl: false
@@ -995,18 +1043,16 @@ resources:
           code: 191
           key: ""
           win: true
-        overlay_opacity:
-          value: 90
+        window_position:
+          value: 0
+        first_run:
+          value: true
         theme:
           value: "system"
         disabled_apps:
           value: ""
-        press_time:
-          value: 900
-        use_legacy_press_win_key_behavior:
-          value: false
       name: "Shortcut Guide"
-- name: Microsoft.PowerToys/WorkspacesSettings-0
+- name: WorkspacesSettings-0
   type: Microsoft.PowerToys/WorkspacesSettings
   dependsOn:
   - winget_Microsoft.PowerToys
@@ -1024,7 +1070,7 @@ resources:
             key: ""
             win: false
       name: "Workspaces"
-- name: Microsoft.PowerToys/ZoomItSettings-0
+- name: ZoomItSettings-0
   type: Microsoft.PowerToys/ZoomItSettings
   dependsOn:
   - winget_Microsoft.PowerToys

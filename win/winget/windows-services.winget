@@ -1,0 +1,224 @@
+##############################################################################
+# Windows Services
+# Disables unnecessary Windows services to reduce background activity,
+# telemetry, and resource usage.
+#
+# Uses the Microsoft.Windows/Service DSC resource. Start type values:
+#   Automatic | AutomaticDelayedStart | Manual | Disabled
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+
+resources:
+
+# Telemetry & diagnostics
+- name: DisableDiagTrack
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Connected User Experiences and Telemetry service
+    securityContext: elevated
+  properties:
+    name: DiagTrack
+    startType: Disabled
+
+- name: DisableWerSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Windows Error Reporting service
+    securityContext: elevated
+  properties:
+    name: WerSvc
+    startType: Disabled
+
+- name: DisablePcaSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Program Compatibility Assistant service
+    securityContext: elevated
+  properties:
+    name: PcaSvc
+    startType: Disabled
+
+# Retail & Insider
+- name: DisableRetailDemo
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Retail Demo service
+    securityContext: elevated
+  properties:
+    name: RetailDemo
+    startType: Disabled
+
+- name: DisableWisvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Windows Insider Service
+    securityContext: elevated
+  properties:
+    name: wisvc
+    startType: Disabled
+
+- name: DisableWMPNetworkSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Windows Media Player Network Sharing service
+    securityContext: elevated
+  properties:
+    name: WMPNetworkSvc
+    startType: Disabled
+
+# Family & telephony
+- name: DisableWpcMonSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Parental Controls (Family Safety) service
+    securityContext: elevated
+  properties:
+    name: WpcMonSvc
+    startType: Disabled
+
+- name: DisableSmsRouter
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable SMS Router service
+    securityContext: elevated
+  properties:
+    name: SmsRouter
+    startType: Disabled
+
+- name: DisablePhoneSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Phone Service
+    securityContext: elevated
+  properties:
+    name: PhoneSvc
+    startType: Disabled
+
+# NFC & payments
+- name: DisableWalletService
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Wallet Service
+    securityContext: elevated
+  properties:
+    name: WalletService
+    startType: Disabled
+
+- name: DisableSEMgrSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Secure Element Manager (NFC payments) service
+    securityContext: elevated
+  properties:
+    name: SEMgrSvc
+    startType: Disabled
+
+# Offline maps
+- name: DisableMapsBroker
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Offline Maps service
+    securityContext: elevated
+  properties:
+    name: MapsBroker
+    startType: Disabled
+
+# Xbox services
+- name: DisableXblAuthManager
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Xbox Live Auth Manager service
+    securityContext: elevated
+  properties:
+    name: XblAuthManager
+    startType: Disabled
+
+- name: DisableXblGameSave
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Xbox Live Game Save service
+    securityContext: elevated
+  properties:
+    name: XblGameSave
+    startType: Disabled
+
+- name: DisableXboxNetApiSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Xbox Live Networking service
+    securityContext: elevated
+  properties:
+    name: XboxNetApiSvc
+    startType: Disabled
+
+# Location
+- name: DisableLfsvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Geolocation service
+    securityContext: elevated
+  properties:
+    name: lfsvc
+    startType: Disabled
+
+# Smart card
+- name: DisableSCardSvr
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Smart Card Resource Manager service
+    securityContext: elevated
+  properties:
+    name: SCardSvr
+    startType: Disabled
+
+- name: DisableScDeviceEnum
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Smart Card Device Enumeration service
+    securityContext: elevated
+  properties:
+    name: ScDeviceEnum
+    startType: Disabled
+
+- name: DisableSCPolicySvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Smart Card Removal Policy service
+    securityContext: elevated
+  properties:
+    name: SCPolicySvc
+    startType: Disabled
+
+# Internet Connection Sharing
+- name: DisableIcsSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Internet Connection Sharing (mobile hotspot) service
+    securityContext: elevated
+  properties:
+    name: icssvc
+    startType: Disabled
+
+# Per-user sync (mail/contacts/calendar)
+- name: DisableOneSyncSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable OneSyncSvc (per-user mail/contacts/calendar sync template). Breaks Mail, Calendar, and People UWP apps.
+    securityContext: elevated
+  properties:
+    name: OneSyncSvc
+    startType: Disabled
+
+# Windows Subsystem for Android
+- name: DisableWSAIFabricSvc
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Windows Subsystem for Android infrastructure service
+    securityContext: elevated
+  properties:
+    name: WSAIFabricSvc
+    startType: Disabled

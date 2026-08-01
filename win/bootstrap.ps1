@@ -12,14 +12,16 @@ $GitHubRepoName = "dotfiles"
 
 $dotfilesPath = Join-Path -Path $HOME -ChildPath ".dotfiles"
 
-$ErrorActionPreference = 'Stop'
 enum WinGetRelease {
     Stable
     Preview
 }
 
+$ErrorActionPreference = 'Stop'
+Set-StrictMode -Version Latest
+
 function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRelease]::Stable) {
-    Write-Host -ForegroundColor Blue "Installing WinGet"
+    Write-Host -ForegroundColor Blue "Installing WinGet..."
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 # Ensure required TLS protocols are enabled for the gallery
     Install-PackageProvider -Name NuGet -Force -Scope CurrentUser | Out-Null
     Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery -Scope CurrentUser -AllowClobber -ErrorAction SilentlyContinue
@@ -28,20 +30,25 @@ function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRel
     } else {
         Repair-WinGetPackageManager -Latest -Force
     }
-    winget configure --enable
+    Write-Host -ForegroundColor Green "WinGet installed"
+    Write-Host -ForegroundColor Blue "Enabling WinGet configuration..."
+    winget install --silent --disable-interactivity --source winget --scope user --accept-source-agreements --accept-package-agreements Microsoft.Dsc.Preview
+    winget install --silent --disable-interactivity --source winget Microsoft.VCRedist.2015+.x64
+    winget configure --enable --disable-interactivity --accept-source-agreements
+    Write-Host -ForegroundColor Green "WinGet configuration enabled"
 }
 
 function Install-Git {
     $ErrorActionPreference = "Stop"
-    Write-Host -ForegroundColor Blue "Installing Git"
+    Write-Host -ForegroundColor Blue "Installing Git..."
     winget configure --accept-configuration-agreements --suppress-initial-details https://raw.githubusercontent.com/$GitHubUsername/$GitHubRepoName/refs/heads/$Branch/win/winget/git.winget
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+    $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
     Write-Host -ForegroundColor Green "Git installed"
 }
 
 function Clone-Repo {
     $ErrorActionPreference = "Stop"
-    Write-Host -ForegroundColor Blue "Cloning dotfiles"
+    Write-Host -ForegroundColor Blue "Cloning dotfiles..."
     if (Test-Path -Path $dotfilesPath) {
         Write-Host -ForegroundColor Yellow "Dotfiles folder already exists"
         Read-Host

@@ -1,82 +1,71 @@
-# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+##############################################################################
+# Neovim
+# Installs Neovim, sets it as EDITOR, and symlinks Neovim/vim configs
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
 
-properties:
-  configurationVersion: 0.2.0
-  resources:
+resources:
+##############################################################################
+# Neovim
+##############################################################################
 
-  ##############################################################################
-  # Neovim
-  ##############################################################################
+- name: Neovim
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Neovim
+  properties:
+    id: Neovim.Neovim
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-neovim
-    directives:
-      description: Install Neovim
-    settings:
-      id: Neovim.Neovim
-      source: winget
+- name: EditorEnvVar
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure Neovim is set as EDITOR
+  properties:
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Test-EnvVar -Name "EDITOR" -Value "nvim"
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Add-EnvVar -Name "EDITOR" -Value "nvim"
 
-  - resource: xPSDesiredStateConfiguration/xScript
-    id: envvar-editor-neovim
-    directives:
-      description: Ensure Neovim is set as EDITOR
-    settings:
-      GetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Get-EnvVar -Name "EDITOR" -Value "nvim"
-      TestScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Test-EnvVar -Name "EDITOR" -Value "nvim"
-      SetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        Add-EnvVar -Name "EDITOR" -Value "nvim"
+- name: NvimSettings
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure Neovim is configured
+  properties:
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $config = @{
+        "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
+      }
+      return Test-SymlinkConfig -Config $config
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $config = @{
+        "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
+      }
+      New-SymlinkConfig -Config $config
 
-  - resource: xPSDesiredStateConfiguration/xScript
-    id: nvim-settings
-    directives:
-      description: Ensure Neovim is configured
-      securityContext: elevated
-    settings:
-      GetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $config = @{
-          "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
-        }
-        return Get-SymlinkConfigResult -Config $config
-      TestScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $config = @{
-          "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
-        }
-        return Test-SymlinkConfig -Config $config
-      SetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $config = @{
-          "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
-        }
-        New-SymlinkConfig -Config $config
-
-  - resource: xPSDesiredStateConfiguration/xScript
-    id: vimrc-settings
-    directives:
-      description: Ensure vimrc is configured
-      securityContext: elevated
-    settings:
-      GetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $config = @{
-          "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
-        }
-        return Get-SymlinkConfigResult -Config $config
-      TestScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $config = @{
-          "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
-        }
-        return Test-SymlinkConfig -Config $config
-      SetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $config = @{
-          "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
-        }
-        New-SymlinkConfig -Config $config
+- name: VimrcSettings
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Ensure vimrc is configured
+  properties:
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $config = @{
+        "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
+      }
+      return Test-SymlinkConfig -Config $config
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $config = @{
+        "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
+      }
+      New-SymlinkConfig -Config $config

@@ -1,6 +1,18 @@
 ################################################################################
 # Utility Functions
 ################################################################################
+function Test-InteractiveShell {
+    try {
+        return $Host.Name -eq 'ConsoleHost' -and
+        -not [Console]::IsInputRedirected -and
+        -not [Console]::IsOutputRedirected
+    }
+    catch {
+        return $false
+    }
+}
+$isInteractiveShell = Test-InteractiveShell
+
 function history {
     Get-Content (Get-PSReadlineOption).HistorySavePath
 }
@@ -38,13 +50,37 @@ function fzf-vim() {
 
 # Yazi (https://yazi-rs.github.io/docs/quick-start)
 function y {
-	$tmp = (New-TemporaryFile).FullName
-	yazi.exe @args --cwd-file="$tmp"
-	$cwd = Get-Content -Path $tmp -Encoding UTF8
-	if ($cwd -and $cwd -ne $PWD.Path -and (Test-Path -LiteralPath $cwd -PathType Container)) {
-		Set-Location -LiteralPath (Resolve-Path -LiteralPath $cwd).Path
-	}
-	Remove-Item -Path $tmp
+    $tmp = (New-TemporaryFile).FullName
+    yazi.exe @args --cwd-file="$tmp"
+    $cwd = Get-Content -Path $tmp -Encoding UTF8
+    if ($cwd -and $cwd -ne $PWD.Path -and (Test-Path -LiteralPath $cwd -PathType Container)) {
+        Set-Location -LiteralPath (Resolve-Path -LiteralPath $cwd).Path
+    }
+    Remove-Item -Path $tmp
+}
+
+function Test-Command {
+    param([Parameter(Mandatory)][string]$Name)
+    $null -ne (Get-Command -Name $Name -ErrorAction SilentlyContinue)
+}
+
+function pkill {
+    param([Parameter(Mandatory)][string]$Name)
+    Get-Process -Name $Name -ErrorAction SilentlyContinue | Stop-Process -Force
+}
+
+function Resolve-Editor {
+    if ($EDITOR_Override) {
+        return $EDITOR_Override
+    }
+
+    foreach ($candidate in 'nvim', 'pvim', 'vim', 'vi', 'code', 'codium', 'notepad++', 'sublime_text') {
+        if (Test-Command $candidate) {
+            return $candidate
+        }
+    }
+
+    return 'notepad'
 }
 
 ################################################################################
@@ -63,46 +99,91 @@ Remove-Item alias:echo -Force
 # Aliases
 ################################################################################
 
-if (Get-Command -Name "nvim" -ErrorAction SilentlyContinue) {
-    Set-Alias -Name "v" -Value nvim
-    Set-Alias -Name "vi" -Value nvim
-    Set-Alias -Name "vim" -Value nvim
-} elseif (Get-Command -Name "vim" -ErrorAction SilentlyContinue) {
-    Set-Alias -Name "v" -Value vim
-    Set-Alias -Name "vi" -Value vim
-}
+$EDITOR = Resolve-Editor
+Set-Alias -Name "v" -Value $EDITOR
+Set-Alias -Name "vi" -Value $EDITOR
+Set-Alias -Name "vim" -Value $EDITOR
 Set-Alias -Name "g" -Value git
 Set-Alias -Name "ex" -Value explorer
 Set-Alias -Name "lg" -Value lazygit
-Set-Alias -Name "cat" -Value bat
 Set-Alias -Name "mkdir" -Value mkdir.exe
-if (Get-Command -Name "lsd" -ErrorAction SilentlyContinue) {
-    Set-Alias -Name "ls" -Value lsd
-}
-elseif (Get-Command -Name "exa" -ErrorAction SilentlyContinue) {
-    Set-Alias -Name "ls" -Value exa
+if ($env:CODING_AGENT) {
+    Set-Alias -Name "cc" -Value $env:CODING_AGENT
 }
 
+if (Test-Command bat) {
+    function cat { bat @args }
+}
+else {
+    function cat { Get-Content @args }
+}
+
+if (Test-Command eza) {
+    function l { eza -1 --icons @args }
+    function ll { eza -lh --icons @args }
+    function la { eza -alh --icons @args }
+    function ls { eza --icons @args }
+}
+else {
+    function l { Get-ChildItem @args }
+    function ll { Get-ChildItem -Force @args }
+    function la { Get-ChildItem -Force @args }
+    function ls { Get-ChildItem @args }
+}
+
+function pst { Get-Clipboard }
 
 ################################################################################
 # PSReadLine
 ################################################################################
-Set-PSReadLineOption -PredictionSource HistoryAndPlugin
-Set-PSReadLineOption -EditMode Vi
-$OnViModeChange = [scriptblock] {
-    if ($args[0] -eq 'Command') {
-        # Set the cursor to a blinking block.
-        Write-Host -NoNewLine "`e[2 q"
+function Initialize-PSReadLine {
+
+    if (-not $isInteractiveShell -or -not (Get-Module -ListAvailable -Name PSReadLine)) {
+        return
     }
-    else {
-        # Set the cursor to a blinking line.
-        Write-Host -NoNewLine "`e[5 q"
+
+    $psreadlineOptions = @{
+        PredictionSource              = 'HistoryAndPlugin'
+        MaximumHistoryCount           = 10000
+        HistoryNoDuplicates           = $true
+        HistorySearchCursorMovesToEnd = $true
+        EditMode                      = 'Vi'
+        ViModeIndicator               = 'Cursor'
+        BellStyle                     = 'None'
+        TerminateOrphanedConsoleApps  = $true
+    }
+    Set-PSReadLineOption @psreadlineOptions
+
+    Set-PSReadLineKeyHandler -Key Alt+Enter -Function AcceptNextSuggestionWord
+    Set-PSReadLineKeyHandler -Key F2 -Function SwitchPredictionView
+    Set-PSReadLineKeyHandler -Chord Ctrl+Tab -Function TabCompleteNext
+    Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
+    Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+    Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+
+    Set-PSReadLineOption -AddToHistoryHandler {
+        param([string]$line)
+        $line -notmatch '(?i)connectionstring'
     }
 }
-Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $OnViModeChange
-Set-PSReadLineKeyHandler -Key Alt+Enter -Function AcceptNextSuggestionWord
-Set-PSReadLineKeyHandler -Key F2 -Function SwitchPredictionView
-Set-PSReadlineKeyHandler -Chord CTRL+Tab -Function TabCompleteNext
+Initialize-PSReadLine
+
+################################################################################
+# Completions
+################################################################################
+function Register-CustomCompletion {
+    if (-not $isInteractiveShell) {
+        return
+    }
+    if (Test-Command dotnet) {
+        Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
+            param($wordToComplete, $commandAst, $cursorPosition)
+            $null = $wordToComplete
+            dotnet complete --position $cursorPosition $commandAst.ToString() |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
+        }
+    }
+}
 
 ################################################################################
 # Startup
@@ -111,13 +192,26 @@ Set-PSReadlineKeyHandler -Chord CTRL+Tab -Function TabCompleteNext
 # Set encoding to UTF-8
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
-function Invoke-Starship-TransientFunction {
-    &starship module character
+if (Get-Command -Name "starship" -ErrorAction SilentlyContinue) {
+    function Invoke-Starship-TransientFunction {
+        &starship module character
+    }
+    Invoke-Expression (&starship init powershell)
 }
 
-Invoke-Expression (&starship init powershell)
+if (Get-Command -Name "zoxide" -ErrorAction SilentlyContinue) {
+    Invoke-Expression (& { (zoxide init powershell | Out-String) })
+    Remove-Item alias:cd -Force
+    Set-Alias -Name "cd" -Value "z"
+}
 
-Invoke-Expression (& { (zoxide init powershell | Out-String) })
+if (Get-Command -Name "mise" -ErrorAction SilentlyContinue) {
+    (&mise activate pwsh) | Out-String | Invoke-Expression
+}
+
+if (Get-Command -Name "gh" -ErrorAction SilentlyContinue) {
+    gh completion -s powershell | Out-String | Invoke-Expression
+}
 
 # fastfetch
 
@@ -147,5 +241,3 @@ $null = Register-EngineEvent -SourceIdentifier 'PowerShell.OnIdle' -MaxTriggerCo
     }
 
 }
-
-# TODO: CTT PowerShell profile

@@ -86,9 +86,6 @@
 [column]
   ui = auto
 
-[commit]
-  gpgsign = true
-
 [core]
   autocrlf = input
   compression = 9

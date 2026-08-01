@@ -1,40 +1,240 @@
-# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+##############################################################################
+# Browsers
+# Installs web browsers (Chrome, Firefox, LibreWolf) and deploys browser
+# extensions via enterprise policies
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
 
-properties:
-  configurationVersion: 0.2.0
-  resources:
+resources:
+- name: GoogleChrome
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Google Chrome
+  properties:
+    id: Google.Chrome
+    source: winget
+    installMode: silent
 
-  ##############################################################################
-  # Browsers
-  ##############################################################################
+- name: MozillaFirefox
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Mozilla Firefox
+  properties:
+    id: Mozilla.Firefox
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-google-chrome
-    directives:
-      description: Install Google Chrome
-      securityContext: elevated
-    settings:
-      id: Google.Chrome
-      source: winget
+- name: LibreWolf
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install LibreWolf
+  properties:
+    id: LibreWolf.LibreWolf
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-mozilla-firefox
-    directives:
-      description: Install Mozilla Firefox
-      securityContext: elevated
-    settings:
-      id: Mozilla.Firefox
-      source: winget
-      scope: user
+- name: FirefoxExtensions
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Install Firefox and LibreWolf extensions via enterprise policy (normal_installed)
+    securityContext: elevated
+  dependsOn:
+    - MozillaFirefox
+    - LibreWolf
+  properties:
+    testScript: |
+      $ErrorActionPreference = 'Stop'
+      $dotfilesRoot = $env:DOTFILES_ROOT
+      if (-not $dotfilesRoot) {
+        $candidate = "$env:USERPROFILE\.dotfiles"
+        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\firefox\extensions.txt')) {
+          $dotfilesRoot = $candidate
+        }
+      }
+      if (-not $dotfilesRoot) { return $false }
+      $extensionsFile = Join-Path $dotfilesRoot 'common\config\firefox\extensions.txt'
+      $browsers = @{
+        Firefox   = 'C:\Program Files\Mozilla Firefox\distribution'
+        LibreWolf = 'C:\Program Files\LibreWolf\distribution'
+      }
+      $slugs = @()
+      if (Test-Path -LiteralPath $extensionsFile) {
+        foreach ($line in Get-Content -LiteralPath $extensionsFile) {
+          $t = $line.Trim()
+          if (-not $t -or $t.StartsWith('#')) { continue }
+          if ($t -match '/addon/([^/]+)/?') { $slugs += $Matches[1] }
+        }
+      }
+      $expectedCount = $slugs.Count
+      $needsUpdate = $false
+      foreach ($entry in $browsers.GetEnumerator()) {
+        if (-not (Test-Path -LiteralPath $entry.Value)) { continue }
+        $policyFile = Join-Path $entry.Value 'policies.json'
+        if (-not (Test-Path -LiteralPath $policyFile)) { $needsUpdate = $true; continue }
+        try {
+          $json = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json
+          $ext = $json.policies.ExtensionSettings
+          if (-not $ext) { $needsUpdate = $true; continue }
+          $actualCount = @($ext.PSObject.Properties | Where-Object { $_.MemberType -eq 'NoteProperty' }).Count
+          if ($actualCount -ne $expectedCount) { $needsUpdate = $true }
+        } catch {
+          $needsUpdate = $true
+        }
+      }
+      return -not $needsUpdate
+    setScript: |
+      $ErrorActionPreference = 'Stop'
+      $dotfilesRoot = $env:DOTFILES_ROOT
+      if (-not $dotfilesRoot) {
+        $candidate = "$env:USERPROFILE\.dotfiles"
+        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\firefox\extensions.txt')) {
+          $dotfilesRoot = $candidate
+        }
+      }
+      if (-not $dotfilesRoot) { throw 'DOTFILES_ROOT env var not set and could not locate dotfiles directory' }
+      $extensionsFile = Join-Path $dotfilesRoot 'common\config\firefox\extensions.txt'
+      $browsers = @{
+        Firefox   = 'C:\Program Files\Mozilla Firefox\distribution'
+        LibreWolf = 'C:\Program Files\LibreWolf\distribution'
+      }
+      $slugs = @()
+      if (Test-Path -LiteralPath $extensionsFile) {
+        foreach ($line in Get-Content -LiteralPath $extensionsFile) {
+          $t = $line.Trim()
+          if (-not $t -or $t.StartsWith('#')) { continue }
+          if ($t -match '/addon/([^/]+)/?') { $slugs += $Matches[1] }
+        }
+      }
+      $settings = @{}
+      foreach ($slug in $slugs) {
+        try {
+          $api = Invoke-RestMethod -Uri "https://addons.mozilla.org/api/v5/addons/addon/$slug/" -Headers @{ 'User-Agent' = 'dotfiles' } -ErrorAction Stop
+          $guid = $api.guid
+          $url = $api.current_version.file.url
+          if ($url -and $url.StartsWith('//')) { $url = 'https:' + $url }
+          $settings[$guid] = @{
+            installation_mode = 'normal_installed'
+            install_url       = $url
+          }
+          Write-Host "Resolved $slug -> $guid"
+        } catch {
+          Write-Warning "Failed to fetch metadata for '$slug': $_"
+        }
+      }
+      if ($settings.Count -eq 0) {
+        Write-Warning 'No extensions resolved; skipping policies.json write'
+        return
+      }
+      foreach ($entry in $browsers.GetEnumerator()) {
+        if (-not (Test-Path -LiteralPath $entry.Value)) {
+          Write-Warning "$($entry.Key) distribution dir not found at '$($entry.Value)'; skipping"
+          continue
+        }
+        $policyFile = Join-Path $entry.Value 'policies.json'
+        $policy = @{}
+        if (Test-Path -LiteralPath $policyFile) {
+          try {
+            $policy = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json -AsHashtable
+          } catch {
+            $policy = @{}
+          }
+        }
+        if (-not $policy.ContainsKey('policies')) { $policy['policies'] = @{} }
+        $policy['policies']['ExtensionSettings'] = $settings
+        $json = $policy | ConvertTo-Json -Depth 10
+        [System.IO.File]::WriteAllText($policyFile, $json, [System.Text.UTF8Encoding]::new($false))
+        Write-Host "Wrote $($settings.Count) extensions to $($entry.Key) policies.json"
+      }
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-librewolf
-    directives:
-      description: Install LibreWolf
-    settings:
-      id: LibreWolf.LibreWolf
-      source: winget
+- name: ChromeExtensions
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Install Google Chrome extensions via enterprise policy (normal_installed)
+    securityContext: elevated
+  dependsOn:
+    - GoogleChrome
+  properties:
+    testScript: |
+      $ErrorActionPreference = 'Stop'
+      $dotfilesRoot = $env:DOTFILES_ROOT
+      if (-not $dotfilesRoot) {
+        $candidate = "$env:USERPROFILE\.dotfiles"
+        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\chrome\extensions.txt')) {
+          $dotfilesRoot = $candidate
+        }
+      }
+      if (-not $dotfilesRoot) { return $false }
+      $extensionsFile = Join-Path $dotfilesRoot 'common\config\chrome\extensions.txt'
+      $policyFile = 'C:\Program Files\Google\Chrome\Application\policies.json'
+      $expectedIds = @()
+      if (Test-Path -LiteralPath $extensionsFile) {
+        foreach ($line in Get-Content -LiteralPath $extensionsFile) {
+          $t = $line.Trim()
+          if (-not $t -or $t.StartsWith('#')) { continue }
+          if ($t -match '/(?:webstore/)?detail/[^/?]+/([a-p]{32})') { $expectedIds += $Matches[1] }
+        }
+      }
+      $expectedCount = $expectedIds.Count
+      if (-not (Test-Path -LiteralPath $policyFile)) { return $false }
+      try {
+        $json = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json
+        $ext = $json.ExtensionSettings
+        if (-not $ext) { return $false }
+        $actualCount = @($ext.PSObject.Properties | Where-Object { $_.MemberType -eq 'NoteProperty' }).Count
+        return $actualCount -eq $expectedCount
+      } catch {
+        return $false
+      }
+    setScript: |
+      $ErrorActionPreference = 'Stop'
+      $dotfilesRoot = $env:DOTFILES_ROOT
+      if (-not $dotfilesRoot) {
+        $candidate = "$env:USERPROFILE\.dotfiles"
+        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\chrome\extensions.txt')) {
+          $dotfilesRoot = $candidate
+        }
+      }
+      if (-not $dotfilesRoot) { throw 'DOTFILES_ROOT env var not set and could not locate dotfiles directory' }
+      $extensionsFile = Join-Path $dotfilesRoot 'common\config\chrome\extensions.txt'
+      $policyFile = 'C:\Program Files\Google\Chrome\Application\policies.json'
+      $settings = @{}
+      if (Test-Path -LiteralPath $extensionsFile) {
+        foreach ($line in Get-Content -LiteralPath $extensionsFile) {
+          $t = $line.Trim()
+          if (-not $t -or $t.StartsWith('#')) { continue }
+          if ($t -match '/(?:webstore/)?detail/[^/?]+/([a-p]{32})') {
+            $id = $Matches[1]
+            $settings[$id] = @{
+              installation_mode = 'normal_installed'
+              update_url        = 'https://clients2.google.com/service/update2/crx'
+            }
+          }
+        }
+      }
+      if ($settings.Count -eq 0) {
+        Write-Warning 'No Chrome extensions resolved; skipping policies.json write'
+        return
+      }
+      $dir = Split-Path -Parent $policyFile
+      if (-not (Test-Path -LiteralPath $dir)) {
+        Write-Warning "Chrome installation dir not found at '$dir'; skipping"
+        return
+      }
+      $policy = @{}
+      if (Test-Path -LiteralPath $policyFile) {
+        try {
+          $policy = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json -AsHashtable
+        } catch {
+          $policy = @{}
+        }
+      }
+      $policy['ExtensionSettings'] = $settings
+      $json = $policy | ConvertTo-Json -Depth 10
+      [System.IO.File]::WriteAllText($policyFile, $json, [System.Text.UTF8Encoding]::new($false))
+      Write-Host "Wrote $($settings.Count) extensions to Chrome policies.json"
 
-  # TODO: Browser extensions
-  # TODO: Browser config
-  # TODO: Set default browser
+# TODO: Browser config

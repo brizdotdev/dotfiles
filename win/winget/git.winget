@@ -1,95 +1,114 @@
+##############################################################################
+# Git
+# Installs Git and OpenSSH, configures the ssh-agent service, applies
+# system-level git config, and adds Git to the PATH
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
 
-# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
-properties:
-  configurationVersion: 0.2.0
-  resources:
+resources:
 
-    # Use script until Winget supports custom overrides
-    # https://github.com/microsoft/winget-cli/issues/3401
-    - resource: xPSDesiredStateConfiguration/xScript
-      # https://gitforwindows.org/silent-or-unattended-installation.html
-      # https://jrsoftware.org/ishelp/index.php?topic=setupcmdline
-      id: install-git
-      directives:
-        description: Install Git for Windows with custom options
-      settings:
-        GetScript: |
-          @{ Result = & winget list --id Git.Git --exact --quiet 2>$null }
-        TestScript: |
-          $result = & winget list --id Git.Git --exact --quiet 2>$null
-          return $LASTEXITCODE -eq 0
-        SetScript: |
-          $overrideParams = @(
-            '/SP-'
-            '/VERYSILENT'
-            '/SUPPRESSMSGBOXES'
-            '/NORESTART'
-            '/NOCANCEL'
-            '/LOG'
-            '/Components="gitlfs,scalar,windowsterminal,assoc,assoc_sh"'
-            '/o:PathOption=BashOnly'
-            '/o:SSHOption=ExternalOpenSSH'
-            '/o:CURLOption=WinSSL'
-            '/o:BashTerminalOption=ConHost'
-            '/o:DefaultBranchOption=main'
-          ) -join ' '
-          winget install Git.Git --source winget --silent --override $overrideParams
+# https://github.com/microsoft/winget-cli/issues/3401
+- type: Microsoft.WinGet/Package
+  name: Git
+  properties:
+    id: Git.Git
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install Git
+    securityContext: elevated
 
-    - resource: xPSDesiredStateConfiguration/xScript
-      id: path-contains-git
-      directives:
-        description: Ensure Git is in the PATH for the current user
-      dependsOn:
-        - install-git
-      settings:
-        GetScript: |
-          $gitInstallPath = "C:\Program Files\Git"
-          $pathsToAdd = @(
-            (Join-Path -Path $gitInstallPath -ChildPath "bin"),
-            (Join-Path -Path $gitInstallPath -ChildPath "cmd"),
-            (Join-Path -Path $gitInstallPath -ChildPath "mingw64\bin"),
-            (Join-Path -Path $gitInstallPath -ChildPath "usr\bin")
-          )
-          $currentPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User)
-            $splitPath = @($currentPath -split ';' | Where-Object { $_ })
-            $missingPaths = @($pathsToAdd | Where-Object { $splitPath -notcontains $_ })
-            if ($missingPaths.Count -eq 0) {
-            return $true
-          } else {
-            return $false
-          }
-        TestScript: |
-          $gitInstallPath = "C:\Program Files\Git"
-          $pathsToAdd = @(
-            (Join-Path -Path $gitInstallPath -ChildPath "bin"),
-            (Join-Path -Path $gitInstallPath -ChildPath "cmd"),
-            (Join-Path -Path $gitInstallPath -ChildPath "mingw64\bin"),
-            (Join-Path -Path $gitInstallPath -ChildPath "usr\bin")
-          )
-          $currentPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User)
-            $splitPath = @($currentPath -split ';' | Where-Object { $_ })
-            $missingPaths = @($pathsToAdd | Where-Object { $splitPath -notcontains $_ })
-            if ($missingPaths.Count -eq 0) {
-            return $true
-          } else {
-            return $false
-          }
-        SetScript: |
-          $gitInstallPath = "C:\Program Files\Git"
-          $pathsToAdd = @(
-            (Join-Path -Path $gitInstallPath -ChildPath "bin"),
-            (Join-Path -Path $gitInstallPath -ChildPath "cmd"),
-            (Join-Path -Path $gitInstallPath -ChildPath "mingw64\bin"),
-            (Join-Path -Path $gitInstallPath -ChildPath "usr\bin")
-          )
-          $currentPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User)
-            $splitPath = @($currentPath -split ';' | Where-Object { $_ })
-            $missingPaths = @($pathsToAdd | Where-Object { $splitPath -notcontains $_ })
-          if ($missingPaths.Count -eq 0) {
-            Write-Host 'Git is already in the path.'
-          } else {
-            $newPath = ($splitPath + $missingPaths) -join ';'
-            [Environment]::SetEnvironmentVariable('Path', $newPath, [EnvironmentVariableTarget]::User)
-            $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
-            Write-Host 'Git has been added to the path.'
-          }
+- type: Microsoft.WinGet/Package
+  name: OpenSSH
+  properties:
+    id: Microsoft.OpenSSH.Preview
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install Microsoft OpenSSH Preview (external SSH client for Git)
+    securityContext: elevated
+
+- name: SshAgent
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
+  dependsOn:
+    - OpenSSH
+  metadata:
+    description: Ensure the OpenSSH Authentication Agent service is running and set to automatic
+  properties:
+    testScript: |
+      $service = Get-Service ssh-agent
+      return $service.Status -eq 'Running' -and $service.StartType -eq 'Automatic'
+    setScript: |
+      Set-Service ssh-agent -StartupType Automatic
+      Start-Service ssh-agent
+
+- name: GitSystemConfig
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
+  dependsOn:
+  - Git
+  - OpenSSH
+  metadata:
+    description: Apply Git for Windows installer options via git config --system (https://gitforwindows.org/silent-or-unattended-installation.html)
+    securityContext: elevated
+  properties:
+    testScript: |
+      $git = 'C:\Program Files\Git\cmd\git.exe'
+      if (-not (Test-Path $git)) { return $false }
+      $sslBackend    = & $git config --system --get http.sslBackend 2>$null
+      $sslCAInfo     = & $git config --system --get http.sslCAInfo 2>$null
+      $sshCommand    = & $git config --system --get core.sshCommand 2>$null
+      $defaultBranch = & $git config --system --get init.defaultBranch 2>$null
+      $symlinks      = & $git config --system --get core.symlinks 2>$null
+      $global:LASTEXITCODE = 0
+      return ($sslBackend -eq 'schannel' -and -not $sslCAInfo -and $sshCommand -eq '"/c/Program Files/OpenSSH/ssh.exe"' -and $defaultBranch -eq 'main' -and $symlinks -eq 'true')
+    setScript: |
+      $git = 'C:\Program Files\Git\cmd\git.exe'
+      & $git config --system http.sslBackend schannel
+      & $git config --system --unset-all http.sslCAInfo 2>$null
+      & $git config --system core.sshCommand '"/c/Program Files/OpenSSH/ssh.exe"'
+      & $git config --system init.defaultBranch main
+      & $git config --system core.symlinks true
+      $global:LASTEXITCODE = 0
+
+- name: GitPath
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
+  dependsOn:
+  - Git
+  metadata:
+    description: Ensure Git is in the PATH for the current user
+  properties:
+    testScript: |
+      $gitInstallPath = 'C:\Program Files\Git'
+      $pathsToAdd = @(
+        (Join-Path -Path $gitInstallPath -ChildPath 'bin'),
+        (Join-Path -Path $gitInstallPath -ChildPath 'cmd'),
+        (Join-Path -Path $gitInstallPath -ChildPath 'mingw64\bin'),
+        (Join-Path -Path $gitInstallPath -ChildPath 'usr\bin')
+      )
+      $currentPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User)
+      $splitPath = @($currentPath -split ';' | Where-Object { $_ })
+      $missingPaths = @($pathsToAdd | Where-Object { $splitPath -notcontains $_ })
+      return $missingPaths.Count -eq 0
+    setScript: |
+      $gitInstallPath = 'C:\Program Files\Git'
+      $pathsToAdd = @(
+        (Join-Path -Path $gitInstallPath -ChildPath 'bin'),
+        (Join-Path -Path $gitInstallPath -ChildPath 'cmd'),
+        (Join-Path -Path $gitInstallPath -ChildPath 'mingw64\bin'),
+        (Join-Path -Path $gitInstallPath -ChildPath 'usr\bin')
+      )
+      $currentPath = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User)
+      $splitPath = @($currentPath -split ';' | Where-Object { $_ })
+      $missingPaths = @($pathsToAdd | Where-Object { $splitPath -notcontains $_ })
+      if ($missingPaths.Count -eq 0) {
+        Write-Host 'Git is already in the path.'
+      } else {
+        $newPath = ($splitPath + $missingPaths) -join ';'
+        [Environment]::SetEnvironmentVariable('Path', $newPath, [EnvironmentVariableTarget]::User)
+        $env:Path = [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::Machine) + ';' + [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::User)
+        Write-Host 'Git has been added to the path.'
+      }

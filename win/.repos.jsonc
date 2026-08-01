@@ -1,0 +1,46 @@
+[
+  {
+    "url": "https://github.com/ChrisTitusTech/winutil",
+    "commit": "50be7390e586f664df76d7fed41fc3c39252288c"
+  },
+  {
+    "url": "https://github.com/ChrisTitusTech/powershell-profile",
+    "commit": "41ea0f8a9e6a9b8c7a4fff081e5d8f508e244208"
+  },
+  {
+    "url": "https://github.com/memstechtips/UnattendedWinstall",
+    "commit": "cca752363772a845eb0fed9d3a5b89b5d0a10d20"
+  },
+  {
+    "url": "https://github.com/manmademagic/winget-dsc-config",
+    "commit": "0c9b969e3c04f45a4a402f72201a25e4041f795a"
+  },
+  {
+    "url": "https://github.com/matracey/provision-machine",
+    "commit": "17ea7e63d6b0b3df5d95ac85273264bfd848b616"
+  },
+  {
+    "url": "https://github.com/denelon/setup",
+    "commit": "ed57146c2f60a4a461efbbc630d1649c1eafad46"
+  },
+  {
+    "url": "https://github.com/cschneegans/unattend-generator",
+    "commit": "662d88d15a50a4a28cccd648f24c3bd52ba56882"
+  },
+  {
+    "url": "https://github.com/oscarmeldgaard/Windows-Privacy-Debloat",
+    "commit": "a4f8abe569aa4ebb552f0fa8443d76f5d01e8509"
+  },
+  {
+    "url": "https://github.com/Raphire/Win11Debloat",
+    "commit": "0f30b622214f3a28a0bf4b611941c8318a77dd19"
+  },
+  {
+    "url": "https://github.com/memstechtips/Winhance",
+    "commit": "f23d554eb2d6400b1827bcc46b91294ffa53fbc9"
+  },
+  {
+    "url": "https://github.com/microsoft/WindowsDeveloperConfig",
+    "commit": "0a17ed571659a199b24a7872da66cbcabea88a82"
+  }
+]

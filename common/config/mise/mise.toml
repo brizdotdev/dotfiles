@@ -1,5 +1,4 @@
 [bootstrap.packages]
-"apt:fish" = "latest"
 "apt:git" = "latest"
 "apt:sed" = "latest"
 "apt:7zip" = "latest"
@@ -7,7 +6,6 @@
 "apt:poppler-data" = "latest"
 "apt:build-essential" = "latest"
 
-"apk:fish" = "latest"
 "apk:git" = "latest"
 "apk:sed" = "latest"
 "apk:7zip" = "latest"
@@ -15,7 +13,6 @@
 "apk:poppler-data" = "latest"
 "apk:build-base" = "latest"
 
-"pacman:fish" = "latest"
 "pacman:git" = "latest"
 "pacman:sed" = "latest"
 "pacman:7zip" = "latest"
@@ -26,12 +23,13 @@
 [tools]
 # Lang
 bun = "latest"
-# dotnet = "latest"
 node = "latest"
 go = "latest"
 python = "latest"
 rust = "latest"
 uv = "latest"
+
+dotnet = { version = "latest", os = ["linux", "macos"] }
 
 # AI
 claude = "latest"
@@ -43,7 +41,6 @@ apm = "latest"
 delta = "latest"
 github-cli = "latest"
 glab = "latest"
-hunk = "latest"
 lazygit = "latest"
 
 # Yazi and deps
@@ -52,15 +49,16 @@ ffmpeg = "latest"
 resvg = "latest"
 
 # Utils
-"cargo:xan" = "latest"
 "github:1broseidon/ketch" = "latest"
+"github:BurntSushi/xsv" = "latest"
+"github:sharkdp/vivid" = "latest"
+"github:sharkdp/pastel" = "latest"
+"github:agavra/tuicr" = "latest"
 "pipx:posting" = "latest"
 "pipx:sqlit-tui" = "latest"
-atuin = "latest"
+
 bat = "latest"
-bat-extras = "latest"
 bitwarden = "latest"
-btop = "latest"
 croc = "latest"
 doggo = "latest"
 duf = "latest"
@@ -72,9 +70,7 @@ fx = "latest"
 fzf = "latest"
 glow = "latest"
 gum = "latest"
-herdr = "latest"
 hyperfine = "latest"
-imagemagick = "latest"
 jq = "latest"
 neovim = "latest"
 oha = "latest"
@@ -83,16 +79,33 @@ ripgrep = "latest"
 sd = "latest"
 starship = "latest"
 television = "latest"
-tmux = "latest"
-viddy = "latest"
 yq = "latest"
 yt-dlp = "latest"
 zoxide = "latest"
 
+atuin = { version = "latest", os = ["linux", "macos"] }
+"cargo:xan" = { version = "latest", os = ["linux", "macos"] }
+bat-extras = { version = "latest", os = ["linux", "macos"] }
+btop = { version = "latest", os = ["linux", "macos"] }
+herdr = { version = "latest", os = ["linux", "macos"] }
+imagemagick = { version = "latest", os = ["linux", "macos"] }
+tmux = { version = "latest", os = ["linux", "macos"] }
+viddy = { version = "latest", os = ["linux", "macos"] }
+
+[env]
+FX_THEME = "9"
+FX_SHOW_SIZE = "true"
+FX_LINE_NUMBERS = "true"
+OPENCODE_ENABLE_EXA = "1"
+
 [settings]
-dotfiles.root = "~/.dotfiles"
 dotfiles.default_mode = "symlink"
+dotfiles.root = "~/.dotfiles"
+experimental = true
 github.credential_command = "gh auth token"
+
+[settings.pipx]
+uvx = true
 
 [dotfiles]
 # Git
@@ -104,11 +117,8 @@ github.credential_command = "gh auth token"
 # Shell & prompt
 # "~/.bashrc" = "~/.dotfiles/linux/config/bash/bashrc"
 "~/.config/starship.toml" = "~/.dotfiles/common/config/starship/starship.toml"
-# Terminal
-"~/.tmux.conf" = "~/.dotfiles/linux/config/tmux/.tmux.conf"
-"~/.tmux/plugins/tpm" = "~/.dotfiles/linux/config/tmux/tpm"
-# Tools
-"~/.config/lazygit/config.yml" = "~/.dotfiles/common/config/lazygit/config.yml"
+"~/.config/mise/config.toml" = "~/.dotfiles/common/config/mise/mise.toml"
+"~/.config/mise/miserc.toml" = "~/.dotfiles/linux/config/mise/miserc.toml"
 "~/.curlrc" = "~/.dotfiles/common/config/curl/.curlrc"
 "~/.claude/settings.json" = "~/.dotfiles/common/config/claude/settings.json"
 "~/.config/opencode/opencode.json" = "~/.dotfiles/common/config/opencode/opencode.json"
@@ -118,6 +128,3 @@ github.credential_command = "gh auth token"
 "~/.config/yazi/" = "~/.dotfiles/common/config/yazi/"
 # Kanata
 "~/.config/kanata/kanata.kbd" = "~/.dotfiles/common/config/kanata/laptop.kbd"
-# xdg-desktop-portal
-"~/.config/xdg-desktop-portal/portals.conf" = "~/.dotfiles/linux/config/xdg-desktop-portal/portals.conf"
-"~/.config/xdg-desktop-portal-termfilechooser/config" = "~/.dotfiles/linux/config/xdg-desktop-portal-termfilechooser/config"

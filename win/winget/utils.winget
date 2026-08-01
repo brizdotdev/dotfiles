@@ -1,197 +1,210 @@
-# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+##############################################################################
+# Utilities & media
+# Installs general-purpose utilities, media players, and codec extensions
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
 
-properties:
-  configurationVersion: 0.2.0
-  resources:
+resources:
+##############################################################################
+# Utilities
+##############################################################################
 
-  ##############################################################################
-  # Utilities
-  ##############################################################################
+- name: Everything
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Everything
+    securityContext: elevated
+  properties:
+    id: voidtools.Everything
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-raycast
-    directives:
-      description: Install Raycast
-    settings:
-      id: 9PFXXSHC64H3
-      source: msstore
+- name: 7Zip
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install 7-Zip
+    securityContext: elevated
+  properties:
+    id: 7zip.7zip
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-everything
-    directives:
-      description: Install Everything
-    settings:
-      id: voidtools.Everything
-      source: winget
+- name: PathContains7Zip
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  dependsOn:
+  - 7Zip
+  metadata:
+    description: Ensure 7-Zip is in the path
+  properties:
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $pathsToAdd = @('C:\Program Files\7-Zip')
+      return Test-EnvPath -Paths $pathsToAdd
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $pathsToAdd = @('C:\Program Files\7-Zip')
+      Add-EnvPath -Paths $pathsToAdd
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-7zip
-    directives:
-      description: Install 7-Zip
-    settings:
-      id: 7zip.7zip
-      source: winget
+- name: gsudo
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install gsudo
+    securityContext: elevated
+  properties:
+    id: gerardog.gsudo
+    source: winget
+    installMode: silent
 
-  - resource: xPSDesiredStateConfiguration/xScript
-    id: path-contains-7zip
-    directives:
-      description: Ensure 7-Zip is in the path
-    dependsOn:
-      - winget-7zip
-    settings:
-      TestScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $pathsToAdd = @('C:\Program Files\7-Zip')
-        return Test-EnvPath -Paths $pathsToAdd
-      SetScript: |
-        . "${WinGetConfigRoot}\..\Utils.ps1"
-        $pathsToAdd = @('C:\Program Files\7-Zip')
-        Add-EnvPath -Paths $pathsToAdd
+- name: OpenSSH
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install OpenSSH
+    securityContext: elevated
+  properties:
+    id: Microsoft.OpenSSH.Preview
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-gsudo
-    directives:
-      description: Install gsudo
-    settings:
-      id: gerardog.gsudo
-      source: winget
+- name: LocalSend
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install LocalSend
+  properties:
+    id: LocalSend.LocalSend
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-openssh
-    directives:
-      description: Install OpenSSH
-    settings:
-      id: Microsoft.OpenSSH.Preview
-      source: winget
+- name: Bitwarden
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Bitwarden
+  properties:
+    id: Bitwarden.Bitwarden
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-local-send
-    directives:
-      description: Install LocalSend
-    settings:
-      id: LocalSend.LocalSend
-      source: winget
+- name: WindowsClock
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Windows Clock
+  properties:
+    id: 9WZDNCRFJ3PR
+    source: msstore
+    installMode: silent
+    acceptAgreements: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-eza
-    directives:
-      description: Install eza
-    settings:
-      id: eza-community.eza
-      source: winget
+- name: WindowsCalculator
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Windows Calculator
+  properties:
+    id: 9WZDNCRFHVN5
+    source: msstore
+    installMode: silent
+    acceptAgreements: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-bitwarden
-    directives:
-      description: Install Bitwarden
-    settings:
-      id: Bitwarden.Bitwarden
-      source: winget
+- name: WindowsCamera
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Windows Camera
+  properties:
+    id: 9WZDNCRFJBBG
+    source: msstore
+    installMode: silent
+    acceptAgreements: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-bitwarden-cli
-    directives:
-      description: Install Bitwarden CLI
-    settings:
-      id: Bitwarden.Bitwarden.CLI
-      source: winget
+##############################################################################
+# Media
+##############################################################################
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-windowsclock
-    directives:
-      description: Install Windows Clock
-    settings:
-      id: 9WZDNCRFJ3PR
-      source: msstore
+- name: Spotify
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Spotify
+  properties:
+    id: Spotify.Spotify
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-windowscalculator
-    directives:
-      description: Install Windows Calculator
-    settings:
-      id: 9WZDNCRFHVN5
-      source: msstore
+- name: mpv
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install mpv
+    securityContext: elevated
+  properties:
+    id: shinchiro.mpv
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-windowscamera
-    directives:
-      description: Install Windows Camera
-    settings:
-      id: 9WZDNCRFJBBG
-      source: msstore
+- name: VLC
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install VLC
+    securityContext: elevated
+  properties:
+    id: VideoLAN.VLC
+    source: winget
+    installMode: silent
 
-  ##############################################################################
-  # Media
-  ##############################################################################
+- name: ytDlp
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install yt-dlp
+  properties:
+    id: yt-dlp.yt-dlp
+    source: winget
+    installMode: silent
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-spotify
-    directives:
-      description: Install Spotify
-    settings:
-      id: Spotify.Spotify
-      source: winget
+- name: HEIFExtensions
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install HEIF Image Extensions
+  properties:
+    id: 9PMMSR1CGPWG
+    source: msstore
+    installMode: silent
+    acceptAgreements: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-mpv
-    directives:
-      description: Install mpv
-    settings:
-      id: shinchiro.mpv
-      source: winget
+- name: WebMediaExtensions
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Web Media Extensions
+  properties:
+    id: 9N5TDP8VCMHS
+    source: msstore
+    installMode: silent
+    acceptAgreements: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-vlc
-    directives:
-      description: Install VLC
-    settings:
-      id: VideoLAN.VLC
-      source: winget
+- name: WebPExtensions
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install WebP Extensions
+  properties:
+    id: 9PG2DK419DRG
+    source: msstore
+    installMode: silent
+    acceptAgreements: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-yt-dlp
-    directives:
-      description: Install yt-dlp
-    settings:
-      id: yt-dlp.yt-dlp
-      source: winget
+- name: VP9Extensions
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install VP9 Extensions
+  properties:
+    id: 9N4D0MSMP0PT
+    source: msstore
+    installMode: silent
+    acceptAgreements: true
 
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-heif
-    directives:
-      description: Install HEIF Image Extensions
-    settings:
-      id: 9PMMSR1CGPWG
-      source: msstore
-
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-web-media-extensions
-    directives:
-      description: Install Web Media Extensions
-    settings:
-      id: 9N5TDP8VCMHS
-      source: msstore
-
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-web-pextensions
-    directives:
-      description: Install WebP Extensions
-    settings:
-      id: 9PG2DK419DRG
-      source: msstore
-
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-vp9-extensions
-    directives:
-      description: Install VP9 Extensions
-    settings:
-      id: 9N4D0MSMP0PT
-      source: msstore
-
-  - resource: Microsoft.WinGet.DSC/WinGetPackage
-    id: winget-av1-extensions
-    directives:
-      description: Install AV1 Extensions
-    settings:
-      id: 9MVZQVXJBQ9V
-      source: msstore
+- name: AV1Extensions
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install AV1 Extensions
+  properties:
+    id: 9MVZQVXJBQ9V
+    source: msstore
+    installMode: silent
+    acceptAgreements: true
