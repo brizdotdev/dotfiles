@@ -21,6 +21,7 @@ completedColumns:
 - [configure-fzf](tasks/configure-fzf.md)
 - [configure-herdr](tasks/configure-herdr.md)
 - [open-code-plugins-and-config](tasks/open-code-plugins-and-config.md)
+- [espanso](tasks/espanso.md)
 
 ## Todo
 

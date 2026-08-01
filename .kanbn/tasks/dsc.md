@@ -29,7 +29,7 @@ Dev:
 ✅ fonts.winget
 git.winget
 neovim.winget
-powershell.winget
+✅ powershell.winget
 sandbox.winget
 
 Gaming:

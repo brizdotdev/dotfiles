@@ -6,7 +6,9 @@ progress: 0
 tags: []
 ---
 
-# Configure Herdr
+# Compare Multiplexers
+
+Herdr vs Tmux/PSMux vs [Superlogical](https://news.ycombinator.com/item?id=49098965) vs zmx
 
 ## History
 

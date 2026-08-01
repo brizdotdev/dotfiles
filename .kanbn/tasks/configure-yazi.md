@@ -7,3 +7,5 @@ tags: []
 ---
 
 # Configure Yazi
+
+Keybinds and plugins
