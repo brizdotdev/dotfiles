@@ -87,15 +87,6 @@ resources:
     source: winget
     installMode: silent
 
-- name: BitwardenCLI
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Bitwarden CLI
-  properties:
-    id: Bitwarden.CLI
-    source: winget
-    installMode: silent
-
 - name: WindowsClock
   type: Microsoft.WinGet/Package
   metadata:
