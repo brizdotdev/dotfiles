@@ -879,6 +879,31 @@ resources:
       DWord: 1
     _exist: true
 
+# Recovery
+- name: PointInTimeRestore
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable point-in-time restore
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\Recovery\PITR\Settings
+    valueName: Active_UX
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: PointInTimeRestoreMaxDiskUsage
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set point-in-time restore max disk usage to 10 GB
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\Recovery\PITR\Settings
+    valueName: MaxGlobalSize_UX
+    valueData:
+      DWord: 10240
+    _exist: true
+
 # Block OEM software auto-install via Windows Update drivers (e.g. Razer Synapse)
 - name: NoDriverSearchWindowsUpdate
   type: Microsoft.Windows/Registry
