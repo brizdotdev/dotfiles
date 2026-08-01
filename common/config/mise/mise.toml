@@ -23,12 +23,13 @@
 [tools]
 # Lang
 bun = "latest"
-dotnet = "latest"
 node = "latest"
 go = "latest"
 python = "latest"
 rust = "latest"
 uv = "latest"
+
+dotnet = { version = "latest", os = ["linux", "macos"] }
 
 # AI
 claude = "latest"
