@@ -96,6 +96,7 @@ viddy = { version = "latest", os = ["linux", "macos"] }
 FX_THEME = "9"
 FX_SHOW_SIZE = "true"
 FX_LINE_NUMBERS = "true"
+OPENCODE_ENABLE_EXA = "1"
 
 [settings]
 dotfiles.default_mode = "symlink"
