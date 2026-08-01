@@ -44,6 +44,17 @@ resources:
       DWord: 1
     _exist: true
 
+- type: Microsoft.Windows/Registry
+  name: FullPathTitlebar
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: FullPathAddress
+    valueData:
+      DWord: 1
+  metadata:
+    description: Show full path in Explorer titlebar
+    securityContext: elevated
+
 - name: ShowSuperHidden
   type: Microsoft.Windows/Registry
   metadata:
