@@ -1,3 +1,8 @@
+##############################################################################
+# PowerShell & shell
+# Installs PowerShell 7, shell tools (Starship, zoxide, eza) and PowerShell
+# modules, sets shell environment variables, and symlinks profile configs
+##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
   winget:

@@ -1,3 +1,7 @@
+##############################################################################
+# Utilities & media
+# Installs general-purpose utilities, media players, and codec extensions
+##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
   winget:

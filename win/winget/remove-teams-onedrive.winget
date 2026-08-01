@@ -1,3 +1,7 @@
+##############################################################################
+# Remove Teams & OneDrive
+# Uninstalls OneDrive and Microsoft Teams (winget and store versions)
+##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
   winget:

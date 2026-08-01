@@ -1,3 +1,7 @@
+##############################################################################
+# Neovim
+# Installs Neovim, sets it as EDITOR, and symlinks Neovim/vim configs
+##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
   winget:

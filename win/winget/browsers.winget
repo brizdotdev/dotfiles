@@ -1,3 +1,8 @@
+##############################################################################
+# Browsers
+# Installs web browsers (Chrome, Firefox, LibreWolf) and deploys browser
+# extensions via enterprise policies
+##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
   winget:

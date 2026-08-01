@@ -1,3 +1,8 @@
+##############################################################################
+# Development
+# Developer environment: language runtimes/SDKs, WSL, containers, Git config,
+# and CLI utilities
+##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
   winget:

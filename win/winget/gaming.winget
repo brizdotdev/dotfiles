@@ -1,3 +1,8 @@
+##############################################################################
+# Gaming
+# Installs gaming apps (Discord, Steam, GOG Galaxy) and applies gaming/
+# performance registry tweaks (Game Mode, Game DVR, GPU/CPU scheduling)
+##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
   winget:

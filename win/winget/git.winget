@@ -1,3 +1,8 @@
+##############################################################################
+# Git
+# Installs Git and OpenSSH, configures the ssh-agent service, applies
+# system-level git config, and adds Git to the PATH
+##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
   winget:
