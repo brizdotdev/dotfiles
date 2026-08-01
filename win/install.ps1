@@ -35,12 +35,14 @@ $configMap = @(
             "$PSScriptRoot\winget\fonts.winget"
             "$PSScriptRoot\winget\neovim.winget"
         )
+        Scripts = @()
     }
     [PSCustomObject]@{
         Name = "Gaming"
         Configs = @(
             "$PSScriptRoot\winget\gaming.winget"
         )
+        Scripts = @()
     }
     [PSCustomObject]@{
         Name = "Remove Teams and OneDrive"
@@ -48,6 +50,7 @@ $configMap = @(
         Configs = @(
             "$PSScriptRoot\winget\remove-teams-onedrive.winget"
         )
+        Scripts = @()
     }
 )
 
