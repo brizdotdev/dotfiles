@@ -1,4 +1,3 @@
-#Requires -RunAsAdministrator
 ################################################################################
 # Setup script for my dotfiles
 ################################################################################
@@ -77,9 +76,9 @@ function Initialize-Requirements {
     }
 
     Write-Host -ForegroundColor Blue "Enabling WinGet configuration..."
-    winget install --silent --scope user --accept-source-agreements --accept-package-agreements --source winget Microsoft.Dsc.Preview
-    winget install --silent --no-upgrade --source winget Microsoft.VCRedist.2015+.x64
-    winget install --silent --source winget OpenDsc.Resources
+    winget install --silent --accept-source-agreements --accept-package-agreements --source winget Microsoft.Dsc.Preview | Out-Null
+    winget install --silent --no-upgrade --source winget Microsoft.VCRedist.2015+.x64 | Out-Null
+    winget configure --enable
     Write-Host -ForegroundColor Green "WinGet configuration enabled"
 
     if ($isAdmin) {
@@ -94,7 +93,7 @@ function Initialize-Requirements {
 
 function Get-Inputs{
     $configOptions = @($configMap.Name)
-    $preselectedOptions = ($configMap | Where-Object { $_.Preselected -eq $True } | Select-Object -ExpandProperty Name) -join ','
+    $preselectedOptions = ($configMap | Where-Object { $_.PSObject.Properties['Preselected'] -and $_.Preselected -eq $True } | Select-Object -ExpandProperty Name) -join ','
     $selectedOptions = gum choose --header "Select configuration to apply" --no-limit --selected "$preselectedOptions" $configOptions
     $selectedExtras = gum choose --header "Select extras to install" --no-limit $extras.Keys
     $ImportSSHKey = $False
