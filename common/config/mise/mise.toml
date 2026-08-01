@@ -1,5 +1,4 @@
 [bootstrap.packages]
-"apt:fish" = "latest"
 "apt:git" = "latest"
 "apt:sed" = "latest"
 "apt:7zip" = "latest"
@@ -7,7 +6,6 @@
 "apt:poppler-data" = "latest"
 "apt:build-essential" = "latest"
 
-"apk:fish" = "latest"
 "apk:git" = "latest"
 "apk:sed" = "latest"
 "apk:7zip" = "latest"
@@ -15,7 +13,6 @@
 "apk:poppler-data" = "latest"
 "apk:build-base" = "latest"
 
-"pacman:fish" = "latest"
 "pacman:git" = "latest"
 "pacman:sed" = "latest"
 "pacman:7zip" = "latest"
