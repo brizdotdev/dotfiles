@@ -26,7 +26,7 @@
 [tools]
 # Lang
 bun = "latest"
-# dotnet = "latest"
+dotnet = "latest"
 node = "latest"
 go = "latest"
 python = "latest"
@@ -43,7 +43,6 @@ apm = "latest"
 delta = "latest"
 github-cli = "latest"
 glab = "latest"
-hunk = "latest"
 lazygit = "latest"
 
 # Yazi and deps
@@ -54,6 +53,10 @@ resvg = "latest"
 # Utils
 "cargo:xan" = "latest"
 "github:1broseidon/ketch" = "latest"
+"github:BurntSushi/xsv" = "latest"
+"github:sharkdp/vivid" = "latest"
+"github:sharkdp/pastel" = "latest"
+"github:agavra/tuicr" = "latest"
 "pipx:posting" = "latest"
 "pipx:sqlit-tui" = "latest"
 atuin = "latest"
@@ -89,6 +92,11 @@ yq = "latest"
 yt-dlp = "latest"
 zoxide = "latest"
 
+[env]
+FX_THEME = "9"
+FX_SHOW_SIZE = "true"
+FX_LINE_NUMBERS = "true"
+
 [settings]
 dotfiles.root = "~/.dotfiles"
 dotfiles.default_mode = "symlink"
@@ -108,6 +116,7 @@ github.credential_command = "gh auth token"
 "~/.tmux.conf" = "~/.dotfiles/linux/config/tmux/.tmux.conf"
 "~/.tmux/plugins/tpm" = "~/.dotfiles/linux/config/tmux/tpm"
 # Tools
+"~/.config/mise/config.toml" = "~/.dotfiles/common/config/mise/mise.toml"
 "~/.config/lazygit/config.yml" = "~/.dotfiles/common/config/lazygit/config.yml"
 "~/.curlrc" = "~/.dotfiles/common/config/curl/.curlrc"
 "~/.claude/settings.json" = "~/.dotfiles/common/config/claude/settings.json"
