@@ -107,7 +107,7 @@ resources:
     installMode: silent
 
 - name: WindowsSandbox
-  type: Microsoft.Windows/WindowsFeatureList
+  type: Microsoft.Windows/OptionalFeatureList
   metadata:
     description: Enable Windows Sandbox
     securityContext: elevated
@@ -116,29 +116,56 @@ resources:
       - featureName: Containers-DisposableClientVM
         state: Installed
 
+- type: Microsoft.DSC.Transitional/RunCommandOnSet
+  name: Microsoft.WindowsSandbox.DSC.Module
+  properties:
+    executable: C:\Program Files\PowerShell\7\pwsh.exe
+    arguments:
+      "0": -NoProfile
+      "1": -NoLogo
+      "2": -Command
+      "3": >-
+        if (-not (Get-Module -ListAvailable -Name Microsoft.WindowsSandbox.DSC))
+        { Install-PSResource -Name Microsoft.WindowsSandbox.DSC -Prerelease
+        -TrustRepository -AcceptLicense }
+      treatAsArray: true
+  metadata:
+    description: Ensure Microsoft.WindowsSandbox.DSC module is installed
+
+- type: Microsoft.WindowsSandbox.DSC/WindowsSandbox
+  name: WindowsSandbox
+  dependsOn:
+    - Microsoft.WindowsSandbox.DSC.Module
+  properties:
+    Ensure: Present
+    #WsbFile: <Provide a custom .wsb file to open. The parameters below will override existing values in the wsb file>
+    LogonCommand: >
+      cmd /c start powershell -NoExit -Command "$progressPreference = 'silentlyContinue';
+      Write-Host 'Setting execution policy to remote signed...' `n;
+      Set-ExecutionPolicy RemoteSigned -Force;
+      Write-Host 'Installing WinGet PowerShell module from PSGallery...';
+      Install-PackageProvider -Name NuGet -Force | Out-Null;
+      Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null;
+      Write-Host 'Using Repair-WinGetPackageManager cmdlet to bootstrap WinGet...';
+      Repair-WinGetPackageManager;
+      Write-Host 'Done.';
+    #HostFolder: <Absolute path to folder on host machine that will be shared into the Windows Sandbox>
+    #SandboxFolder: <Absolute path to destination in the sandbox to map the Host Folder to>
+    #ReadOnly: false
+    #MemoryInMB: 2048
+    #vGPU: true
+    #AudioInput: true
+    #ClipboardRedirection: true
+    #Networking: true
+    #PrinterRedirection: false
+    #ProtectedClient: false
+    #VideoInput: true
+  metadata:
+    description: Create Windows Sandbox with Winget installed
+
 ##############################################################################
 # Git
 ##############################################################################
-
-- name: GitConfig
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Ensure Git is configured
-  properties:
-    testScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:USERPROFILE\.gitconfig" = "$env:DOTFILES\common\config\git\.gitconfig"
-        "$env:USERPROFILE\.gitignore_global" = "$env:DOTFILES\common\config\git\.gitignore_global"
-      }
-      return Test-SymlinkConfig -Config $config
-    setScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:USERPROFILE\.gitconfig" = "$env:DOTFILES\common\config\git\.gitconfig"
-        "$env:USERPROFILE\.gitignore_global" = "$env:DOTFILES\common\config\git\.gitignore_global"
-      }
-      New-SymlinkConfig -Config $config
 
 - name: MiseConfigSymlink
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -161,37 +188,6 @@ resources:
 ##############################################################################
 # Utils
 ##############################################################################
-
-# https://opencode.ai/docs/tools#websearch
-- name: OpenCodeExa
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Enable websearch tool for OpenCode
-  properties:
-    testScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Test-EnvVar -Name "OPENCODE_ENABLE_EXA" -Value "1"
-    setScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Add-EnvVar -Name "OPENCODE_ENABLE_EXA" -Value "1"
-
-- name: LazygitSettings
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Ensure Lazygit is configured
-  properties:
-    testScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:LOCALAPPDATA\lazygit\config.yml" = "$env:DOTFILES\common\config\lazygit\config.yml"
-      }
-      return Test-SymlinkConfig -Config $config
-    setScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:LOCALAPPDATA\lazygit\config.yml" = "$env:DOTFILES\common\config\lazygit\config.yml"
-      }
-      New-SymlinkConfig -Config $config
 
 - name: Poppler
   type: Microsoft.WinGet/Package
