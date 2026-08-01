@@ -110,6 +110,83 @@ resources:
       DWord: 0
     _exist: true
 
+- name: SystemPaneSuggestions
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable suggested apps in Settings system pane
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SystemPaneSuggestionsEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: SoftLanding
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Soft Landing tutorial/tips notifications for new users
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SoftLandingEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: RotatingLockScreenOverlay
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable promotional/rotating lock screen overlay (ads, fun facts)
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: RotatingLockScreenOverlayEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: PreInstalledApps
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable auto-install of preinstalled promotional apps
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: PreInstalledAppsEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: OemPreInstalledApps
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable auto-install of OEM-bundled bloatware apps
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: OemPreInstalledAppsEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: SuggestedContent310093
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable suggested content channel 310093 (suggested apps in Settings)
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SubscribedContent-310093Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: SuggestedContent88000326
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable suggested content channel 88000326 (Store app suggestions)
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SubscribedContent-88000326Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
 - name: DisableCloudOptimizedContent
   type: Microsoft.Windows/Registry
   metadata:
@@ -138,8 +215,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable search box suggestions in Start Menu
-    winget:
-      securityContext: elevated
   properties:
     keyPath: HKCU\Software\Policies\Microsoft\Windows\Explorer
     valueName: DisableSearchBoxSuggestions
@@ -154,6 +229,56 @@ resources:
   properties:
     keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Search
     valueName: BingSearchEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: CortanaConsent
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Cortana consent
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Search
+    valueName: CortanaConsent
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableWebSearch
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Do not allow web search from Windows Desktop Search
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search
+    valueName: DisableWebSearch
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: ConnectedSearchUseWeb
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Don't search the web or display web results in Search
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search
+    valueName: ConnectedSearchUseWeb
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: AllowCortana
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Cortana
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search
+    valueName: AllowCortana
     valueData:
       DWord: 0
     _exist: true
@@ -528,6 +653,19 @@ resources:
       DWord: 1
     _exist: true
 
+- name: DisableConsumerAccountStateContent
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Turn off cloud consumer account state content (subscription/benefit status fetched from cloud)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent
+    valueName: DisableConsumerAccountStateContent
+    valueData:
+      DWord: 1
+    _exist: true
+
 - name: DisableDeliveryOptimization
   type: Microsoft.Windows/Registry
   metadata:
@@ -564,6 +702,90 @@ resources:
   properties:
     keyPath: HKLM\SOFTWARE\Policies\WindowsNotepad
     valueName: DisableAIFeatures
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Copilot / Recall / Click to Do (adapted from Windows-Privacy-Debloat.ps1)
+- name: TurnOffCopilotUser
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Turn off Windows Copilot (user policy)
+  properties:
+    keyPath: HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot
+    valueName: TurnOffWindowsCopilot
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: TurnOffCopilotMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Turn off Windows Copilot (machine policy)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot
+    valueName: TurnOffWindowsCopilot
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideCopilotButton
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Copilot button from taskbar
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: ShowCopilotButton
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableAIDataAnalysisMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable AI data analysis / Recall indexing (machine policy)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI
+    valueName: DisableAIDataAnalysis
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableAIDataAnalysisUser
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable AI data analysis / Recall indexing (user policy)
+  properties:
+    keyPath: HKCU\Software\Policies\Microsoft\Windows\WindowsAI
+    valueName: DisableAIDataAnalysis
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableClickToDoMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Click to Do (machine policy)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI
+    valueName: DisableClickToDo
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableClickToDoUser
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Click to Do (user policy)
+  properties:
+    keyPath: HKCU\Software\Policies\Microsoft\Windows\WindowsAI
+    valueName: DisableClickToDo
     valueData:
       DWord: 1
     _exist: true
