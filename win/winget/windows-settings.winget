@@ -20,7 +20,8 @@ resources:
       DWord: 1
   metadata:
     description: Enable Developer Mode (sideload + dev features)
-    securityContext: elevated
+    winget:
+      securityContext: elevated
 
 - name: AdvancedSettings
   type: Microsoft.WinGet/Package
@@ -564,6 +565,8 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Logitech Download Assistant
+    winget:
+      securityContext: elevated
   properties:
     keyPath: HKLM\Software\Microsoft\Windows\CurrentVersion\Run
     valueName: Logitech Download Assistant
