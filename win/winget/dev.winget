@@ -143,6 +143,30 @@ resources:
       }
       New-SymlinkConfig -Config $config
 
+- name: MiseConfigSymlink
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Symlink mise config.toml to dotfiles
+  properties:
+    getScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $config = @{
+        "$env:USERPROFILE\.config\mise\config.toml" = "$env:DOTFILES\common\config\mise\mise.toml"
+      }
+      return Get-SymlinkConfigResult -Config $config
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $config = @{
+        "$env:USERPROFILE\.config\mise\config.toml" = "$env:DOTFILES\common\config\mise\mise.toml"
+      }
+      return Test-SymlinkConfig -Config $config
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      $config = @{
+        "$env:USERPROFILE\.config\mise\config.toml" = "$env:DOTFILES\common\config\mise\mise.toml"
+      }
+      New-SymlinkConfig -Config $config
+
 ##############################################################################
 # Utils
 ##############################################################################
