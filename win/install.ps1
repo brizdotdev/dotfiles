@@ -53,17 +53,18 @@ $configMap = @(
 )
 
 $extras = @{
-    "OBS" = "OBSProject.OBSStudio"
-    "Spotify" = "9NCBCSZSJRSB"
-    "LibreOffice" = "TheDocumentFoundation.LibreOffice"
-    "WireGuard" = "WireGuard.WireGuard"
-    "Obsidian" = "Obsidian.Obsidian"
-    "WinDirStat" = "WinDirStat.WinDirStat"
-    "ScreenToGif" = "NickeManarin.ScreenToGif"
     "FFMPEG" = "Gyan.FFmpeg"
     "Flameshot" = "flameshot"
+    "LibreOffice" = "TheDocumentFoundation.LibreOffice"
+    "MullvadVPN" = "MullvadVPN.MullvadVPN"
+    "OBS" = "OBSProject.OBSStudio"
+    "Obsidian" = "Obsidian.Obsidian"
     "RegionToShare" = "9N4066W2R5Q4"
+    "ScreenToGif" = "NickeManarin.ScreenToGif"
+    "Spotify" = "9NCBCSZSJRSB"
     "TwinkleTray" = "xanderfrangos.twinkletray"
+    "WinDirStat" = "WinDirStat.WinDirStat"
+    "WireGuard" = "WireGuard.WireGuard"
 }
 
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
