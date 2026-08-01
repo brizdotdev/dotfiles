@@ -103,18 +103,18 @@ resources:
     source: winget
     installMode: silent
 
+- name: DockerSandbox
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Docker Sandbox
+  properties:
+    id: Docker.sbx
+    source: winget
+    installMode: silent
+
 ##############################################################################
 # Git
 ##############################################################################
-
-- name: Delta
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Delta
-  properties:
-    id: dandavison.delta
-    source: winget
-    installMode: silent
 
 - name: GitConfig
   type: Microsoft.DSC.Transitional/PowerShellScript
