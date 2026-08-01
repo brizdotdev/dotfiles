@@ -53,3 +53,196 @@ resources:
     id: GOG.Galaxy
     source: winget
     installMode: silent
+
+# ============================================================================
+# Gaming & performance (HKCU)
+# Adapted from autounattend.xml Winhancements.ps1 (UserCustomizations)
+# ============================================================================
+
+- name: AutoGameMode
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable Windows Game Mode (deprioritise background work during games)
+  properties:
+    keyPath: HKCU\Software\Microsoft\GameBar
+    valueName: AutoGameModeEnabled
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: GameDVRFSEBehaviorMode
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Allow Windows to optimise fullscreen games
+  properties:
+    keyPath: HKCU\System\GameConfigStore
+    valueName: GameDVR_FSEBehaviorMode
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: GameDVREnabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Game DVR master switch (system-side)
+  properties:
+    keyPath: HKCU\System\GameConfigStore
+    valueName: GameDVR_Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: GameBarNexus
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Prevent Xbox button on controllers from opening Game Bar
+  properties:
+    keyPath: HKCU\Software\Microsoft\GameBar
+    valueName: UseNexusForGameBarEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: GameBarStartupPanel
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Suppress Game Bar tips/hints panel
+  properties:
+    keyPath: HKCU\Software\Microsoft\GameBar
+    valueName: ShowStartupPanel
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DirectXGlobalSettings
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Global DirectX user preferences (flip model, no VRR/HDR auto-enable)
+  properties:
+    keyPath: HKCU\Software\Microsoft\DirectX\UserGpuPreferences
+    valueName: DirectXUserGlobalSettings
+    valueData:
+      String: "SwapEffectUpgradeEnable=1;VRROptimizeEnable=0;AutoHDREnable=0;"
+    _exist: true
+
+# ============================================================================
+# Gaming & performance (HKLM)
+# Adapted from autounattend.xml Winhancements.ps1 (Gaming & Performance Settings)
+# ============================================================================
+
+- name: Win32PrioritySeparation
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Give foreground apps longer CPU quantums for responsiveness
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\System\CurrentControlSet\Control\PriorityControl
+    valueName: Win32PrioritySeparation
+    valueData:
+      DWord: 38
+    _exist: true
+
+- name: SystemResponsiveness
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Reduce background CPU reservation for active game/multimedia
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile
+    valueName: SystemResponsiveness
+    valueData:
+      DWord: 10
+    _exist: true
+
+- name: NetworkThrottlingIndex
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Keep network throttling at default 10 (better DPC latency for gaming)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile
+    valueName: NetworkThrottlingIndex
+    valueData:
+      DWord: 10
+    _exist: true
+
+- name: GameTaskPriority
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Give games higher CPU scheduling priority
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games
+    valueName: Priority
+    valueData:
+      DWord: 6
+    _exist: true
+
+- name: GameTaskScheduling
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Assign high-priority scheduling category to games
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games
+    valueName: Scheduling Category
+    valueData:
+      String: "High"
+    _exist: true
+
+- name: GameTaskGpuPriority
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Give games higher GPU scheduling priority
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games
+    valueName: GPU Priority
+    valueData:
+      DWord: 8
+    _exist: true
+
+- name: HwSchMode
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable hardware-accelerated GPU scheduling (reduces latency on supported drivers)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\System\CurrentControlSet\Control\GraphicsDrivers
+    valueName: HwSchMode
+    valueData:
+      DWord: 2
+    _exist: true
+
+- name: NvidiaGR535
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable legacy NVIDIA image-sharpening flag (modern drivers use Control Panel)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\NVIDIA Corporation\Global\FTS
+    valueName: EnableGR535
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: AllowGameDVRPolicy
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Game DVR via machine-wide policy
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR
+    valueName: AllowGameDVR
+    valueData:
+      DWord: 0
+    _exist: true
