@@ -80,7 +80,6 @@ function Initialize-Requirements {
     winget install --silent --scope user --accept-source-agreements --accept-package-agreements --source winget Microsoft.Dsc.Preview
     winget install --silent --no-upgrade --source winget Microsoft.VCRedist.2015+.x64
     winget install --silent --source winget OpenDsc.Resources
-    winget configure --enable --disable-interactivity --accept-source-agreements
     Write-Host -ForegroundColor Green "WinGet configuration enabled"
 
     if ($isAdmin) {

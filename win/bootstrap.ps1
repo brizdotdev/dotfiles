@@ -34,7 +34,6 @@ function Update-WinGetFromPowerShellGallery([WinGetRelease]$Release = [WinGetRel
     Write-Host -ForegroundColor Blue "Enabling WinGet configuration..."
     winget install --silent --disable-interactivity --source winget --scope user --accept-source-agreements --accept-package-agreements Microsoft.Dsc.Preview
     winget install --silent --disable-interactivity --source winget Microsoft.VCRedist.2015+.x64
-    winget install --silent --disable-interactivity --source winget OpenDsc.Resources
     winget configure --enable --disable-interactivity --accept-source-agreements
     Write-Host -ForegroundColor Green "WinGet configuration enabled"
 }

@@ -15,13 +15,19 @@ resources:
 # TODO: Move some stuff to mise
 
 - name: HostsEnvVar
-  type: OpenDsc.Windows/Environment
+  type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Set an environment variable to hosts file
   properties:
-    name: HOSTS
-    value: C:\Windows\System32\drivers\etc\hosts
-    _scope: User
+    getScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      return @{ Value = (Get-EnvVar -Name "HOSTS") }
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Test-EnvVar -Name "HOSTS" -Value "C:\Windows\System32\drivers\etc\hosts"
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Add-EnvVar -Name "HOSTS" -Value "C:\Windows\System32\drivers\etc\hosts"
 
 ##############################################################################
 # Languages
@@ -200,13 +206,19 @@ resources:
 
 # https://opencode.ai/docs/tools#websearch
 - name: OpenCodeExa
-  type: OpenDsc.Windows/Environment
+  type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Enable websearch tool for OpenCode
   properties:
-    name: OPENCODE_ENABLE_EXA
-    value: 1
-    _scope: User
+    getScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      return @{ Value = (Get-EnvVar -Name "OPENCODE_ENABLE_EXA") }
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Test-EnvVar -Name "OPENCODE_ENABLE_EXA" -Value "1"
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Add-EnvVar -Name "OPENCODE_ENABLE_EXA" -Value "1"
 
 - name: Television
   type: Microsoft.WinGet/Package
