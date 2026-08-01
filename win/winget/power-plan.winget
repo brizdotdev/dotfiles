@@ -15,14 +15,6 @@ resources:
     description: Set power mode to best performance on AC via powrprof.dll
     securityContext: elevated
   properties:
-    getScript: |
-      Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
-      [DllImport("powrprof.dll", EntryPoint = "PowerGetUserConfiguredACPowerMode")]
-      public static extern uint PowerGetUserConfiguredACPowerMode(out System.Guid PowerModeGuid);
-      '@
-      $guid = [System.Guid]::Empty
-      [Win32.PowerMode]::PowerGetUserConfiguredACPowerMode([ref]$guid) | Out-Null
-      return @{ PowerMode = $guid.ToString() }
     testScript: |
       Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
       [DllImport("powrprof.dll", EntryPoint = "PowerGetUserConfiguredACPowerMode")]
@@ -46,14 +38,6 @@ resources:
     description: Set power mode to balanced on battery via powrprof.dll
     securityContext: elevated
   properties:
-    getScript: |
-      Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
-      [DllImport("powrprof.dll", EntryPoint = "PowerGetUserConfiguredDCPowerMode")]
-      public static extern uint PowerGetUserConfiguredDCPowerMode(out System.Guid PowerModeGuid);
-      '@
-      $guid = [System.Guid]::Empty
-      [Win32.PowerMode]::PowerGetUserConfiguredDCPowerMode([ref]$guid) | Out-Null
-      return @{ PowerMode = $guid.ToString() }
     testScript: |
       Add-Type -Name PowerMode -Namespace Win32 -MemberDefinition @'
       [DllImport("powrprof.dll", EntryPoint = "PowerGetUserConfiguredDCPowerMode")]

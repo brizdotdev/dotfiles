@@ -27,12 +27,6 @@ resources:
   metadata:
     description: Ensure Windows Terminal is configured
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:LocalAppData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" = "$env:DOTFILES\win\config\WindowsTerminal\settings.json"
-      }
-      return Get-SymlinkConfigResult -Config $config
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{

@@ -27,9 +27,6 @@ resources:
   metadata:
     description: Ensure Neovim is set as EDITOR
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Get-EnvVar -Name "EDITOR" -Value "nvim"
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Test-EnvVar -Name "EDITOR" -Value "nvim"
@@ -42,12 +39,6 @@ resources:
   metadata:
     description: Ensure Neovim is configured
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:LocalAppData\nvim" = "$env:DOTFILES\common\config\nvim"
-      }
-      return Get-SymlinkConfigResult -Config $config
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
@@ -66,12 +57,6 @@ resources:
   metadata:
     description: Ensure vimrc is configured
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
-      }
-      return Get-SymlinkConfigResult -Config $config
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{

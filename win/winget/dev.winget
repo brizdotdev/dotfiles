@@ -16,9 +16,6 @@ resources:
   metadata:
     description: Set an environment variable to hosts file
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      return @{ Value = (Get-EnvVar -Name "HOSTS") }
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Test-EnvVar -Name "HOSTS" -Value "C:\Windows\System32\drivers\etc\hosts"
@@ -35,8 +32,6 @@ resources:
   metadata:
     description: Ensure Microsoft Store Python app is uninstalled and removed from the PATH
   properties:
-    getScript: |
-      return Get-ChildItem -Path "$env:LocalAppData\Microsoft\WindowsApps\*python*.exe" -ErrorAction SilentlyContinue
     testScript: |
       $pythonExecutables = Get-ChildItem -Path "$env:LocalAppData\Microsoft\WindowsApps\*python*.exe" -ErrorAction SilentlyContinue
       return $pythonExecutables.Count -eq 0
@@ -61,9 +56,6 @@ resources:
 - name: InstallWslComponents
   type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   properties:
-    getScript: |
-      $svc = Get-CimInstance -ClassName Win32_Service -Filter "Name='vmcompute'"
-      return @{ vmcomputePresent = [bool]$svc }
     testScript: |
       # If vmcompute is present, VMP is active — components already installed.
       $svc = Get-CimInstance -ClassName Win32_Service -Filter "Name='vmcompute'"
@@ -121,13 +113,6 @@ resources:
   metadata:
     description: Ensure Git is configured
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:USERPROFILE\.gitconfig" = "$env:DOTFILES\common\config\git\.gitconfig"
-        "$env:USERPROFILE\.gitignore_global" = "$env:DOTFILES\common\config\git\.gitignore_global"
-      }
-      return Get-SymlinkConfigResult -Config $config
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
@@ -148,12 +133,6 @@ resources:
   metadata:
     description: Symlink mise config.toml to dotfiles
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:USERPROFILE\.config\mise\config.toml" = "$env:DOTFILES\common\config\mise\mise.toml"
-      }
-      return Get-SymlinkConfigResult -Config $config
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
@@ -177,9 +156,6 @@ resources:
   metadata:
     description: Enable websearch tool for OpenCode
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      return @{ Value = (Get-EnvVar -Name "OPENCODE_ENABLE_EXA") }
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Test-EnvVar -Name "OPENCODE_ENABLE_EXA" -Value "1"
@@ -192,12 +168,6 @@ resources:
   metadata:
     description: Ensure Lazygit is configured
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:LOCALAPPDATA\lazygit\config.yml" = "$env:DOTFILES\common\config\lazygit\config.yml"
-      }
-      return Get-SymlinkConfigResult -Config $config
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $config = @{
@@ -234,10 +204,6 @@ resources:
   metadata:
     description: Ensure the mise shims directory is in the PATH
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $shimsPath = "$env:LocalAppData\mise\shims"
-      return @{ InPath = (Test-EnvPath -Paths @($shimsPath)) }
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $shimsPath = "$env:LocalAppData\mise\shims"
@@ -246,4 +212,3 @@ resources:
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $shimsPath = "$env:LocalAppData\mise\shims"
       Add-EnvPath -Paths @($shimsPath)
-

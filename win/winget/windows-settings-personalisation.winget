@@ -15,11 +15,6 @@ resources:
 - type: Microsoft.DSC.Transitional/PowerShellScript
   name: DarkTheme
   properties:
-    getScript: |
-      $regPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize'
-      $apps   = Get-ItemPropertyValue $regPath -Name AppsUseLightTheme    -EA SilentlyContinue
-      $system = Get-ItemPropertyValue $regPath -Name SystemUsesLightTheme -EA SilentlyContinue
-      return @{ AppsUseLightTheme = [int]$apps; SystemUsesLightTheme = [int]$system }
     testScript: |
       $regPath = 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize'
       $apps   = Get-ItemPropertyValue $regPath -Name AppsUseLightTheme    -EA SilentlyContinue
@@ -176,13 +171,6 @@ resources:
     description: "Start: Clean Win11 Start menu (empty pinned list and clear start*.bin caches)"
     securityContext: elevated
   properties:
-    getScript: |
-      $key = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
-      $val = $null
-      if (Test-Path -LiteralPath $key) {
-        $val = (Get-ItemProperty -LiteralPath $key -Name 'ConfigureStartPins' -ErrorAction SilentlyContinue).ConfigureStartPins
-      }
-      return @{ ConfigureStartPins = $val }
     testScript: |
       $key = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
       if (-not (Test-Path -LiteralPath $key)) { return $false }
@@ -233,8 +221,6 @@ resources:
     description: "Add 'Take Ownership' to context menu for files, folders, and drives"
     securityContext: elevated
   properties:
-    getScript: |
-      return @{ TakeOwnershipExists = (Test-Path -LiteralPath 'Registry::HKEY_CLASSES_ROOT\*\shell\TakeOwnership') }
     testScript: |
       return (Test-Path -LiteralPath 'Registry::HKEY_CLASSES_ROOT\*\shell\TakeOwnership')
     setScript: |
@@ -381,13 +367,6 @@ Windows Registry Editor Version 5.00
     description: Pin Explorer, LibreWolf, and VS Code to the taskbar in order
     securityContext: elevated
   properties:
-    getScript: |
-      $key = 'HKCU:\Software\Policies\Microsoft\Windows\Explorer'
-      $props = if (Test-Path -LiteralPath $key) { Get-ItemProperty -LiteralPath $key -ErrorAction SilentlyContinue } else { $null }
-      return @{
-        StartLayoutFile    = if ($props) { $props.StartLayoutFile } else { $null }
-        LockedStartLayout = if ($props) { $props.LockedStartLayout } else { $null }
-      }
     testScript: |
       $ErrorActionPreference = 'Stop'
       $layoutFile = Join-Path $env:ProgramData 'TaskbarLayout\TaskbarLayoutModification.xml'
@@ -754,8 +733,6 @@ Windows Registry Editor Version 5.00
     description: Install Bibata cursor
     securityContext: elevated
   properties:
-    getScript: |
-      return $false
     testScript: |
       if (Get-ChildItem -Path "$env:WINDIR\Cursors" -Directory -Filter "Bibata*" -ErrorAction SilentlyContinue | Select-Object -First 1) {
         return $true

@@ -40,10 +40,6 @@ resources:
   metadata:
     description: Ensure 7-Zip is in the path
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $pathsToAdd = @('C:\Program Files\7-Zip')
-      return Test-EnvPath -Paths $pathsToAdd
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $pathsToAdd = @('C:\Program Files\7-Zip')

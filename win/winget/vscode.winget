@@ -18,8 +18,6 @@ resources:
   metadata:
     description: Install Visual Studio Code
   properties:
-    getScript: |
-      @{ Result = & winget list --id Microsoft.VisualStudioCode --exact 2>$null }
     testScript: |
       $result = & winget list --id Microsoft.VisualStudioCode --exact 2>$null
       return $LASTEXITCODE -eq 0
@@ -35,12 +33,6 @@ resources:
   metadata:
     description: Install the Microsoft.VSCode.Dsc prerelease resource module
   properties:
-    getScript: |
-      $module = Get-InstalledPSResource -Name Microsoft.VSCode.Dsc -ErrorAction SilentlyContinue |
-        Where-Object { $_.Version.ToString() -eq '0.1.6-alpha' -and $_.PrivateData.PSData.Prerelease -eq 'alpha' } |
-        Select-Object -First 1
-      $version = if ($module) { $module.Version.ToString() } else { $null }
-      return @{ installed = [bool]$module; version = $version }
     testScript: |
       $module = Get-InstalledPSResource -Name Microsoft.VSCode.Dsc -ErrorAction SilentlyContinue |
         Where-Object { $_.Version.ToString() -eq '0.1.6-alpha' -and $_.PrivateData.PSData.Prerelease -eq 'alpha' } |
@@ -72,10 +64,6 @@ resources:
   metadata:
     description: Ensure Visual Studio Code is in the path
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $pathsToAdd = @("$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin")
-      return @{ Result = Test-EnvPath -Paths $pathsToAdd }
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $pathsToAdd = @("$env:LOCALAPPDATA\Programs\Microsoft VS Code\bin")

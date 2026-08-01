@@ -67,10 +67,6 @@ resources:
   metadata:
     description: Ensure the ChangeScreenResolution module is installed from the PowerShell Gallery
   properties:
-    getScript: |
-      $module = Get-InstalledPSResource -Name ChangeScreenResolution -ErrorAction SilentlyContinue
-      $version = if ($module) { $module.Version.ToString() } else { $null }
-      return @{ installed = [bool]$module; version = $version }
     testScript: |
       $module = Get-InstalledPSResource -Name ChangeScreenResolution -ErrorAction SilentlyContinue
       return [bool]$module
@@ -86,10 +82,6 @@ resources:
   metadata:
     description: Ensure the posh-git module is installed from the PowerShell Gallery
   properties:
-    getScript: |
-      $module = Get-InstalledPSResource -Name posh-git -ErrorAction SilentlyContinue
-      $version = if ($module) { $module.Version.ToString() } else { $null }
-      return @{ installed = [bool]$module; version = $version }
     testScript: |
       $module = Get-InstalledPSResource -Name posh-git -ErrorAction SilentlyContinue
       return [bool]$module
@@ -105,10 +97,6 @@ resources:
   metadata:
     description: Ensure the DockerCompletion module is installed from the PowerShell Gallery
   properties:
-    getScript: |
-      $module = Get-InstalledPSResource -Name DockerCompletion -ErrorAction SilentlyContinue
-      $version = if ($module) { $module.Version.ToString() } else { $null }
-      return @{ installed = [bool]$module; version = $version }
     testScript: |
       $module = Get-InstalledPSResource -Name DockerCompletion -ErrorAction SilentlyContinue
       return [bool]$module
@@ -124,10 +112,6 @@ resources:
   metadata:
     description: Ensure the CompletionPredictor module is installed from the PowerShell Gallery
   properties:
-    getScript: |
-      $module = Get-InstalledPSResource -Name CompletionPredictor -ErrorAction SilentlyContinue
-      $version = if ($module) { $module.Version.ToString() } else { $null }
-      return @{ installed = [bool]$module; version = $version }
     testScript: |
       $module = Get-InstalledPSResource -Name CompletionPredictor -ErrorAction SilentlyContinue
       return [bool]$module
@@ -143,10 +127,6 @@ resources:
   metadata:
     description: Ensure the PSFzf module is installed from the PowerShell Gallery
   properties:
-    getScript: |
-      $module = Get-InstalledPSResource -Name PSFzf -ErrorAction SilentlyContinue
-      $version = if ($module) { $module.Version.ToString() } else { $null }
-      return @{ installed = [bool]$module; version = $version }
     testScript: |
       $module = Get-InstalledPSResource -Name PSFzf -ErrorAction SilentlyContinue
       return [bool]$module
@@ -162,9 +142,6 @@ resources:
   metadata:
     description: Disable PowerShell telemetry
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Get-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT"
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Test-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
@@ -177,9 +154,6 @@ resources:
   metadata:
     description: Disable PowerShell update check
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Get-EnvVar -Name "POWERSHELL_UPDATECHECK"
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Test-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
@@ -192,13 +166,6 @@ resources:
   metadata:
     description: Ensure PowerShell is configured
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $profileAllHosts = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\profile.ps1'
-      $config = @{
-        $profileAllHosts = "${WinGetConfigRoot}\..\config\PowerShell\profile.ps1"
-      }
-      return Get-SymlinkConfigResult -Config $config
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $profileAllHosts = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\profile.ps1'
@@ -219,13 +186,6 @@ resources:
   metadata:
     description: Ensure Starship is configured
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $starshipConfig = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.config\starship.toml'
-      $config = @{
-        $starshipConfig = "${WinGetConfigRoot}\..\..\common\config\starship\starship.toml"
-      }
-      return Get-SymlinkConfigResult -Config $config
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $starshipConfig = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.config\starship.toml'
@@ -246,9 +206,6 @@ resources:
   metadata:
     description: Ensure Less is set as the default pager
   properties:
-    getScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      Get-EnvVar -Name "PAGER" -Value "less"
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Test-EnvVar -Name "PAGER" -Value "less"

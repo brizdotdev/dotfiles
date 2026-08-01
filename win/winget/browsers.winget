@@ -46,36 +46,6 @@ resources:
     - MozillaFirefox
     - LibreWolf
   properties:
-    getScript: |
-      $ErrorActionPreference = 'Stop'
-      $dotfilesRoot = $env:DOTFILES_ROOT
-      if (-not $dotfilesRoot) {
-        $candidate = "$env:USERPROFILE\.dotfiles"
-        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\firefox\extensions.txt')) {
-          $dotfilesRoot = $candidate
-        }
-      }
-      if (-not $dotfilesRoot) { return @{ Error = 'DOTFILES_ROOT not set' } }
-      $extensionsFile = Join-Path $dotfilesRoot 'common\config\firefox\extensions.txt'
-      $browsers = @{
-        Firefox   = 'C:\Program Files\Mozilla Firefox\distribution'
-        LibreWolf = 'C:\Program Files\LibreWolf\distribution'
-      }
-      $result = @{}
-      foreach ($entry in $browsers.GetEnumerator()) {
-        $policyFile = Join-Path $entry.Value 'policies.json'
-        if (Test-Path -LiteralPath $policyFile) {
-          try {
-            $json = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json
-            $result[$entry.Key] = $json.policies.ExtensionSettings
-          } catch {
-            $result[$entry.Key] = $null
-          }
-        } else {
-          $result[$entry.Key] = $null
-        }
-      }
-      return $result
     testScript: |
       $ErrorActionPreference = 'Stop'
       $dotfilesRoot = $env:DOTFILES_ROOT
@@ -188,28 +158,6 @@ resources:
   dependsOn:
     - GoogleChrome
   properties:
-    getScript: |
-      $ErrorActionPreference = 'Stop'
-      $dotfilesRoot = $env:DOTFILES_ROOT
-      if (-not $dotfilesRoot) {
-        $candidate = "$env:USERPROFILE\.dotfiles"
-        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\chrome\extensions.txt')) {
-          $dotfilesRoot = $candidate
-        }
-      }
-      if (-not $dotfilesRoot) { return @{ Error = 'DOTFILES_ROOT not set' } }
-      $extensionsFile = Join-Path $dotfilesRoot 'common\config\chrome\extensions.txt'
-      $policyFile = 'C:\Program Files\Google\Chrome\Application\policies.json'
-      $result = $null
-      if (Test-Path -LiteralPath $policyFile) {
-        try {
-          $json = Get-Content -LiteralPath $policyFile -Raw | ConvertFrom-Json
-          $result = $json.ExtensionSettings
-        } catch {
-          $result = $null
-        }
-      }
-      return @{ ExtensionSettings = $result; Source = $extensionsFile }
     testScript: |
       $ErrorActionPreference = 'Stop'
       $dotfilesRoot = $env:DOTFILES_ROOT

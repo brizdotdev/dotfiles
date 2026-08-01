@@ -882,9 +882,6 @@ resources:
   metadata:
     description: Deny access to Store LocalState db (no Store app suggestions in Start search)
   properties:
-    getScript: |
-      $db = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
-      return @{ StoreDbExists = (Test-Path -LiteralPath $db) }
     testScript: |
       $db = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\LocalState\store.db"
       if (-not (Test-Path -LiteralPath $db)) { return $true }
