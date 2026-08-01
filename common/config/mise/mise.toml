@@ -112,12 +112,8 @@ github.credential_command = "gh auth token"
 # Shell & prompt
 # "~/.bashrc" = "~/.dotfiles/linux/config/bash/bashrc"
 "~/.config/starship.toml" = "~/.dotfiles/common/config/starship/starship.toml"
-# Terminal
-"~/.tmux.conf" = "~/.dotfiles/linux/config/tmux/.tmux.conf"
-"~/.tmux/plugins/tpm" = "~/.dotfiles/linux/config/tmux/tpm"
-# Tools
 "~/.config/mise/config.toml" = "~/.dotfiles/common/config/mise/mise.toml"
-"~/.config/lazygit/config.yml" = "~/.dotfiles/common/config/lazygit/config.yml"
+"~/.config/mise/miserc.toml" = "~/.dotfiles/linux/config/mise/miserc.toml"
 "~/.curlrc" = "~/.dotfiles/common/config/curl/.curlrc"
 "~/.claude/settings.json" = "~/.dotfiles/common/config/claude/settings.json"
 "~/.config/opencode/opencode.json" = "~/.dotfiles/common/config/opencode/opencode.json"
@@ -127,6 +123,3 @@ github.credential_command = "gh auth token"
 "~/.config/yazi/" = "~/.dotfiles/common/config/yazi/"
 # Kanata
 "~/.config/kanata/kanata.kbd" = "~/.dotfiles/common/config/kanata/laptop.kbd"
-# xdg-desktop-portal
-"~/.config/xdg-desktop-portal/portals.conf" = "~/.dotfiles/linux/config/xdg-desktop-portal/portals.conf"
-"~/.config/xdg-desktop-portal-termfilechooser/config" = "~/.dotfiles/linux/config/xdg-desktop-portal-termfilechooser/config"
