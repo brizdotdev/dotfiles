@@ -1,0 +1,16 @@
+name: dotfiles
+version: 1.0.0
+
+dependencies:
+  apm:
+    - microsoft/playwright-cli/skills/playwright-cli
+    - JuliusBrussee/caveman#v1.9.1
+    - mattpocock/skills#v1.1.0
+    - anthropics/skills
+    - dietrichgebert/ponytail#v4.8.4
+    - garrytan/gstack
+  mcp:
+    - name: deepwiki
+      registry: false
+      transport: http
+      url: https://mcp.deepwiki.com/mcp

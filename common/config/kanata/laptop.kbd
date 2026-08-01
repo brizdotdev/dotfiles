@@ -1,0 +1,78 @@
+;; Repo: https://github.com/jtroo/kanata/
+;; Guide: https://jtroo.github.io/config.html
+;; Keycodes: https://github.com/jtroo/kanata/blob/main/parser/src/keys/mod.rs
+
+;; (defcfg
+;;   process-unmapped-keys yes
+;; )
+
+(defvar
+  tap-time 150
+  hold-time 200
+)
+
+(defsrc
+  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
+  lctl lmet lalt           spc            ralt rmet rctl
+)
+
+;; @cap @a @s @d @f _ _ @j @k @l @; _ _
+(deflayer base
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  @cap _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ @l2
+)
+
+(deflayer l1
+  _ _ _ _ _ _ _ _ _ _ _ _ _ del
+  menu _ _ _ _ _ _ _ _ _ _ home end _
+  _ _ _ _ _ _ left down up right pgup pgdn _
+  _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _
+)
+
+(deflayer l2
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _ _ _ _ mute vold volu pp
+  _ _ _ _ _ _ _ _ _ _ _ prev next
+  _ _ _ _ _ _ _ _ _ _ _ _
+  _ _ _ _ _ _ _
+)
+
+;; https://github.com/jtroo/kanata/discussions/1455
+;; (deftemplate charmod (char mod)
+;;   (switch
+;;     ((key-timing 3 less-than 250)) $char break
+;;     () (tap-hold-release-timeout 200 500 $char $mod $char) break
+;;   )
+;; )
+
+(defalias
+  cap (tap-hold-press $tap-time $hold-time XX (layer-toggle l1))
+  l2 (tap-hold-press $tap-time $hold-time XX (layer-toggle l2))
+
+  ;; GASC layout - https://precondition.github.io/home-row-mods#gasc
+  ;; a (tap-hold $tap-time $hold-time a lmet)
+  ;; s (tap-hold $tap-time $hold-time s lalt)
+  ;; d (tap-hold $tap-time $hold-time d lsft)
+  ;; f (tap-hold $tap-time $hold-time f lctl)
+  ;; j (tap-hold $tap-time $hold-time j rctrl)
+  ;; k (tap-hold $tap-time $hold-time k rsft)
+  ;; l (tap-hold $tap-time $hold-time l ralt)
+  ;; ; (tap-hold $tap-time $hold-time ; rmet)
+
+  ;; a (t! charmod a lmet)
+  ;; s (t! charmod s lalt)
+  ;; d (t! charmod d lsft)
+  ;; f (t! charmod f lctl)
+
+  ;; j (t! charmod j rctrl)
+  ;; k (t! charmod k rsft)
+  ;; l (t! charmod l ralt)
+  ;; ; (t! charmod ; rmet)
+)

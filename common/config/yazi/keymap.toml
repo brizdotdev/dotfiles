@@ -1,0 +1,42 @@
+# https://yazi-rs.github.io/docs/tips#dropping-to-shell
+[[mgr.prepend_keymap]]
+on   = "!"
+for  = "unix"
+run  = 'shell "$SHELL" --block'
+desc = "Open $SHELL here"
+
+# If you also using Yazi on Windows:
+[[mgr.prepend_keymap]]
+on   = "!"
+for  = "windows"
+run  = 'shell "powershell.exe" --block'
+desc = "Open PowerShell here"
+
+# https://yazi-rs.github.io/docs/tips#selected-files-to-clipboard
+[[mgr.prepend_keymap]]
+on  = "y"
+run = [ 'shell -- for path in %s; do echo "file://$path"; done | wl-copy -t text/uri-list', "yank" ]
+
+# https://yazi-rs.github.io/docs/tips#cd-to-git-root
+[[mgr.prepend_keymap]]
+on = [ "g", "r" ]
+run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"'
+
+# Go to dotfiles
+[[mgr.prepend_keymap]]
+on   = [ "g", "." ]
+run  = 'cd ~/.dotfiles'
+desc = "Go to dotfiles"
+
+# Go to temp folder
+[[mgr.prepend_keymap]]
+on   = [ "g", "t" ]
+for  = "unix"
+run  = 'cd /tmp'
+desc = "Go to temp folder"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "t" ]
+for  = "windows"
+run  = 'cd %temp%'
+desc = "Go to temp folder"
