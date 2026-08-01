@@ -10,7 +10,6 @@ metadata:
 
 resources:
 
-# TODO: https://github.com/microsoft/winget-dsc/blob/main/resources/Microsoft.Windows.Settings/Microsoft.Windows.Settings.psm1
 - name: DeveloperMode
   type: Microsoft.Windows/Registry
   properties:

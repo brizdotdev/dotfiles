@@ -11,9 +11,6 @@ metadata:
 
 resources:
 
-# TODO: Integrate https://github.com/microsoft/WindowsDeveloperConfig
-# TODO: Move some stuff to mise
-
 - name: HostsEnvVar
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
