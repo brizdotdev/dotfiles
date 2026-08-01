@@ -143,6 +143,17 @@ resources:
       DWord: 0
     _exist: true
 
+- name: DisableLockscreenTips
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable tips, tricks and fun facts on the lock screen (SubscribedContent-338387)
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager
+    valueName: SubscribedContent-338387Enabled
+    valueData:
+      DWord: 0
+    _exist: true
+
 - name: PreInstalledApps
   type: Microsoft.Windows/Registry
   metadata:
@@ -702,6 +713,72 @@ resources:
   properties:
     keyPath: HKLM\SOFTWARE\Policies\WindowsNotepad
     valueName: DisableAIFeatures
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Disable AI features in Paint (adapted from Win11Debloat Disable_Paint_AI_Features.reg)
+- name: DisablePaintCocreator
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Paint Cocreator AI feature
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
+    valueName: DisableCocreator
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisablePaintGenerativeFill
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Paint Generative Fill AI feature
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
+    valueName: DisableGenerativeFill
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisablePaintImageCreator
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Paint Image Creator AI feature
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
+    valueName: DisableImageCreator
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisablePaintGenerativeErase
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Paint Generative Erase AI feature
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
+    valueName: DisableGenerativeErase
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisablePaintRemoveBackground
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Paint Remove Background AI feature
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
+    valueName: DisableRemoveBackground
     valueData:
       DWord: 1
     _exist: true

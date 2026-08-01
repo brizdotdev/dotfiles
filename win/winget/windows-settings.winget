@@ -155,6 +155,76 @@ resources:
       DWord: 0
     _exist: true
 
+# Add common folders back to 'This PC' (adapted from Win11Debloat Add_All_Folders_Under_This_PC.reg)
+- name: AddFoldersToThisPC
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Add Desktop, Documents, Downloads, Music, Pictures and Videos folders back to 'This PC' in File Explorer
+    winget:
+      securityContext: elevated
+  properties:
+    getScript: |
+      $guids = @(
+        '{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}',  # Desktop
+        '{d3162b92-9365-467a-956b-92703aca08af}',  # Documents
+        '{088e3905-0323-4b02-9826-5d99428e115f}',  # Downloads
+        '{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}',  # Music
+        '{1CF1260C-4DD0-4ebb-811F-33C572699FDE}',  # Music (legacy)
+        '{24ad3ad4-a569-4530-98e1-ab02f9417aa8}',  # Pictures
+        '{f86fa3ab-70d2-4fc7-9c99-fcbf05467f3a}'   # Videos
+      )
+      $base = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace'
+      $result = @{}
+      foreach ($guid in $guids) {
+        $path = Join-Path $base $guid
+        $hideIfEnabled = $null
+        $hiddenByDefault = $null
+        if (Test-Path -LiteralPath $path) {
+          $hideIfEnabled = (Get-ItemProperty -LiteralPath $path -Name HideIfEnabled -ErrorAction SilentlyContinue).HideIfEnabled
+          $hiddenByDefault = (Get-ItemProperty -LiteralPath $path -Name HiddenByDefault -ErrorAction SilentlyContinue).HiddenByDefault
+        }
+        $result[$guid] = @{ HideIfEnabled = $hideIfEnabled; HiddenByDefault = $hiddenByDefault }
+      }
+      return @{ Folders = $result }
+    testScript: |
+      $guids = @(
+        '{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}',
+        '{d3162b92-9365-467a-956b-92703aca08af}',
+        '{088e3905-0323-4b02-9826-5d99428e115f}',
+        '{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}',
+        '{1CF1260C-4DD0-4ebb-811F-33C572699FDE}',
+        '{24ad3ad4-a569-4530-98e1-ab02f9417aa8}',
+        '{f86fa3ab-70d2-4fc7-9c99-fcbf05467f3a}'
+      )
+      $base = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace'
+      foreach ($guid in $guids) {
+        $path = Join-Path $base $guid
+        if (-not (Test-Path -LiteralPath $path)) { return $false }
+        $hideIfEnabled = (Get-ItemProperty -LiteralPath $path -Name HideIfEnabled -ErrorAction SilentlyContinue).HideIfEnabled
+        if ($null -ne $hideIfEnabled) { return $false }
+        $hiddenByDefault = (Get-ItemProperty -LiteralPath $path -Name HiddenByDefault -ErrorAction SilentlyContinue).HiddenByDefault
+        if ($hiddenByDefault -ne 0) { return $false }
+      }
+      return $true
+    setScript: |
+      $guids = @(
+        '{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}',
+        '{d3162b92-9365-467a-956b-92703aca08af}',
+        '{088e3905-0323-4b02-9826-5d99428e115f}',
+        '{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}',
+        '{1CF1260C-4DD0-4ebb-811F-33C572699FDE}',
+        '{24ad3ad4-a569-4530-98e1-ab02f9417aa8}',
+        '{f86fa3ab-70d2-4fc7-9c99-fcbf05467f3a}'
+      )
+      $base = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace'
+      foreach ($guid in $guids) {
+        $path = Join-Path $base $guid
+        if (-not (Test-Path -LiteralPath $path)) {
+          New-Item -Path $path -Force | Out-Null
+        }
+        Remove-ItemProperty -LiteralPath $path -Name HideIfEnabled -ErrorAction SilentlyContinue
+        Set-ItemProperty -LiteralPath $path -Name HiddenByDefault -Value 0 -Type DWord
+
 # Windows Update
 - name: NoAutoRestart
   type: Microsoft.Windows/Registry
@@ -479,6 +549,111 @@ resources:
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
     valueName: DefaultBrowserSettingsCampaignEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Edge AI features (adapted from Win11Debloat Disable_Edge_AI_Features.reg)
+- name: EdgeNoCopilotCDPPageContext
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge Copilot CDP page context
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: CopilotCDPPageContext
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoCopilotPageContext
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge Copilot page context
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: CopilotPageContext
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoHubsSidebar
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge Hubs sidebar
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: HubsSidebarEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoEntraCopilotPageContext
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge Entra Copilot page context
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: EdgeEntraCopilotPageContext
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoHistoryAISearch
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge history AI search
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: EdgeHistoryAISearchEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeNoComposeInline
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge inline AI compose
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: ComposeInlineEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: EdgeGenAILocalFoundationalModel
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable Edge local foundational model settings (disables cloud AI)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: GenAILocalFoundationalModelSettings
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: EdgeNoNewTabBingChat
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Edge Bing Chat on new tab page
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Edge
+    valueName: NewTabPageBingChatEnabled
     valueData:
       DWord: 0
     _exist: true
