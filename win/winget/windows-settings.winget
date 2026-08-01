@@ -155,6 +155,41 @@ resources:
       DWord: 0
     _exist: true
 
+- name: ShowLnkExtension
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Show .lnk file extension on shortcut files
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKEY_CLASSES_ROOT\lnkfile
+    valueName: NeverShowExt
+    _exist: false
+
+- name: DisableAutoplay
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable AutoPlay for removable media
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers
+    valueName: DisableAutoplay
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableAutorunAllDrives
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Block autorun on all drive types (policy)
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
+    valueName: NoDriveTypeAutoRun
+    valueData:
+      DWord: 255
+    _exist: true
+
 # Add common folders back to 'This PC' (adapted from Win11Debloat Add_All_Folders_Under_This_PC.reg)
 - name: AddFoldersToThisPC
   type: Microsoft.DSC.Transitional/PowerShellScript

@@ -113,6 +113,105 @@ resources:
       DWord: 1
     _exist: true
 
+- name: HideFrequentListWin11
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide most used apps list (Win11)"
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Start
+    valueName: ShowFrequentList
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: HideRecommendedSectionUser
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide Recommended section (user policy)"
+  properties:
+    keyPath: HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer
+    valueName: HideRecommendedSection
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideRecommendedSectionMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide Recommended section (machine policy)"
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer
+    valueName: HideRecommendedSection
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideRecommendedSectionMDM
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide Recommended section (MDM/CSP)"
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start
+    valueName: HideRecommendedSection
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideRecommendedSectionEducation
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Set education environment flag (hides Recommended section)"
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Education
+    valueName: IsEducationEnvironment
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: CleanStartMenuWin11
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: "Start: Clean Win11 Start menu (empty pinned list and clear start*.bin caches)"
+    winget:
+      securityContext: elevated
+  properties:
+    getScript: |
+      $key = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      $val = $null
+      if (Test-Path -LiteralPath $key) {
+        $val = (Get-ItemProperty -LiteralPath $key -Name 'ConfigureStartPins' -ErrorAction SilentlyContinue).ConfigureStartPins
+      }
+      return @{ ConfigureStartPins = $val }
+    testScript: |
+      $key = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      if (-not (Test-Path -LiteralPath $key)) { return $false }
+      $val = (Get-ItemProperty -LiteralPath $key -Name 'ConfigureStartPins' -ErrorAction SilentlyContinue).ConfigureStartPins
+      return ($val -eq '{"pinnedList":[]}')
+    setScript: |
+      $json = '{"pinnedList":[]}'
+      $key1 = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      $key2 = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+      New-Item -Path $key1 -ItemType 'Directory' -ErrorAction SilentlyContinue | Out-Null
+      Set-ItemProperty -LiteralPath $key1 -Name 'ConfigureStartPins' -Value $json -Type 'String'
+      New-Item -Path $key2 -ItemType 'Directory' -ErrorAction SilentlyContinue | Out-Null
+      Set-ItemProperty -LiteralPath $key2 -Name 'ConfigureStartPins' -Value $json -Type 'String'
+      $systemAccounts = @('Public','Default','All Users','Default User')
+      Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' |
+          Where-Object { $_.PSChildName -like 'S-1-5-21-*' } |
+          ForEach-Object {
+              $profilePath = (Get-ItemProperty $_.PSPath -Name 'ProfileImagePath' -ErrorAction SilentlyContinue).ProfileImagePath
+              if ($profilePath -and ((Split-Path $profilePath -Leaf) -notin $systemAccounts)) {
+                  Remove-Item "$profilePath\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start*.bin" -Force -ErrorAction SilentlyContinue
+              }
+          }
+      Stop-Process -Name 'StartMenuExperienceHost' -Force -ErrorAction SilentlyContinue
+
 - name: ClassicContextMenu
   type: Microsoft.Windows/Registry
   metadata:
@@ -133,6 +232,64 @@ resources:
   properties:
     keyPath: HKLM\SOFTWARE\Classes\Folder\shellex\ContextMenuHandlers\PintoStartScreen
     _exist: false
+
+- name: TakeOwnership
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: "Add 'Take Ownership' to context menu for files, folders, and drives"
+    winget:
+      securityContext: elevated
+  properties:
+    getScript: |
+      return @{ TakeOwnershipExists = (Test-Path -LiteralPath 'Registry::HKEY_CLASSES_ROOT\*\shell\TakeOwnership') }
+    testScript: |
+      return (Test-Path -LiteralPath 'Registry::HKEY_CLASSES_ROOT\*\shell\TakeOwnership')
+    setScript: |
+      $reg = @'
+Windows Registry Editor Version 5.00
+
+[-HKEY_CLASSES_ROOT\*\shell\TakeOwnership]
+[-HKEY_CLASSES_ROOT\*\shell\runas]
+
+[HKEY_CLASSES_ROOT\*\shell\TakeOwnership]
+@="Take Ownership"
+"Extended"=-
+"HasLUAShield"=""
+"NoWorkingDirectory"=""
+"NeverDefault"=""
+
+[HKEY_CLASSES_ROOT\*\shell\TakeOwnership\command]
+@="powershell -windowstyle hidden -command \"Start-Process cmd -ArgumentList '/c takeown /f \"%1\" && icacls \"%1\" /grant *S-1-3-4:F /t /c /l & pause' -Verb runAs\""
+"IsolatedCommand"="powershell -windowstyle hidden -command \"Start-Process cmd -ArgumentList '/c takeown /f \"%1\" && icacls \"%1\" /grant *S-1-3-4:F /t /c /l & pause' -Verb runAs\""
+
+[HKEY_CLASSES_ROOT\Directory\shell\TakeOwnership]
+@="Take Ownership"
+"AppliesTo"="NOT (System.ItemPathDisplay:\"C:\\Users\" OR System.ItemPathDisplay:\"C:\\ProgramData\" OR System.ItemPathDisplay:\"C:\\Windows\" OR System.ItemPathDisplay:\"C:\\Windows\\System32\" OR System.ItemPathDisplay:\"C:\\Program Files\" OR System.ItemPathDisplay:\"C:\\Program Files (x86)\")"
+"Extended"=-
+"HasLUAShield"=""
+"NoWorkingDirectory"=""
+"Position"="middle"
+
+[HKEY_CLASSES_ROOT\Directory\shell\TakeOwnership\command]
+@="powershell -windowstyle hidden -command \"$Y = ($null | choice).Substring(1,1); Start-Process cmd -ArgumentList ('/c takeown /f \"%1\" /r /d ' + $Y + ' && icacls \"%1\" /grant *S-1-3-4:F /t /c /l /q & pause') -Verb runAs\""
+"IsolatedCommand"="powershell -windowstyle hidden -command \"$Y = ($null | choice).Substring(1,1); Start-Process cmd -ArgumentList ('/c takeown /f \"%1\" /r /d ' + $Y + ' && icacls \"%1\" /grant *S-1-3-4:F /t /c /l /q & pause') -Verb runAs\""
+
+[HKEY_CLASSES_ROOT\Drive\shell\runas]
+@="Take Ownership"
+"Extended"=-
+"HasLUAShield"=""
+"NoWorkingDirectory"=""
+"Position"="middle"
+"AppliesTo"="NOT (System.ItemPathDisplay:\"C:\\\")"
+
+[HKEY_CLASSES_ROOT\Drive\shell\runas\command]
+@="cmd.exe /c takeown /f \"%1\" /r /d y && icacls \"%1\" /grant *S-1-3-4:F /t /c & Pause"
+"IsolatedCommand"="cmd.exe /c takeown /f \"%1\" /r /d y && icacls \"%1\" /grant *S-1-3-4:F /t /c & Pause"
+'@
+      $tmp = [System.IO.Path]::GetTempFileName()
+      [System.IO.File]::WriteAllText($tmp, $reg, [System.Text.UnicodeEncoding]::new($false, $true))
+      reg import $tmp
+      Remove-Item -LiteralPath $tmp -Force
 
 - name: HideDesktopIcons
   type: Microsoft.Windows/Registry

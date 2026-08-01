@@ -690,6 +690,45 @@ resources:
       DWord: 0
     _exist: true
 
+# WiFi Sense (adapted from Winhance security-wifi-sense)
+- name: DisableWiFiSenseHotspotReporting
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable WiFi Sense hotspot reporting
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting
+    valueName: Value
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableWiFiSenseAutoConnect
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable auto-connect to WiFi Sense suggested hotspots
+    winget:
+      securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots
+    valueName: Value
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Office AI Training (adapted from Winhance privacy-office-ai-training)
+- name: DisableOfficeAITraining
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Block Office AI training data collection from your usage
+  properties:
+    keyPath: HKCU\Software\Policies\Microsoft\office\16.0\common\ai\training
+    valueName: optionalconnectedexperiencesenabled
+    valueData:
+      DWord: 0
+    _exist: true
+
 # Windows AI (adapted from winutil WPFTweaksWindowsAI)
 - name: HideAISettingsPage
   type: Microsoft.Windows/Registry
