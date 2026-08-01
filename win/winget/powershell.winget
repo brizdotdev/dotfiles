@@ -158,22 +158,34 @@ resources:
         -Scope CurrentUser
 
 - name: PowerShellTelemetry
-  type: OpenDsc.Windows/Environment
+  type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Disable PowerShell telemetry
   properties:
-    name: POWERSHELL_TELEMETRY_OPTOUT
-    value: "true"
-    _scope: User
+    getScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Get-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT"
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Test-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Add-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
 
 - name: PowerShellUpdateCheck
-  type: OpenDsc.Windows/Environment
+  type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Disable PowerShell update check
   properties:
-    name: POWERSHELL_UPDATECHECK
-    value: "false"
-    _scope: User
+    getScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Get-EnvVar -Name "POWERSHELL_UPDATECHECK"
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Test-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Add-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
 
 - name: PowerShellSettings
   type: Microsoft.DSC.Transitional/PowerShellScript
@@ -230,10 +242,16 @@ resources:
       New-SymlinkConfig -Config $config
 
 - name: SetLessAsPager
-  type: OpenDsc.Windows/Environment
+  type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:
     description: Ensure Less is set as the default pager
   properties:
-    name: PAGER
-    value: less
-    _scope: User
+    getScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Get-EnvVar -Name "PAGER" -Value "less"
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Test-EnvVar -Name "PAGER" -Value "less"
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Add-EnvVar -Name "PAGER" -Value "less"
