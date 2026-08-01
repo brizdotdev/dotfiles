@@ -48,6 +48,7 @@ resources:
   type: Microsoft.WinGet/Package
   metadata:
     description: Install WSL
+    securityContext: elevated
   properties:
     id: Microsoft.WSL
     source: winget
@@ -72,6 +73,7 @@ resources:
       # stream — so there is no stderr-as-error problem and no cmd ">nul" needed.
       $p = Start-Process -FilePath 'wsl.exe' -ArgumentList '--install','--no-distribution' -Wait -PassThru
       if ($p.ExitCode -eq 3010 -or $p.ExitCode -eq 1641) {
+        $p = Start-Process -FilePath 'wsl.exe' -ArgumentList '--update','--pre-release' -Wait -PassThru
         Write-Host "WSL installed successfully, but a system reboot is required."
       }
       elseif ($p.ExitCode -ne 0) {
