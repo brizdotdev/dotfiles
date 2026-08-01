@@ -317,6 +317,37 @@ resources:
       DWord: 0
     _exist: true
 
+- name: ReceiveOtherMicrosoftUpdates
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Receive updates for other Microsoft products (Office, Visual Studio, etc.)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings
+    valueName: AllowMUUpdateService
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: RegisterMicrosoftUpdateService
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: Opt-in to Microsoft Update service via WUA COM API (registers service so AllowMUUpdateService toggle takes effect)
+    securityContext: elevated
+  properties:
+    testScript: |
+      try {
+        $manager = New-Object -ComObject Microsoft.Update.ServiceManager
+        $service = $manager.Services | Where-Object { $_.ServiceID -eq '7971f918-a847-4430-9279-4a52d1efe18d' }
+        return ($null -ne $service)
+      } catch {
+        return $false
+      }
+    setScript: |
+      $manager = New-Object -ComObject Microsoft.Update.ServiceManager
+      $manager.ClientApplicationID = 'opencode-dotfiles'
+      $null = $manager.AddService2('7971f918-a847-4430-9279-4a52d1efe18d', 7, '')
+
 # Microsoft Edge
 - name: EdgeHideFirstRun
   type: Microsoft.Windows/Registry
