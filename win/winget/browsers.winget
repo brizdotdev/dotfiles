@@ -9,11 +9,14 @@ metadata:
     processor:
       identifier: dscv3
 
+# TODO  Install in user scope where possible
+
 resources:
 - name: GoogleChrome
   type: Microsoft.WinGet/Package
   metadata:
     description: Install Google Chrome
+    securityContext: elevated
   properties:
     id: Google.Chrome
     source: winget

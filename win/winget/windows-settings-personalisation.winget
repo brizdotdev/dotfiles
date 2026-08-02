@@ -89,6 +89,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: "Start: Hide recently added apps (policy)"
+    securityContext: elevated
   properties:
     keyPath: HKCU\Software\Policies\Microsoft\Windows\Explorer
     valueName: NoStartMenuRecentlyInstalledApps
@@ -100,6 +101,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: "Start: Hide most used apps list (policy)"
+    securityContext: elevated
   properties:
     keyPath: HKCU\Software\Policies\Microsoft\Windows\Explorer
     valueName: NoStartMenuMFUprogramsList
@@ -208,6 +210,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Hide desktop icons
+    securityContext: elevated
   properties:
     keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
     valueName: NoDesktop

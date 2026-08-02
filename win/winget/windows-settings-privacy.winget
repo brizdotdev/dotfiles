@@ -225,6 +225,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable search box suggestions in Start Menu
+    securityContext: elevated
   properties:
     keyPath: HKCU\Software\Policies\Microsoft\Windows\Explorer
     valueName: DisableSearchBoxSuggestions

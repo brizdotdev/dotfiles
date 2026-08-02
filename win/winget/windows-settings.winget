@@ -102,6 +102,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Thumbs.db on network folders
+    securityContext: elevated
   properties:
     keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
     valueName: DisableThumbnailsOnNetworkFolders
@@ -824,6 +825,7 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Disable Windows Copilot
+    securityContext: elevated
   properties:
     keyPath: HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot
     valueName: TurnOffWindowsCopilot
