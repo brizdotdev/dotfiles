@@ -1,0 +1,20 @@
+##############################################################################
+# Development
+##############################################################################
+
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+
+- name: DeveloperMode
+  type: Microsoft.Windows/Registry
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock
+    valueName: AllowDevelopmentWithoutDevLicense
+    valueData:
+      DWord: 1
+  metadata:
+    description: Enable Developer Mode (sideload + dev features)
+    securityContext: elevated

@@ -16,6 +16,7 @@ $configMap = @(
         Name = "Base"
         Preselected = $True
         Configs = @(
+            "$PSScriptRoot\winget\developer-mode.winget"
             "$PSScriptRoot\winget\powershell.winget"
             "$PSScriptRoot\winget\windows-settings.winget"
             "$PSScriptRoot\winget\windows-settings-personalisation.winget"
