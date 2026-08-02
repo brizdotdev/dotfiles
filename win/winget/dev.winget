@@ -44,68 +44,31 @@ resources:
 # WSL
 ##############################################################################
 
-- name: WSL
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install WSL
-    securityContext: elevated
-  properties:
-    id: Microsoft.WSL
-    source: winget
-    installMode: silent
-
-- name: InstallWslComponents
-  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
-  properties:
-    testScript: |
-      # If vmcompute is present, VMP is active — components already installed.
-      $svc = Get-CimInstance -ClassName Win32_Service -Filter "Name='vmcompute'"
-      return [bool]$svc
-    setScript: |
-      Write-Host "InstallWslComponents: running wsl --install --no-distribution..."
-      # Launch wsl.exe directly WITHOUT -NoNewWindow and WITHOUT -RedirectStandard*
-      # so Start-Process allocates a fresh console (CREATE_NEW_CONSOLE), which
-      # wsl's install bootstrap requires. The dscv3 host has no console to
-      # inherit, so -NoNewWindow (or -RedirectStandardOutput, which also
-      # suppresses the new console) makes wsl fail with "The Windows Subsystem
-      # for Linux is not installed". With no -Redirect* flags PowerShell never
-      # captures wsl's output — it goes to that console, not PowerShell's error
-      # stream — so there is no stderr-as-error problem and no cmd ">nul" needed.
-      $p = Start-Process -FilePath 'wsl.exe' -ArgumentList '--install','--no-distribution' -Wait -PassThru
-      if ($p.ExitCode -eq 3010 -or $p.ExitCode -eq 1641) {
-        $p = Start-Process -FilePath 'wsl.exe' -ArgumentList '--update','--pre-release' -Wait -PassThru
-        Write-Host "WSL installed successfully, but a system reboot is required."
-      }
-      elseif ($p.ExitCode -ne 0) {
-        throw "InstallWslComponents: wsl --install failed with exit code $($p.ExitCode)"
-      }
-  metadata:
-    securityContext: elevated
-
+# TODO: Enable WSL?
 
 ##############################################################################
 # Containers
 ##############################################################################
 
 # TODO: Replace with wslc when that's available (https://learn.microsoft.com/en-us/windows/wsl/wsl-container)
-- name: DockerDesktop
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Docker Desktop
-  properties:
-    id: Docker.DockerDesktop
-    source: winget
-    installMode: silent
 
-- name: DockerSandbox
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Docker Sandbox
-  properties:
-    id: Docker.sbx
-    source: winget
-    installMode: silent
+# - name: DockerDesktop
+#   type: Microsoft.WinGet/Package
+#   metadata:
+#     description: Install Docker Desktop
+#   properties:
+#     id: Docker.DockerDesktop
+#     source: winget
+#     installMode: silent
 
+# - name: DockerSandbox
+#   type: Microsoft.WinGet/Package
+#   metadata:
+#     description: Install Docker Sandbox
+#   properties:
+#     id: Docker.sbx
+#     source: winget
+#     installMode: silent
 - name: WindowsSandbox
   type: Microsoft.Windows/OptionalFeatureList
   metadata:
