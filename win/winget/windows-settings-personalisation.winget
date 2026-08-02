@@ -298,104 +298,104 @@ resources:
 
 # https://learn.microsoft.com/windows/configuration/taskbar/pinned-apps
 # https://learn.microsoft.com/windows-hardware/customize/desktop/customize-the-windows-11-taskbar
-- name: TaskbarLayout
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: Pin Explorer, LibreWolf, and VS Code to the taskbar in order
-    securityContext: elevated
-  properties:
-    testScript: |
-      $ErrorActionPreference = 'Stop'
-      $layoutFile = Join-Path $env:ProgramData 'TaskbarLayout\TaskbarLayoutModification.xml'
-      if (-not (Test-Path -LiteralPath $layoutFile)) { return $false }
-      $content = [System.IO.File]::ReadAllText($layoutFile)
-      function Find-AppShortcut([string]$exeName) {
-        $shell = New-Object -ComObject WScript.Shell
-        $dirs = @(
-          [Environment]::GetFolderPath('CommonStartMenu'),
-          [Environment]::GetFolderPath('StartMenu')
-        )
-        foreach ($dir in $dirs) {
-          if (-not (Test-Path -LiteralPath $dir)) { continue }
-          foreach ($link in Get-ChildItem -LiteralPath $dir -Recurse -Filter *.lnk -ErrorAction SilentlyContinue) {
-            try { $target = $shell.CreateShortcut($link.FullName).TargetPath } catch { continue }
-            if ($target -and ($target -replace '\\', '/') -like "*/$exeName") { return $link.FullName }
-          }
-        }
-        return $null
-      }
-      $libre = Find-AppShortcut 'librewolf.exe'
-      if ($libre -and $content -notmatch [regex]::Escape($libre)) { return $false }
-      $vscode = Find-AppShortcut 'code.exe'
-      if ($vscode -and $content -notmatch [regex]::Escape($vscode)) { return $false }
-      return $true
-    setScript: |
-      $ErrorActionPreference = 'Stop'
-      $key = 'HKCU:\Software\Policies\Microsoft\Windows\Explorer'
-      $layoutDir = Join-Path $env:ProgramData 'TaskbarLayout'
-      $layoutFile = Join-Path $layoutDir 'TaskbarLayoutModification.xml'
+# - name: TaskbarLayout
+#   type: Microsoft.DSC.Transitional/PowerShellScript
+#   metadata:
+#     description: Pin Explorer, LibreWolf, and VS Code to the taskbar in order
+#     securityContext: elevated
+#   properties:
+#     testScript: |
+#       $ErrorActionPreference = 'Stop'
+#       $layoutFile = Join-Path $env:ProgramData 'TaskbarLayout\TaskbarLayoutModification.xml'
+#       if (-not (Test-Path -LiteralPath $layoutFile)) { return $false }
+#       $content = [System.IO.File]::ReadAllText($layoutFile)
+#       function Find-AppShortcut([string]$exeName) {
+#         $shell = New-Object -ComObject WScript.Shell
+#         $dirs = @(
+#           [Environment]::GetFolderPath('CommonStartMenu'),
+#           [Environment]::GetFolderPath('StartMenu')
+#         )
+#         foreach ($dir in $dirs) {
+#           if (-not (Test-Path -LiteralPath $dir)) { continue }
+#           foreach ($link in Get-ChildItem -LiteralPath $dir -Recurse -Filter *.lnk -ErrorAction SilentlyContinue) {
+#             try { $target = $shell.CreateShortcut($link.FullName).TargetPath } catch { continue }
+#             if ($target -and ($target -replace '\\', '/') -like "*/$exeName") { return $link.FullName }
+#           }
+#         }
+#         return $null
+#       }
+#       $libre = Find-AppShortcut 'librewolf.exe'
+#       if ($libre -and $content -notmatch [regex]::Escape($libre)) { return $false }
+#       $vscode = Find-AppShortcut 'code.exe'
+#       if ($vscode -and $content -notmatch [regex]::Escape($vscode)) { return $false }
+#       return $true
+#     setScript: |
+#       $ErrorActionPreference = 'Stop'
+#       $key = 'HKCU:\Software\Policies\Microsoft\Windows\Explorer'
+#       $layoutDir = Join-Path $env:ProgramData 'TaskbarLayout'
+#       $layoutFile = Join-Path $layoutDir 'TaskbarLayoutModification.xml'
 
-      function Find-AppShortcut([string]$exeName) {
-        $shell = New-Object -ComObject WScript.Shell
-        $dirs = @(
-          [Environment]::GetFolderPath('CommonStartMenu'),
-          [Environment]::GetFolderPath('StartMenu')
-        )
-        foreach ($dir in $dirs) {
-          if (-not (Test-Path -LiteralPath $dir)) { continue }
-          foreach ($link in Get-ChildItem -LiteralPath $dir -Recurse -Filter *.lnk -ErrorAction SilentlyContinue) {
-            try { $target = $shell.CreateShortcut($link.FullName).TargetPath } catch { continue }
-            if ($target -and ($target -replace '\\', '/') -like "*/$exeName") { return $link.FullName }
-          }
-        }
-        return $null
-      }
+#       function Find-AppShortcut([string]$exeName) {
+#         $shell = New-Object -ComObject WScript.Shell
+#         $dirs = @(
+#           [Environment]::GetFolderPath('CommonStartMenu'),
+#           [Environment]::GetFolderPath('StartMenu')
+#         )
+#         foreach ($dir in $dirs) {
+#           if (-not (Test-Path -LiteralPath $dir)) { continue }
+#           foreach ($link in Get-ChildItem -LiteralPath $dir -Recurse -Filter *.lnk -ErrorAction SilentlyContinue) {
+#             try { $target = $shell.CreateShortcut($link.FullName).TargetPath } catch { continue }
+#             if ($target -and ($target -replace '\\', '/') -like "*/$exeName") { return $link.FullName }
+#           }
+#         }
+#         return $null
+#       }
 
-      $librePath = Find-AppShortcut 'librewolf.exe'
-      if (-not $librePath) {
-        $librePath = Join-Path ([Environment]::GetFolderPath('StartMenu')) 'Programs\LibreWolf.lnk'
-      }
+#       $librePath = Find-AppShortcut 'librewolf.exe'
+#       if (-not $librePath) {
+#         $librePath = Join-Path ([Environment]::GetFolderPath('StartMenu')) 'Programs\LibreWolf.lnk'
+#       }
 
-      $vscodePath = Find-AppShortcut 'code.exe'
-      if (-not $vscodePath) {
-        $vscodePath = Join-Path ([Environment]::GetFolderPath('StartMenu')) 'Programs\Visual Studio Code\Visual Studio Code.lnk'
-      }
+#       $vscodePath = Find-AppShortcut 'code.exe'
+#       if (-not $vscodePath) {
+#         $vscodePath = Join-Path ([Environment]::GetFolderPath('StartMenu')) 'Programs\Visual Studio Code\Visual Studio Code.lnk'
+#       }
 
-      $xml = @(
-        '<LayoutModificationTemplate xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification" xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" xmlns:taskbar="http://schemas.microsoft.com/Start/2014/TaskbarLayout" Version="1">'
-        '  <CustomTaskbarLayoutCollection PinListPlacement="Replace">'
-        '    <defaultlayout:TaskbarLayout>'
-        '      <taskbar:TaskbarPinList>'
-        '        <taskbar:DesktopApp DesktopApplicationID="Microsoft.Windows.Explorer" />'
-        "        <taskbar:DesktopApp DesktopApplicationLinkPath=`"$librePath`" />"
-        "        <taskbar:DesktopApp DesktopApplicationLinkPath=`"$vscodePath`" />"
-        '      </taskbar:TaskbarPinList>'
-        '    </defaultlayout:TaskbarLayout>'
-        '  </CustomTaskbarLayoutCollection>'
-        '</LayoutModificationTemplate>'
-      ) -join [Environment]::NewLine
+#       $xml = @(
+#         '<LayoutModificationTemplate xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification" xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" xmlns:taskbar="http://schemas.microsoft.com/Start/2014/TaskbarLayout" Version="1">'
+#         '  <CustomTaskbarLayoutCollection PinListPlacement="Replace">'
+#         '    <defaultlayout:TaskbarLayout>'
+#         '      <taskbar:TaskbarPinList>'
+#         '        <taskbar:DesktopApp DesktopApplicationID="Microsoft.Windows.Explorer" />'
+#         "        <taskbar:DesktopApp DesktopApplicationLinkPath=`"$librePath`" />"
+#         "        <taskbar:DesktopApp DesktopApplicationLinkPath=`"$vscodePath`" />"
+#         '      </taskbar:TaskbarPinList>'
+#         '    </defaultlayout:TaskbarLayout>'
+#         '  </CustomTaskbarLayoutCollection>'
+#         '</LayoutModificationTemplate>'
+#       ) -join [Environment]::NewLine
 
-      if (-not (Test-Path -LiteralPath $layoutDir)) {
-        New-Item -ItemType Directory -Path $layoutDir -Force | Out-Null
-      }
-      [System.IO.File]::WriteAllText($layoutFile, $xml, [System.Text.UTF8Encoding]::new($false))
+#       if (-not (Test-Path -LiteralPath $layoutDir)) {
+#         New-Item -ItemType Directory -Path $layoutDir -Force | Out-Null
+#       }
+#       [System.IO.File]::WriteAllText($layoutFile, $xml, [System.Text.UTF8Encoding]::new($false))
 
-      if (-not (Test-Path -LiteralPath $key)) {
-        New-Item -Path $key -Force | Out-Null
-      }
-      Set-ItemProperty -LiteralPath $key -Name 'StartLayoutFile' -Value $layoutFile -Type String
-      Set-ItemProperty -LiteralPath $key -Name 'LockedStartLayout' -Value 1 -Type DWord
+#       if (-not (Test-Path -LiteralPath $key)) {
+#         New-Item -Path $key -Force | Out-Null
+#       }
+#       Set-ItemProperty -LiteralPath $key -Name 'StartLayoutFile' -Value $layoutFile -Type String
+#       Set-ItemProperty -LiteralPath $key -Name 'LockedStartLayout' -Value 1 -Type DWord
 
-      # Restart Explorer so it loads the layout while the lock is active.
-      Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
-      while (Get-Process -Name explorer -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 100 }
-      Start-Process explorer
+#       # Restart Explorer so it loads the layout while the lock is active.
+#       Stop-Process -Name explorer -Force -ErrorAction SilentlyContinue
+#       while (Get-Process -Name explorer -ErrorAction SilentlyContinue) { Start-Sleep -Milliseconds 100 }
+#       Start-Process explorer
 
-      # Give Explorer time to apply the locked layout, then unlock so the user
-      # can customize afterward. Mirrors the UnlockStartLayout scheduled task
-      # used by the unattend generator (see resource/UnlockStartLayout.vbs).
-      Start-Sleep -Seconds 3
-      Set-ItemProperty -LiteralPath $key -Name 'LockedStartLayout' -Value 0 -Type DWord
+#       # Give Explorer time to apply the locked layout, then unlock so the user
+#       # can customize afterward. Mirrors the UnlockStartLayout scheduled task
+#       # used by the unattend generator (see resource/UnlockStartLayout.vbs).
+#       Start-Sleep -Seconds 3
+#       Set-ItemProperty -LiteralPath $key -Name 'LockedStartLayout' -Value 0 -Type DWord
 
 # Colors
 - name: TitlebarColor
