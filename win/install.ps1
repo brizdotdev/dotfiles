@@ -19,8 +19,6 @@ $configMap = @(
             "$PSScriptRoot\winget\developer-mode.winget"
             "$PSScriptRoot\winget\powershell.winget"
             "$PSScriptRoot\winget\windows-settings.winget"
-            "$PSScriptRoot\winget\windows-settings-personalisation.winget"
-            "$PSScriptRoot\winget\windows-settings-privacy.winget"
             "$PSScriptRoot\winget\windows-services.winget"
             "$PSScriptRoot\winget\power-plan.winget"
             "$PSScriptRoot\winget\browsers.winget"
@@ -29,6 +27,8 @@ $configMap = @(
             "$PSScriptRoot\winget\vscode.winget"
             "$PSScriptRoot\winget\windows-terminal-settings.winget"
             "$PSScriptRoot\winget\winget-settings.winget"
+            "$PSScriptRoot\winget\windows-settings-personalisation.winget"
+            "$PSScriptRoot\winget\windows-settings-privacy.winget"
         )
         Scripts = @(
             "$PSScriptRoot\scripts\Remove-Bloatware.ps1"
