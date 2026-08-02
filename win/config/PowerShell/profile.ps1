@@ -74,7 +74,7 @@ function Resolve-Editor {
         return $EDITOR_Override
     }
 
-    foreach ($candidate in 'nvim', 'pvim', 'vim', 'vi', 'code', 'codium', 'notepad++', 'sublime_text') {
+    foreach ($candidate in 'nvim', 'vim.exe', 'vi.exe', 'code', 'codium', 'notepad++', 'sublime_text') {
         if (Test-Command $candidate) {
             return $candidate
         }
@@ -119,10 +119,10 @@ else {
 }
 
 if (Test-Command eza) {
-    function l { eza -1 --icons @args }
-    function ll { eza -lh --icons @args }
-    function la { eza -alh --icons @args }
-    function ls { eza --icons @args }
+    function l { eza -1 --icons auto @args }
+    function ll { eza -lh --icons auto @args }
+    function la { eza -alh --icons auto @args }
+    function ls { eza --icons auto @args }
 }
 else {
     function l { Get-ChildItem @args }
