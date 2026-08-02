@@ -197,6 +197,7 @@ if (Get-Command -Name "starship" -ErrorAction SilentlyContinue) {
         &starship module character
     }
     Invoke-Expression (&starship init powershell)
+    Set-PSReadLineOption -ViModeIndicator Cursor
 }
 
 if (Get-Command -Name "zoxide" -ErrorAction SilentlyContinue) {
