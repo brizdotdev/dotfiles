@@ -24,7 +24,7 @@ $configMap = @(
             "$PSScriptRoot\winget\windows-services.winget"
             "$PSScriptRoot\winget\power-plan.winget"
             "$PSScriptRoot\winget\browsers.winget"
-            "$PSScriptRoot\winget\powertoys.winget"
+            # "$PSScriptRoot\winget\powertoys.winget" # TODO: Fix this hanging
             "$PSScriptRoot\winget\utils.winget"
             "$PSScriptRoot\winget\vscode.winget"
             "$PSScriptRoot\winget\windows-terminal-settings.winget"
