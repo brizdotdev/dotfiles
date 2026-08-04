@@ -86,14 +86,15 @@ function Resolve-Editor {
 ################################################################################
 # Remove stupid aliases
 ################################################################################
+Remove-Item alias:cat -Force
+Remove-Item alias:cp -Force
+Remove-Item alias:echo -Force
 Remove-Item alias:history -Force
 Remove-Item alias:ls -Force
-Remove-Item alias:sl -Force
-Remove-Item alias:rm -Force
-Remove-Item alias:sort -Force
-Remove-Item alias:cat -Force
 Remove-Item alias:mv -Force
-Remove-Item alias:echo -Force
+Remove-Item alias:rm -Force
+Remove-Item alias:sl -Force
+Remove-Item alias:sort -Force
 
 ################################################################################
 # Aliases
