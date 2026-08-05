@@ -199,6 +199,25 @@ function pst { Get-Clipboard }
 ################################################################################
 # PSReadLine
 ################################################################################
+function Test-CommandLineResolves {
+    param([string]$Line)
+
+    $parseErrors = $null
+    $ast = [System.Management.Automation.Language.Parser]::ParseInput($Line, [ref]$null, [ref]$parseErrors)
+    # A line that doesn't parse can't have run either.
+    if ($parseErrors.Count -gt 0) { return $false }
+
+    foreach ($cmd in $ast.FindAll({ $args[0] -is [System.Management.Automation.Language.CommandAst] }, $true)) {
+        # Null for dynamic invocation such as `& $exe`, which we can't judge, so
+        # give it the benefit of the doubt.
+        $name = $cmd.GetCommandName()
+        if (-not $name) { continue }
+        if (-not (Get-Command -Name $name -ErrorAction Ignore)) { return $false }
+    }
+
+    return $true
+}
+
 function Initialize-PSReadLine {
 
     # `Get-Module -ListAvailable` walks every directory in $env:PSModulePath and
@@ -230,7 +249,31 @@ function Initialize-PSReadLine {
 
     Set-PSReadLineOption -AddToHistoryHandler {
         param([string]$line)
-        $line -notmatch '(?i)connectionstring'
+
+        try {
+            # Setting a custom handler REPLACES PSReadLine's built-in detection of
+            # passwords/tokens/keys, so delegate to it first rather than losing it.
+            $option = [Microsoft.PowerShell.PSConsoleReadLine]::GetDefaultAddToHistoryOption($line)
+            if ($option -ne [Microsoft.PowerShell.AddToHistoryOption]::MemoryAndFile) {
+                return $option
+            }
+
+            if ($line -match '(?i)connectionstring') {
+                return [Microsoft.PowerShell.AddToHistoryOption]::SkipAdding
+            }
+
+            # Typos and unknown commands stay recallable with Up-arrow for the rest
+            # of this session, but never reach the history file.
+            if (-not (Test-CommandLineResolves $line)) {
+                return [Microsoft.PowerShell.AddToHistoryOption]::MemoryOnly
+            }
+
+            return [Microsoft.PowerShell.AddToHistoryOption]::MemoryAndFile
+        }
+        catch {
+            # Never drop history because of a bug in here.
+            return [Microsoft.PowerShell.AddToHistoryOption]::MemoryAndFile
+        }
     }
 }
 Initialize-PSReadLine
