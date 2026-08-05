@@ -84,6 +84,68 @@ function Resolve-Editor {
 }
 
 ################################################################################
+# Cached shell integrations
+################################################################################
+# starship/zoxide/mise/gh each need an external process spawn to print their
+# PowerShell integration script. Process creation is expensive on this machine
+# (~64ms floor, Defender + MDE + DLP scan every spawn) and `mise` additionally
+# does a periodic "new version available" network check that blocks for ~2s.
+#
+# Their output is static for a given binary, so cache it on disk and invalidate
+# on the executable's size + mtime.
+#
+# Returns the path to a cached .ps1, or $null if the tool isn't installed. The
+# CALLER must dot-source it at profile top level so definitions land in global
+# scope.
+$script:InitCacheDir = Join-Path $env:LOCALAPPDATA 'pwsh-init-cache'
+
+function Get-CachedInitScript {
+    param(
+        [Parameter(Mandatory)][string]$Name,
+        [Parameter(Mandatory)][scriptblock]$Generate
+    )
+
+    $cmd = Get-Command -Name $Name -CommandType Application -ErrorAction SilentlyContinue |
+    Select-Object -First 1
+    if (-not $cmd) { return $null }
+
+    $exe = Get-Item -LiteralPath $cmd.Source -ErrorAction SilentlyContinue
+    if (-not $exe) { return $null }
+    # WinGet installs many tools as reparse-point links under WinGet\Links. Those
+    # report Length 0 and their own mtime does not track the real binary, so
+    # follow the link before stamping.
+    if ($exe.LinkTarget) {
+        $target = Get-Item -LiteralPath $exe.LinkTarget -ErrorAction SilentlyContinue
+        if ($target) { $exe = $target }
+    }
+
+    $stamp = '{0:x}-{1:x}' -f $exe.Length, $exe.LastWriteTimeUtc.Ticks
+    $cacheFile = Join-Path $script:InitCacheDir "$Name.$stamp.ps1"
+
+    if (-not (Test-Path -LiteralPath $cacheFile)) {
+        if (-not (Test-Path -LiteralPath $script:InitCacheDir)) {
+            $null = New-Item -ItemType Directory -Path $script:InitCacheDir -Force
+        }
+        # Drop stale generations for this tool.
+        Get-ChildItem -LiteralPath $script:InitCacheDir -Filter "$Name.*.ps1" -ErrorAction SilentlyContinue |
+        Remove-Item -Force -ErrorAction SilentlyContinue
+
+        # Join the raw output rather than piping to Out-String, which can wrap
+        # long lines at the host width and corrupt the script.
+        $text = @(& $Generate) -join [Environment]::NewLine
+        if ([string]::IsNullOrWhiteSpace($text)) { return $null }
+
+        # Write via a temp file so a shell killed mid-write can't leave a
+        # truncated cache behind for every later shell to source.
+        $tmp = "$cacheFile.$PID.tmp"
+        Set-Content -LiteralPath $tmp -Value $text -Encoding utf8NoBOM
+        Move-Item -LiteralPath $tmp -Destination $cacheFile -Force
+    }
+
+    return $cacheFile
+}
+
+################################################################################
 # Remove stupid aliases
 ################################################################################
 Remove-Item alias:cat -Force
@@ -139,7 +201,11 @@ function pst { Get-Clipboard }
 ################################################################################
 function Initialize-PSReadLine {
 
-    if (-not $isInteractiveShell -or -not (Get-Module -ListAvailable -Name PSReadLine)) {
+    # `Get-Module -ListAvailable` walks every directory in $env:PSModulePath and
+    # stats every manifest it finds, which costs 400-600ms here and is never
+    # cached. An interactive ConsoleHost has already imported PSReadLine by the
+    # time this profile runs, so check the LOADED module list instead (~0.2ms).
+    if (-not $isInteractiveShell -or -not (Get-Module -Name PSReadLine)) {
         return
     }
 
@@ -170,50 +236,40 @@ function Initialize-PSReadLine {
 Initialize-PSReadLine
 
 ################################################################################
-# Completions
-################################################################################
-function Register-CustomCompletion {
-    if (-not $isInteractiveShell) {
-        return
-    }
-    if (Test-Command dotnet) {
-        Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
-            param($wordToComplete, $commandAst, $cursorPosition)
-            $null = $wordToComplete
-            dotnet complete --position $cursorPosition $commandAst.ToString() |
-            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
-        }
-    }
-}
-
-################################################################################
 # Startup
 ################################################################################
 
 # Set encoding to UTF-8
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 
-if (Get-Command -Name "starship" -ErrorAction SilentlyContinue) {
+# `starship init powershell` only prints ANOTHER Invoke-Expression that runs
+# starship.exe a second time with --print-full-init, so ask for the full init
+# directly and skip a whole process spawn.
+$InitScript = Get-CachedInitScript -Name 'starship' -Generate { & starship init powershell --print-full-init }
+if ($InitScript) {
     function Invoke-Starship-TransientFunction {
         &starship module character
     }
-    Invoke-Expression (&starship init powershell)
-    Set-PSReadLineOption -ViModeIndicator Cursor
+    . $InitScript
+    # starship's init resets PromptText, so re-apply the vi cursor indicator.
+    if ($isInteractiveShell -and (Get-Module -Name PSReadLine)) {
+        Set-PSReadLineOption -ViModeIndicator Cursor
+    }
 }
 
-if (Get-Command -Name "zoxide" -ErrorAction SilentlyContinue) {
-    Invoke-Expression (& { (zoxide init powershell | Out-String) })
+$InitScript = Get-CachedInitScript -Name 'zoxide' -Generate { zoxide init powershell }
+if ($InitScript) {
+    . $InitScript
     Remove-Item alias:cd -Force
     Set-Alias -Name "cd" -Value "z"
 }
 
-if (Get-Command -Name "mise" -ErrorAction SilentlyContinue) {
-    (&mise activate pwsh) | Out-String | Invoke-Expression
+$InitScript = Get-CachedInitScript -Name 'mise' -Generate { & mise activate pwsh }
+if ($InitScript) {
+    . $InitScript
 }
 
-if (Get-Command -Name "gh" -ErrorAction SilentlyContinue) {
-    gh completion -s powershell | Out-String | Invoke-Expression
-}
+Remove-Variable -Name InitScript -ErrorAction SilentlyContinue
 
 # fastfetch
 
@@ -228,6 +284,25 @@ $null = Register-EngineEvent -SourceIdentifier 'PowerShell.OnIdle' -MaxTriggerCo
     Import-Module CompletionPredictor
     Import-Module PSFzf
     Set-PsFzfOption -TabExpansion
+
+    ################################################################################
+    # Completions
+    ################################################################################
+    # Deferred: these only affect tab completion, which is unusable until after
+    # the first prompt anyway. Argument completers are engine-global, so
+    # registering them from this event handler still works.
+
+    $GhInit = Get-CachedInitScript -Name 'gh' -Generate { gh completion -s powershell }
+    if ($GhInit) { . $GhInit }
+
+    if (Get-Command -Name dotnet -CommandType Application -ErrorAction SilentlyContinue) {
+        Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
+            param($wordToComplete, $commandAst, $cursorPosition)
+            $null = $wordToComplete
+            dotnet complete --position $cursorPosition $commandAst.ToString() |
+            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
+        }
+    }
 
     ################################################################################
     # Env
