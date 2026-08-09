@@ -706,9 +706,20 @@ resources:
     description: Disable showing tabs in Alt+Tab
   properties:
     keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-    valueName: AltTabSettings
+    valueName: MultiTaskingAltTabFilter
     valueData:
-      DWord: 1
+      DWord: 3
+    _exist: true
+
+- name: DisableSnapGroups
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable showing snapped windows (snap groups) in Alt+Tab, Task View and taskbar
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: EnableTaskGroups
+    valueData:
+      DWord: 0
     _exist: true
 
 - name: DisallowShaking
@@ -751,6 +762,16 @@ resources:
   properties:
     keyPath: HKLM\Software\Microsoft\Windows\CurrentVersion\Run
     valueName: Logitech Download Assistant
+    _exist: false
+
+- name: DisableRthdvcplStartup
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Remove Realtek HD Audio Control Panel (RTHDVCPL) from startup
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+    valueName: RTHDVCPL
     _exist: false
 
 - name: ClipboardHistory
