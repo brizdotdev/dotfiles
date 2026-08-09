@@ -1141,6 +1141,28 @@ resources:
       DWord: 1
     _exist: true
 
+- name: TouchpadScrollDirection
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad scroll direction (down motion scrolls down)
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: ScrollDirection
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: AlpsTouchpadScrollDirection
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set ALPS Dell touchpad scroll direction (down motion scrolls down)
+  properties:
+    keyPath: HKCU\Software\Alps\Apoint
+    valueName: InvertScrollFlag
+    valueData:
+      DWord: 0
+    _exist: true
+
 - name: TouchpadThreeFingerTapEnabled
   type: Microsoft.Windows/Registry
   metadata:
