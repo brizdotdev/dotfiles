@@ -319,10 +319,10 @@ resources:
 - name: DisableLaunchTracking
   type: Microsoft.Windows/Registry
   metadata:
-    description: Disable application launch tracking
+    description: "Privacy: Let Windows improve Start and search results by tracking app launches"
   properties:
     keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-    valueName: Start-TrackProgs
+    valueName: Start_TrackProgs
     valueData:
       DWord: 0
     _exist: true
