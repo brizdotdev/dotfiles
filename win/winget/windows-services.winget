@@ -222,3 +222,32 @@ resources:
   properties:
     name: WSAIFabricSvc
     startType: Disabled
+
+# Intel graphics control panels (driver and display output unaffected)
+- name: DisableIgccservice
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Intel Graphics Command Center service (not needed without the IGCC app; driver/display output unaffected)
+    securityContext: elevated
+  properties:
+    name: igccservice
+    startType: Disabled
+
+- name: DisableIgfxCUIService
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Disable Intel HD Graphics Control Panel service (removes Intel tray/hotkey UI; GPU driver unaffected)
+    securityContext: elevated
+  properties:
+    name: "igfxCUIService2.0.0.0"
+    startType: Disabled
+
+# Printing
+- name: SpoolerManual
+  type: Microsoft.Windows/Service
+  metadata:
+    description: Set Print Spooler to Manual (starts on demand for printing, incl. Microsoft Print to PDF)
+    securityContext: elevated
+  properties:
+    name: Spooler
+    startType: Manual
