@@ -8,6 +8,7 @@ metadata:
     processor:
       identifier: dscv3
 
+resources:
 - name: DeveloperMode
   type: Microsoft.Windows/Registry
   properties:
