@@ -62,7 +62,7 @@ resources:
     _exist: true
 
 - name: CleanStartMenuWin11
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: "Start: Clean Win11 Start menu (empty pinned list and clear start*.bin caches)"
     securityContext: elevated

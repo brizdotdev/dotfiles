@@ -105,7 +105,7 @@ resources:
         -Scope CurrentUser
 
 - name: PowerShellTelemetry
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Disable PowerShell telemetry
   properties:
@@ -117,7 +117,7 @@ resources:
       Add-EnvVar -Name "POWERSHELL_TELEMETRY_OPTOUT" -Value "true"
 
 - name: PowerShellUpdateCheck
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Disable PowerShell update check
   properties:
@@ -129,7 +129,7 @@ resources:
       Add-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
 
 - name: PowerShellSettings
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Ensure PowerShell is configured
   properties:
@@ -149,7 +149,7 @@ resources:
       New-SymlinkConfig -Config $config
 
 - name: StarshipSettings
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Ensure Starship is configured
   properties:
@@ -169,7 +169,7 @@ resources:
       New-SymlinkConfig -Config $config
 
 - name: SetLessAsPager
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Ensure Less is set as the default pager
   properties:

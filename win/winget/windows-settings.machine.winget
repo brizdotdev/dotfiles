@@ -34,7 +34,7 @@ resources:
 
 # Add common folders back to 'This PC' (adapted from Win11Debloat Add_All_Folders_Under_This_PC.reg)
 - name: AddFoldersToThisPC
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Add Desktop, Documents, Downloads, Music, Pictures and Videos folders back to 'This PC' in File Explorer
     securityContext: elevated
@@ -165,7 +165,7 @@ resources:
     _exist: true
 
 - name: RegisterMicrosoftUpdateService
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Opt-in to Microsoft Update service via WUA COM API (registers service so AllowMUUpdateService toggle takes effect)
     securityContext: elevated

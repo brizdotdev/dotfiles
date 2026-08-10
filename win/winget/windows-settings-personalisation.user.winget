@@ -13,7 +13,7 @@ metadata:
 resources:
 
 # https://github.com/microsoft/WindowsDeveloperConfig/blob/0cd8dda905529e8408747fb3e01ea1382cbd335f/windows-dev-config/dev-config.winget#L223-L247
-- type: Microsoft.DSC.Transitional/PowerShellScript
+- type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   name: DarkTheme
   properties:
     testScript: |

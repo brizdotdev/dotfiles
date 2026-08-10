@@ -11,7 +11,7 @@ metadata:
 resources:
 
 - name: PathContains7Zip
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Ensure 7-Zip is in the path
   properties:

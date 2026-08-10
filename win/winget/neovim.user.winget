@@ -24,7 +24,7 @@ resources:
     installMode: silent
 
 - name: EditorEnvVar
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Ensure Neovim is set as EDITOR
   properties:
@@ -36,7 +36,7 @@ resources:
       Add-EnvVar -Name "EDITOR" -Value "nvim"
 
 - name: NvimSettings
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Ensure Neovim is configured
   properties:
@@ -54,7 +54,7 @@ resources:
       New-SymlinkConfig -Config $config
 
 - name: VimrcSettings
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Ensure vimrc is configured
   properties:

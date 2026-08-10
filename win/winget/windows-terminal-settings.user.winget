@@ -24,7 +24,7 @@ resources:
     installMode: silent
 
 - name: WindowsTerminalSettings
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Ensure Windows Terminal is configured
   properties:

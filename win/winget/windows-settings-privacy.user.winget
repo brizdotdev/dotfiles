@@ -479,7 +479,7 @@ resources:
 
 # Microsoft Store recommended search results (adapted from winutil WPFTweaksDisableStoreSearch)
 - name: DisableStoreSearchRecommendations
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Deny access to Store LocalState db (no Store app suggestions in Start search)
   properties:

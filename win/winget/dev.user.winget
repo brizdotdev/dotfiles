@@ -12,7 +12,7 @@ metadata:
 resources:
 
 - name: HostsEnvVar
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Set an environment variable to hosts file
   properties:
@@ -28,7 +28,7 @@ resources:
 ##############################################################################
 
 - name: RemoveFakePython
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Ensure Microsoft Store Python app is uninstalled and removed from the PATH
   properties:
@@ -75,7 +75,7 @@ resources:
 ##############################################################################
 
 - name: MiseConfigSymlink
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Symlink mise config.toml to dotfiles
   properties:
@@ -115,7 +115,7 @@ resources:
     installMode: silent
 
 - name: MiseShimsPath
-  type: Microsoft.DSC.Transitional/PowerShellScript
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
     description: Ensure the mise shims directory is in the PATH
   properties:
