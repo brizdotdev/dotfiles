@@ -119,6 +119,30 @@ function Assert-PassContext {
     }
 }
 
+function Assert-WinGetSource {
+    # Microsoft.WinGet/Package units need the Microsoft.Winget.Source index package
+    # registered for the account running them. MSIX deployment refuses to register a
+    # package for an account with no interactive logon session (0x80073D19,
+    # ERROR_DEPLOYMENT_BLOCKED_BY_USER_LOG_OFF) - which is what a UAC elevation with
+    # another account's credentials produces: a token in your session, not a session.
+    Write-Host -ForegroundColor Blue "Verifying WinGet source is usable for $($env:USERNAME)..."
+    winget source update --name winget 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        throw @"
+WinGet's package source could not be updated for '$($env:USERNAME)'.
+
+If this failed with 0x80073D19, this account has no interactive logon session, so
+Windows will not deploy MSIX packages for it. Elevating from another user's session
+is not enough.
+
+Fix: sign in to Windows directly as this account once, run 'winget source update'
+there, then sign back in as your normal user and retry the Machine pass (or simply
+run the Machine pass while signed in as this account).
+"@
+    }
+    Write-Host -ForegroundColor Green "WinGet source OK"
+}
+
 function Initialize-Requirements {
     param([switch]$IncludeGum)
 
@@ -311,6 +335,7 @@ switch ($Pass) {
 
     'Machine' {
         Initialize-Requirements
+        Assert-WinGetSource
         $inputs = Get-SavedAnswers
         Invoke-ConfigPass -Context 'machine' -SelectedOptions $inputs.SelectedOptions
         Invoke-PassScripts -Property 'MachineScripts' -SelectedOptions $inputs.SelectedOptions
