@@ -9,34 +9,9 @@ metadata:
       identifier: dscv3
 
 resources:
-##############################################################################
-# Utilities
-##############################################################################
-
-- name: Everything
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Everything
-    securityContext: elevated
-  properties:
-    id: voidtools.Everything
-    source: winget
-    installMode: silent
-
-- name: 7Zip
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install 7-Zip
-    securityContext: elevated
-  properties:
-    id: 7zip.7zip
-    source: winget
-    installMode: silent
 
 - name: PathContains7Zip
   type: Microsoft.DSC.Transitional/PowerShellScript
-  dependsOn:
-  - 7Zip
   metadata:
     description: Ensure 7-Zip is in the path
   properties:
@@ -48,26 +23,6 @@ resources:
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       $pathsToAdd = @('C:\Program Files\7-Zip')
       Add-EnvPath -Paths $pathsToAdd
-
-- name: gsudo
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install gsudo
-    securityContext: elevated
-  properties:
-    id: gerardog.gsudo
-    source: winget
-    installMode: silent
-
-- name: OpenSSH
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install OpenSSH
-    securityContext: elevated
-  properties:
-    id: Microsoft.OpenSSH.Preview
-    source: winget
-    installMode: silent
 
 - name: LocalSend
   type: Microsoft.WinGet/Package
@@ -127,26 +82,6 @@ resources:
     description: Install Spotify
   properties:
     id: Spotify.Spotify
-    source: winget
-    installMode: silent
-
-- name: mpv
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install mpv
-    securityContext: elevated
-  properties:
-    id: shinchiro.mpv
-    source: winget
-    installMode: silent
-
-- name: VLC
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install VLC
-    securityContext: elevated
-  properties:
-    id: VideoLAN.VLC
     source: winget
     installMode: silent
 

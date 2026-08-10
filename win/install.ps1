@@ -1,9 +1,29 @@
 ################################################################################
 # Setup script for my dotfiles
+#
+# The configs are split by security context and applied in two passes:
+#
+#   Machine pass  *.machine.winget  - run from a shell ALREADY elevated as an
+#                                     admin account. A fully elevated WinGet
+#                                     needs no elevated child process, so no
+#                                     cross-user remoting happens.
+#   User pass     *.user.winget     - run as yourself, NOT elevated. These
+#                                     configs contain no elevated units, so
+#                                     WinGet never spawns a child under another
+#                                     account and never re-secures state under
+#                                     your profile.
+#
+# Never run a pass in the wrong context: HKCU and profile paths resolve against
+# whoever owns the process, and WinGet's cross-user elevation corrupts its own
+# configuration database under the caller's profile.
+#
+# Order:  -Pass Answers (as you)  ->  -Pass Machine (as admin)  ->  -Pass User (as you)
 ################################################################################
 
 param(
-    [switch]$Reconfigure
+    [switch]$Reconfigure,
+    [ValidateSet('Answers', 'Machine', 'User')]
+    [string]$Pass
 )
 
 $ErrorActionPreference = 'Stop'
@@ -11,53 +31,60 @@ Set-StrictMode -Version Latest
 
 $answersPath = "$PSScriptRoot\install.answers.json"
 
+# Config names are base names; each resolves to <name>.machine.winget and/or
+# <name>.user.winget. A missing variant just means that config has no units of
+# that security context.
 $configMap = @(
     [PSCustomObject]@{
         Name = "Base"
         Preselected = $True
         Configs = @(
-            "$PSScriptRoot\winget\developer-mode.winget"
-            "$PSScriptRoot\winget\powershell.winget"
-            "$PSScriptRoot\winget\windows-settings.winget"
-            "$PSScriptRoot\winget\windows-services.winget"
-            "$PSScriptRoot\winget\power-plan.winget"
-            "$PSScriptRoot\winget\browsers.winget"
-            # "$PSScriptRoot\winget\powertoys.winget" # TODO: Fix this hanging
-            "$PSScriptRoot\winget\utils.winget"
-            "$PSScriptRoot\winget\vscode.winget"
-            "$PSScriptRoot\winget\windows-terminal-settings.winget"
-            "$PSScriptRoot\winget\winget-settings.winget"
-            "$PSScriptRoot\winget\windows-settings-personalisation.winget"
-            "$PSScriptRoot\winget\windows-settings-privacy.winget"
+            "developer-mode"
+            "powershell"
+            "windows-settings"
+            "windows-services"
+            "power-plan"
+            "browsers"
+            # "powertoys" # TODO: Fix this hanging
+            "utils"
+            "vscode"
+            "windows-terminal-settings"
+            "winget-settings"
+            "windows-settings-personalisation"
+            "windows-settings-privacy"
         )
-        Scripts = @(
+        MachineScripts = @(
             "$PSScriptRoot\scripts\Remove-Bloatware.ps1"
         )
+        UserScripts = @()
     }
     [PSCustomObject]@{
         Name = "Dev"
         Configs = @(
-            "$PSScriptRoot\winget\dev.winget"
-            "$PSScriptRoot\winget\git.winget"
-            "$PSScriptRoot\winget\fonts.winget"
-            "$PSScriptRoot\winget\neovim.winget"
+            "dev"
+            "git"
+            "fonts"
+            "neovim"
         )
-        Scripts = @()
+        MachineScripts = @()
+        UserScripts = @()
     }
     [PSCustomObject]@{
         Name = "Gaming"
         Configs = @(
-            "$PSScriptRoot\winget\gaming.winget"
+            "gaming"
         )
-        Scripts = @()
+        MachineScripts = @()
+        UserScripts = @()
     }
     [PSCustomObject]@{
         Name = "Remove Teams and OneDrive"
         Preselected = $True
         Configs = @(
-            "$PSScriptRoot\winget\remove-teams-onedrive.winget"
+            "remove-teams-onedrive"
         )
-        Scripts = @()
+        MachineScripts = @()
+        UserScripts = @()
     }
 )
 
@@ -78,14 +105,32 @@ $extras = @{
 
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
+if (-not $Pass) {
+    $Pass = if ($isAdmin) { 'Machine' } else { 'User' }
+    Write-Host -ForegroundColor Cyan "No -Pass given; running the $Pass pass (elevated: $isAdmin)."
+}
+
+function Assert-PassContext {
+    if ($Pass -eq 'Machine' -and -not $isAdmin) {
+        throw "The Machine pass must run from an elevated shell. Open PowerShell as administrator (entering your admin account's credentials at the UAC prompt) and re-run with -Pass Machine."
+    }
+    if ($Pass -ne 'Machine' -and $isAdmin) {
+        throw "The $Pass pass must run as your own user in a NON-elevated shell. Running it elevated as another account writes HKCU values and profile files to that account instead of yours."
+    }
+}
+
 function Initialize-Requirements {
-    # Ensure that Gum is installed
-    if (-not (Get-Command "gum" -ErrorAction SilentlyContinue)) {
+    param([switch]$IncludeGum)
+
+    if ($IncludeGum -and -not (Get-Command "gum" -ErrorAction SilentlyContinue)) {
         winget install --silent --accept-source-agreements --accept-package-agreements --source winget --no-upgrade charmbracelet.gum
         $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
     }
 
     Write-Host -ForegroundColor Blue "Enabling WinGet configuration..."
+    # Registers WinGet and DSC for whichever account runs this pass. The machine
+    # pass needs its own registration: these are per-user MSIX registrations, and
+    # an account without them fails process init with 0xC0000142.
     winget install --silent --accept-source-agreements --accept-package-agreements --source winget Microsoft.Dsc.Preview | Out-Null
     winget install --silent --no-upgrade --source winget Microsoft.VCRedist.2015+.x64 | Out-Null
     winget configure --enable
@@ -151,42 +196,64 @@ function Get-Inputs {
     return $result
 }
 
-function Install-SelectedItems {
+function Get-SavedAnswers {
+    if (-not (Test-Path $answersPath)) {
+        throw "No saved answers at $answersPath. Run '.\install.ps1 -Pass Answers' as your own user first."
+    }
+    return Get-Content $answersPath -Raw | ConvertFrom-Json
+}
+
+function Invoke-ConfigPass {
     param (
-        [object[]]$SelectedOptions,
-        [object[]]$SelectedExtras
+        [ValidateSet('machine', 'user')]
+        [string]$Context,
+        [object[]]$SelectedOptions
     )
 
     foreach ($option in $SelectedOptions) {
         $selectedConfig = $configMap | Where-Object { $_.Name -eq $option }
-        foreach ($config in $selectedConfig.Configs) {
-            Write-Host -ForegroundColor Blue "Installing configuration: $config"
-            winget configure --suppress-initial-details --accept-configuration-agreements --disable-interactivity $config
-            Write-Host -ForegroundColor Green "Configuration installed: $config"
+        foreach ($base in $selectedConfig.Configs) {
+            $path = "$PSScriptRoot\winget\$base.$Context.winget"
+            # A missing variant means this config has no units of this context.
+            if (-not (Test-Path $path)) { continue }
+            Write-Host -ForegroundColor Blue "Applying [$Context] $base"
+            # No --disable-interactivity: it would suppress prompts WinGet may
+            # legitimately need (package installers requesting their own UAC).
+            winget configure --suppress-initial-details --accept-configuration-agreements $path
+            Write-Host -ForegroundColor Green "Applied [$Context] $base"
         }
-        foreach ($script in $selectedConfig.Scripts) {
-            if ($script -match 'Remove-Bloatware') {
-                $launchArgs = @('-NoProfile','-ExecutionPolicy','Bypass','-File',$script)
-                if (-not $isAdmin) {
-                    Write-Host -ForegroundColor Cyan "Not elevated; relaunching $script via UAC (Windows PowerShell 5.1)..."
-                    $p = Start-Process powershell.exe -Verb RunAs -PassThru -Wait -ArgumentList $launchArgs
-                }
-                elseif ($PSVersionTable.PSEdition -ne 'Desktop') {
-                    Write-Host -ForegroundColor Cyan "DISM requires Windows PowerShell 5.1; relaunching $script..."
-                    & powershell.exe @launchArgs
-                }
-                else {
-                    & $script
-                }
+    }
+}
+
+function Invoke-PassScripts {
+    param (
+        [ValidateSet('MachineScripts', 'UserScripts')]
+        [string]$Property,
+        [object[]]$SelectedOptions
+    )
+
+    foreach ($option in $SelectedOptions) {
+        $selectedConfig = $configMap | Where-Object { $_.Name -eq $option }
+        foreach ($script in $selectedConfig.$Property) {
+            Write-Host -ForegroundColor Blue "Running $script"
+            if ($script -match 'Remove-Bloatware' -and $PSVersionTable.PSEdition -ne 'Desktop') {
+                # DISM cmdlets require Windows PowerShell 5.1
+                & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script
                 continue
             }
             & $script
         }
     }
+}
+
+function Install-Extras {
+    param([object[]]$SelectedExtras)
 
     foreach ($extra in $SelectedExtras) {
         $packageId = $extras[$extra]
-        winget install --accept-package-agreements --accept-source-agreements --disable-interactivity $packageId
+        # Plain `winget install` elevation is the installer's own UAC prompt, which
+        # is unrelated to `winget configure` remoting and is safe from here.
+        winget install --accept-package-agreements --accept-source-agreements $packageId
     }
 }
 
@@ -205,55 +272,75 @@ function Set-GitConfiguration {
     }
 }
 
-$env:DOTFILES_ROOT = Split-Path -Parent $PSScriptRoot
-Initialize-Requirements
+Assert-PassContext
 
-$saved = $null
-if (-not $Reconfigure -and (Test-Path $answersPath)) {
-    $saved = Get-Content $answersPath -Raw | ConvertFrom-Json
-    Write-Host -ForegroundColor Cyan "Loaded saved answers from $answersPath"
+switch ($Pass) {
+    'Answers' {
+        Initialize-Requirements -IncludeGum
+        $saved = $null
+        if (-not $Reconfigure -and (Test-Path $answersPath)) {
+            $saved = Get-Content $answersPath -Raw | ConvertFrom-Json
+            Write-Host -ForegroundColor Cyan "Loaded saved answers from $answersPath"
+        }
+        $inputs = Get-Inputs -Saved $saved
+
+        $extrasLine = if ($inputs.SelectedExtras) { ($inputs.SelectedExtras | ForEach-Object { "- $_" }) -join "`n" } else { "- (none)" }
+        $browserLine = if ($inputs.SetDefaultBrowser) { "- $($inputs.Browser)" } else { "- (not set)" }
+        $agentLine = if ($inputs.CodingAgent) { "- $($inputs.CodingAgent)" } else { "- (none)" }
+        $optionsLine = ($inputs.SelectedOptions | ForEach-Object { "- $_" }) -join "`n"
+
+        $summary = @(
+            "### Configuration",
+            $optionsLine
+            "### Extras",
+            $extrasLine
+            "### Git",
+            "- Email: $($inputs.GitUserEmail)",
+            "- Commit signing: $($inputs.GitConfigureSigning)"
+            "### SSH",
+            "- Import from Yubikey: $($inputs.ImportSSHKey)"
+            "### Default browser",
+            $browserLine
+            "### Coding agent",
+            $agentLine
+        ) -join "`n`n"
+
+        gum format $summary
+        Write-Host -ForegroundColor Green "Answers saved. Next: run '.\install.ps1 -Pass Machine' from an elevated admin shell, then '.\install.ps1 -Pass User' here."
+    }
+
+    'Machine' {
+        Initialize-Requirements
+        $inputs = Get-SavedAnswers
+        Invoke-ConfigPass -Context 'machine' -SelectedOptions $inputs.SelectedOptions
+        Invoke-PassScripts -Property 'MachineScripts' -SelectedOptions $inputs.SelectedOptions
+        Write-Host -ForegroundColor Green "Machine pass done. Next: run '.\install.ps1 -Pass User' as your own user."
+    }
+
+    'User' {
+        Initialize-Requirements -IncludeGum
+        $saved = $null
+        if (-not $Reconfigure -and (Test-Path $answersPath)) {
+            $saved = Get-Content $answersPath -Raw | ConvertFrom-Json
+        }
+        $inputs = Get-Inputs -Saved $saved
+
+        Invoke-ConfigPass -Context 'user' -SelectedOptions $inputs.SelectedOptions
+        Invoke-PassScripts -Property 'UserScripts' -SelectedOptions $inputs.SelectedOptions
+        Install-Extras -SelectedExtras $inputs.SelectedExtras
+        Set-GitConfiguration -GitUserEmail $inputs.GitUserEmail -GitConfigureSigning $inputs.GitConfigureSigning
+        if ($inputs.ImportSSHKey) {
+            & "$PSScriptRoot\scripts\Import-SSHKey.ps1"
+        }
+        if ($inputs.SetDefaultBrowser) {
+            & "$PSScriptRoot\scripts\Set-DefaultBrowser.ps1" -Browser $inputs.Browser
+        }
+        if ($inputs.CodingAgent -ne "") {
+            [Environment]::SetEnvironmentVariable("CODING_AGENT", $inputs.CodingAgent, "User")
+            $env:CODING_AGENT = $inputs.CodingAgent
+        }
+        Write-Host -ForegroundColor Green "User pass done!"
+    }
 }
 
-$inputs = Get-Inputs -Saved $saved
-
-$extrasLine = if ($inputs.SelectedExtras) { ($inputs.SelectedExtras | ForEach-Object { "- $_" }) -join "`n" } else { "- (none)" }
-$browserLine = if ($inputs.SetDefaultBrowser) { "- $($inputs.Browser)" } else { "- (not set)" }
-$agentLine = if ($inputs.CodingAgent) { "- $($inputs.CodingAgent)" } else { "- (none)" }
-$optionsLine = ($inputs.SelectedOptions | ForEach-Object { "- $_" }) -join "`n"
-
-$summary = @(
-    "### Configuration",
-    $optionsLine
-    "### Extras",
-    $extrasLine
-    "### Git",
-    "- Email: $($inputs.GitUserEmail)",
-    "- Commit signing: $($inputs.GitConfigureSigning)"
-    "### SSH",
-    "- Import from Yubikey: $($inputs.ImportSSHKey)"
-    "### Default browser",
-    $browserLine
-    "### Coding agent",
-    $agentLine
-) -join "`n`n"
-
-gum format $summary
-gum confirm "Proceed with these settings?"; if ($LASTEXITCODE -ne 0) {
-    Write-Host -ForegroundColor Yellow "Aborted."
-    exit 1
-}
-
-Install-SelectedItems -SelectedOptions $inputs.SelectedOptions -SelectedExtras $inputs.SelectedExtras
-Set-GitConfiguration -GitUserEmail $inputs.GitUserEmail -GitConfigureSigning $inputs.GitConfigureSigning
-if ($inputs.ImportSSHKey) {
-    & "$PSScriptRoot\scripts\Import-SSHKey.ps1"
-}
-if ($inputs.SetDefaultBrowser) {
-    & "$PSScriptRoot\scripts\Set-DefaultBrowser.ps1" -Browser $inputs.Browser
-}
-if ($inputs.CodingAgent -ne "") {
-    [Environment]::SetEnvironmentVariable("CODING_AGENT", $inputs.CodingAgent, "User")
-    $env:CODING_AGENT = $inputs.CodingAgent
-}
-Write-Host -ForegroundColor Green "Done!"
 Read-Host

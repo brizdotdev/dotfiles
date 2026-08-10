@@ -9,6 +9,7 @@ metadata:
       identifier: dscv3
 
 resources:
+
 - name: OneDriveAbsent
   type: Microsoft.WinGet/Package
   metadata:

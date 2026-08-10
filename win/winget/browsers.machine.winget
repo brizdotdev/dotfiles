@@ -12,6 +12,7 @@ metadata:
 # TODO  Install in user scope where possible
 
 resources:
+
 - name: GoogleChrome
   type: Microsoft.WinGet/Package
   metadata:
@@ -25,6 +26,7 @@ resources:
 - name: MozillaFirefox
   type: Microsoft.WinGet/Package
   metadata:
+    securityContext: elevated
     description: Install Mozilla Firefox
   properties:
     id: Mozilla.Firefox
@@ -34,6 +36,7 @@ resources:
 - name: LibreWolf
   type: Microsoft.WinGet/Package
   metadata:
+    securityContext: elevated
     description: Install LibreWolf
   properties:
     id: LibreWolf.LibreWolf
@@ -51,14 +54,11 @@ resources:
   properties:
     testScript: |
       $ErrorActionPreference = 'Stop'
-      $dotfilesRoot = $env:DOTFILES_ROOT
-      if (-not $dotfilesRoot) {
-        $candidate = "$env:USERPROFILE\.dotfiles"
-        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\firefox\extensions.txt')) {
-          $dotfilesRoot = $candidate
-        }
-      }
-      if (-not $dotfilesRoot) { return $false }
+      # Runs elevated: under over-the-shoulder UAC the elevated process carries the local
+      # admin's USERPROFILE and none of the caller's env vars. Resolve the repo from the
+      # config file's own location instead - WinGet substitutes WinGetConfigRoot textually,
+      # so it is independent of which account the unit runs as.
+      $dotfilesRoot = (Resolve-Path -LiteralPath "${WinGetConfigRoot}\..\..").Path
       $extensionsFile = Join-Path $dotfilesRoot 'common\config\firefox\extensions.txt'
       $browsers = @{
         Firefox   = 'C:\Program Files\Mozilla Firefox\distribution'
@@ -91,14 +91,8 @@ resources:
       return -not $needsUpdate
     setScript: |
       $ErrorActionPreference = 'Stop'
-      $dotfilesRoot = $env:DOTFILES_ROOT
-      if (-not $dotfilesRoot) {
-        $candidate = "$env:USERPROFILE\.dotfiles"
-        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\firefox\extensions.txt')) {
-          $dotfilesRoot = $candidate
-        }
-      }
-      if (-not $dotfilesRoot) { throw 'DOTFILES_ROOT env var not set and could not locate dotfiles directory' }
+      # See the note in testScript: resolve from the config location, not the env/profile.
+      $dotfilesRoot = (Resolve-Path -LiteralPath "${WinGetConfigRoot}\..\..").Path
       $extensionsFile = Join-Path $dotfilesRoot 'common\config\firefox\extensions.txt'
       $browsers = @{
         Firefox   = 'C:\Program Files\Mozilla Firefox\distribution'
@@ -163,14 +157,11 @@ resources:
   properties:
     testScript: |
       $ErrorActionPreference = 'Stop'
-      $dotfilesRoot = $env:DOTFILES_ROOT
-      if (-not $dotfilesRoot) {
-        $candidate = "$env:USERPROFILE\.dotfiles"
-        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\chrome\extensions.txt')) {
-          $dotfilesRoot = $candidate
-        }
-      }
-      if (-not $dotfilesRoot) { return $false }
+      # Runs elevated: under over-the-shoulder UAC the elevated process carries the local
+      # admin's USERPROFILE and none of the caller's env vars. Resolve the repo from the
+      # config file's own location instead - WinGet substitutes WinGetConfigRoot textually,
+      # so it is independent of which account the unit runs as.
+      $dotfilesRoot = (Resolve-Path -LiteralPath "${WinGetConfigRoot}\..\..").Path
       $extensionsFile = Join-Path $dotfilesRoot 'common\config\chrome\extensions.txt'
       $policyFile = 'C:\Program Files\Google\Chrome\Application\policies.json'
       $expectedIds = @()
@@ -194,14 +185,8 @@ resources:
       }
     setScript: |
       $ErrorActionPreference = 'Stop'
-      $dotfilesRoot = $env:DOTFILES_ROOT
-      if (-not $dotfilesRoot) {
-        $candidate = "$env:USERPROFILE\.dotfiles"
-        if (Test-Path -LiteralPath (Join-Path $candidate 'common\config\chrome\extensions.txt')) {
-          $dotfilesRoot = $candidate
-        }
-      }
-      if (-not $dotfilesRoot) { throw 'DOTFILES_ROOT env var not set and could not locate dotfiles directory' }
+      # See the note in testScript: resolve from the config location, not the env/profile.
+      $dotfilesRoot = (Resolve-Path -LiteralPath "${WinGetConfigRoot}\..\..").Path
       $extensionsFile = Join-Path $dotfilesRoot 'common\config\chrome\extensions.txt'
       $policyFile = 'C:\Program Files\Google\Chrome\Application\policies.json'
       $settings = @{}
@@ -239,5 +224,3 @@ resources:
       $json = $policy | ConvertTo-Json -Depth 10
       [System.IO.File]::WriteAllText($policyFile, $json, [System.Text.UTF8Encoding]::new($false))
       Write-Host "Wrote $($settings.Count) extensions to Chrome policies.json"
-
-# TODO: Browser config

@@ -1,0 +1,59 @@
+##############################################################################
+# Git
+# Installs Git and OpenSSH, configures the ssh-agent service, applies
+# system-level git config, and adds Git to the PATH
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+
+resources:
+
+# https://github.com/microsoft/winget-cli/issues/3401
+- type: Microsoft.WinGet/Package
+  name: Git
+  properties:
+    id: Git.Git
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install Git
+    securityContext: elevated
+
+- type: Microsoft.WinGet/Package
+  name: OpenSSH
+  properties:
+    id: Microsoft.OpenSSH.Preview
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install Microsoft OpenSSH Preview (external SSH client for Git)
+    securityContext: elevated
+
+- name: GitSystemConfig
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
+  dependsOn:
+  - Git
+  - OpenSSH
+  metadata:
+    description: Apply Git for Windows installer options via git config --system (https://gitforwindows.org/silent-or-unattended-installation.html)
+    securityContext: elevated
+  properties:
+    testScript: |
+      $git = 'C:\Program Files\Git\cmd\git.exe'
+      if (-not (Test-Path $git)) { return $false }
+      $sslBackend    = & $git config --system --get http.sslBackend 2>$null
+      $sslCAInfo     = & $git config --system --get http.sslCAInfo 2>$null
+      $defaultBranch = & $git config --system --get init.defaultBranch 2>$null
+      $symlinks      = & $git config --system --get core.symlinks 2>$null
+      $global:LASTEXITCODE = 0
+      return ($sslBackend -eq 'schannel' -and -not $sslCAInfo -and $defaultBranch -eq 'main' -and $symlinks -eq 'true')
+    setScript: |
+      $git = 'C:\Program Files\Git\cmd\git.exe'
+      & $git config --system http.sslBackend schannel
+      & $git config --system --unset-all http.sslCAInfo 2>$null
+      & $git config --system init.defaultBranch main
+      & $git config --system core.symlinks true
+      $global:LASTEXITCODE = 0

@@ -1,0 +1,46 @@
+##############################################################################
+# PowerShell & shell
+# Installs PowerShell 7, shell tools (Starship, zoxide, eza) and PowerShell
+# modules, sets shell environment variables, and symlinks profile configs
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+
+resources:
+
+##############################################################################
+# PowerShell
+##############################################################################
+
+- name: Terminal
+  type: Microsoft.WinGet/Package
+  properties:
+    id: Microsoft.WindowsTerminal
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install Windows Terminal
+    securityContext: elevated
+
+- name: PowerShell
+  type: Microsoft.WinGet/Package
+  properties:
+    id: Microsoft.PowerShell
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install PowerShell 7
+    securityContext: elevated
+
+- name: Starship
+  type: Microsoft.WinGet/Package
+  properties:
+    id: Starship.Starship
+    source: winget
+    installMode: silent
+  metadata:
+    description: Install Starship
+    securityContext: elevated

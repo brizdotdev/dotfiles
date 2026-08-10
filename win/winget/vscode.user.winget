@@ -10,6 +10,7 @@ metadata:
       identifier: dscv3
 
 resources:
+
 # Use script until Winget supports custom overrides
 # https://github.com/microsoft/winget-cli/issues/3401
 # https://github.com/microsoft/vscode/blob/main/build/win32/code.iss
@@ -44,7 +45,6 @@ resources:
         -TrustRepository `
         -AcceptLicense `
         -Scope CurrentUser
-
 
 - name: vscodevim
   type: Microsoft.VSCode.Dsc/VSCodeExtension

@@ -1,0 +1,376 @@
+##############################################################################
+# Privacy
+# This configuration disables telemetry, tracking, and other privacy-invasive features in Windows.
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+
+resources:
+
+- name: DisableCloudOptimizedContent
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable cloud optimized content
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Policies\Microsoft\Windows\CloudContent
+    valueName: DisableCloudOptimizedContent
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableWebSearch
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Do not allow web search from Windows Desktop Search
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search
+    valueName: DisableWebSearch
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: ConnectedSearchUseWeb
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Don't search the web or display web results in Search
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search
+    valueName: ConnectedSearchUseWeb
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: AllowCortana
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Cortana
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search
+    valueName: AllowCortana
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableNewsAndInterests
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable News and Interests
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Dsh
+    valueName: AllowNewsAndInterests
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: WPFTweaksPreventDeviceMetadataFromNetwork
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Prevent Device Companion Apps
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Device Metadata
+    valueName: PreventDeviceMetadataFromNetwork
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: TelemetryAllow
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set telemetry to minimum (AllowTelemetry)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection
+    valueName: AllowTelemetry
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TelemetryMax
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set telemetry to minimum (MaxTelemetryAllowed)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection
+    valueName: MaxTelemetryAllowed
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TelemetryPolicy
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set telemetry to minimum (DataCollection GPO path)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection
+    valueName: AllowTelemetry
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Activity history (adapted from winutil WPFTweaksActivity)
+- name: DisableActivityFeed
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable activity feed (Timeline)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\System
+    valueName: EnableActivityFeed
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: NoPublishUserActivities
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Do not publish user activities to Microsoft
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\System
+    valueName: PublishUserActivities
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: NoUploadUserActivities
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Do not upload user activities to Microsoft
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\System
+    valueName: UploadUserActivities
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Location tracking (adapted from winutil WPFTweaksLocation)
+- name: DenyLocationMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Deny location access for all users (machine-wide consent store)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location
+    valueName: Value
+    valueData:
+      String: Deny
+    _exist: true
+
+- name: DisableLocationSensor
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable location sensor permission
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}
+    valueName: SensorPermissionState
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableMapsAutoUpdate
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable offline maps auto-update
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SYSTEM\Maps
+    valueName: AutoUpdateEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableConsumerFeatures
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Windows consumer features (auto-installed sponsored apps)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent
+    valueName: DisableWindowsConsumerFeatures
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableConsumerAccountStateContent
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Turn off cloud consumer account state content (subscription/benefit status fetched from cloud)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent
+    valueName: DisableConsumerAccountStateContent
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableDeliveryOptimization
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Delivery Optimization P2P update sharing
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization
+    valueName: DODownloadMode
+    valueData:
+      DWord: 0
+    _exist: true
+
+# WiFi Sense (adapted from Winhance security-wifi-sense)
+- name: DisableWiFiSenseHotspotReporting
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable WiFi Sense hotspot reporting
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting
+    valueName: Value
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableWiFiSenseAutoConnect
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable auto-connect to WiFi Sense suggested hotspots
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots
+    valueName: Value
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Windows AI (adapted from winutil WPFTweaksWindowsAI)
+- name: HideAISettingsPage
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide AI components page in Settings
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
+    valueName: SettingsPageVisibility
+    valueData:
+      String: hide:aicomponents
+    _exist: true
+
+- name: DisableNotepadAI
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Notepad AI features
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\WindowsNotepad
+    valueName: DisableAIFeatures
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Disable AI features in Paint (adapted from Win11Debloat Disable_Paint_AI_Features.reg)
+- name: DisablePaintCocreator
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Paint Cocreator AI feature
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
+    valueName: DisableCocreator
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisablePaintGenerativeFill
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Paint Generative Fill AI feature
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
+    valueName: DisableGenerativeFill
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisablePaintImageCreator
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Paint Image Creator AI feature
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
+    valueName: DisableImageCreator
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisablePaintGenerativeErase
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Paint Generative Erase AI feature
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
+    valueName: DisableGenerativeErase
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisablePaintRemoveBackground
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Paint Remove Background AI feature
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint
+    valueName: DisableRemoveBackground
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: TurnOffCopilotMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Turn off Windows Copilot (machine policy)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot
+    valueName: TurnOffWindowsCopilot
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableAIDataAnalysisMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable AI data analysis / Recall indexing (machine policy)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI
+    valueName: DisableAIDataAnalysis
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableClickToDoMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Click to Do (machine policy)
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI
+    valueName: DisableClickToDo
+    valueData:
+      DWord: 1
+    _exist: true

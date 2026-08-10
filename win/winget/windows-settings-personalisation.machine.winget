@@ -1,0 +1,127 @@
+
+##############################################################################
+# Personalization
+# Settings related to looks and appearance
+##############################################################################
+
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+
+resources:
+
+# https://learn.microsoft.com/windows/configuration/start/policy-settings (Hide category view, 24H2+KB5067036 / 25H2)
+- name: StartHideCategoryView
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Start category view, forcing grid as the default view
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\Software\Policies\Microsoft\Windows\Explorer
+    valueName: HideCategoryView
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideRecommendedSectionMachine
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide Recommended section (machine policy)"
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer
+    valueName: HideRecommendedSection
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideRecommendedSectionMDM
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Hide Recommended section (MDM/CSP)"
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start
+    valueName: HideRecommendedSection
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideRecommendedSectionEducation
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: "Start: Set education environment flag (hides Recommended section)"
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Education
+    valueName: IsEducationEnvironment
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: CleanStartMenuWin11
+  type: Microsoft.DSC.Transitional/PowerShellScript
+  metadata:
+    description: "Start: Clean Win11 Start menu (empty pinned list and clear start*.bin caches)"
+    securityContext: elevated
+  properties:
+    testScript: |
+      $key = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      if (-not (Test-Path -LiteralPath $key)) { return $false }
+      $val = (Get-ItemProperty -LiteralPath $key -Name 'ConfigureStartPins' -ErrorAction SilentlyContinue).ConfigureStartPins
+      return ($val -eq '{"pinnedList":[]}')
+    setScript: |
+      $json = '{"pinnedList":[]}'
+      $key1 = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
+      $key2 = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer'
+      New-Item -Path $key1 -ItemType 'Directory' -ErrorAction SilentlyContinue | Out-Null
+      Set-ItemProperty -LiteralPath $key1 -Name 'ConfigureStartPins' -Value $json -Type 'String'
+      New-Item -Path $key2 -ItemType 'Directory' -ErrorAction SilentlyContinue | Out-Null
+      Set-ItemProperty -LiteralPath $key2 -Name 'ConfigureStartPins' -Value $json -Type 'String'
+      $systemAccounts = @('Public','Default','All Users','Default User')
+      Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' |
+          Where-Object { $_.PSChildName -like 'S-1-5-21-*' } |
+          ForEach-Object {
+              $profilePath = (Get-ItemProperty $_.PSPath -Name 'ProfileImagePath' -ErrorAction SilentlyContinue).ProfileImagePath
+              if ($profilePath -and ((Split-Path $profilePath -Leaf) -notin $systemAccounts)) {
+                  Remove-Item "$profilePath\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start*.bin" -Force -ErrorAction SilentlyContinue
+              }
+          }
+      Stop-Process -Name 'StartMenuExperienceHost' -Force -ErrorAction SilentlyContinue
+
+- name: RemovePinToStartContextMenu
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Remove "Pin to Start" from the context menu
+    securityContext: elevated
+  properties:
+    keyPath: HKLM\SOFTWARE\Classes\Folder\shellex\ContextMenuHandlers\PintoStartScreen
+    _exist: false
+
+# Cursors
+- name: InstallBibataCursor
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
+  metadata:
+    description: Install Bibata cursor
+    securityContext: elevated
+  properties:
+    testScript: |
+      if (Get-ChildItem -Path "$env:WINDIR\Cursors" -Directory -Filter "Bibata*" -ErrorAction SilentlyContinue | Select-Object -First 1) {
+        return $true
+      }
+      return $false
+    setScript: |
+      cd "$env:TEMP"
+      curl.exe --silent --fail -L -O https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.6/Bibata-Modern-Classic-Windows.zip | Out-Null
+      if (Test-Path -Path Bibata) {
+        Remove-Item -Path Bibata -Force -Recurse
+      }
+      New-Item -Path .\Bibata -ItemType Directory -Force
+      Expand-Archive -Path Bibata-Modern-Classic-Windows.zip -DestinationPath .\Bibata
+      $cursors = Get-ChildItem -Path .\Bibata
+      foreach ($cursor in $cursors) {
+        $installPath = Join-Path -Path $cursor.FullName -ChildPath "install.inf"
+        Start-Process "$installPath" -Verb "Install"
+      }

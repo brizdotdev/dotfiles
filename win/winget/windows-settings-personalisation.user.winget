@@ -11,6 +11,7 @@ metadata:
       identifier: dscv3
 
 resources:
+
 # https://github.com/microsoft/WindowsDeveloperConfig/blob/0cd8dda905529e8408747fb3e01ea1382cbd335f/windows-dev-config/dev-config.winget#L223-L247
 - type: Microsoft.DSC.Transitional/PowerShellScript
   name: DarkTheme
@@ -50,19 +51,6 @@ resources:
     valueData:
       DWord: 1
 
-# https://learn.microsoft.com/windows/configuration/start/policy-settings (Hide category view, 24H2+KB5067036 / 25H2)
-- name: StartHideCategoryView
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Hide Start category view, forcing grid as the default view
-    securityContext: elevated
-  properties:
-    keyPath: HKLM\Software\Policies\Microsoft\Windows\Explorer
-    valueName: HideCategoryView
-    valueData:
-      DWord: 1
-    _exist: true
-
 # Only honored on builds >= 26300 (25H2 Insider); inert on earlier builds
 - name: StartShowPinnedSection
   type: Microsoft.Windows/Registry
@@ -89,7 +77,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: "Start: Hide recently added apps (policy)"
-    securityContext: elevated
   properties:
     keyPath: HKCU\Software\Policies\Microsoft\Windows\Explorer
     valueName: NoStartMenuRecentlyInstalledApps
@@ -101,7 +88,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: "Start: Hide most used apps list (policy)"
-    securityContext: elevated
   properties:
     keyPath: HKCU\Software\Policies\Microsoft\Windows\Explorer
     valueName: NoStartMenuMFUprogramsList
@@ -120,72 +106,6 @@ resources:
       DWord: 0
     _exist: true
 
-- name: HideRecommendedSectionMachine
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: "Start: Hide Recommended section (machine policy)"
-    securityContext: elevated
-  properties:
-    keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer
-    valueName: HideRecommendedSection
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: HideRecommendedSectionMDM
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: "Start: Hide Recommended section (MDM/CSP)"
-    securityContext: elevated
-  properties:
-    keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start
-    valueName: HideRecommendedSection
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: HideRecommendedSectionEducation
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: "Start: Set education environment flag (hides Recommended section)"
-    securityContext: elevated
-  properties:
-    keyPath: HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Education
-    valueName: IsEducationEnvironment
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: CleanStartMenuWin11
-  type: Microsoft.DSC.Transitional/PowerShellScript
-  metadata:
-    description: "Start: Clean Win11 Start menu (empty pinned list and clear start*.bin caches)"
-    securityContext: elevated
-  properties:
-    testScript: |
-      $key = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
-      if (-not (Test-Path -LiteralPath $key)) { return $false }
-      $val = (Get-ItemProperty -LiteralPath $key -Name 'ConfigureStartPins' -ErrorAction SilentlyContinue).ConfigureStartPins
-      return ($val -eq '{"pinnedList":[]}')
-    setScript: |
-      $json = '{"pinnedList":[]}'
-      $key1 = 'HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start'
-      $key2 = 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer'
-      New-Item -Path $key1 -ItemType 'Directory' -ErrorAction SilentlyContinue | Out-Null
-      Set-ItemProperty -LiteralPath $key1 -Name 'ConfigureStartPins' -Value $json -Type 'String'
-      New-Item -Path $key2 -ItemType 'Directory' -ErrorAction SilentlyContinue | Out-Null
-      Set-ItemProperty -LiteralPath $key2 -Name 'ConfigureStartPins' -Value $json -Type 'String'
-      $systemAccounts = @('Public','Default','All Users','Default User')
-      Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' |
-          Where-Object { $_.PSChildName -like 'S-1-5-21-*' } |
-          ForEach-Object {
-              $profilePath = (Get-ItemProperty $_.PSPath -Name 'ProfileImagePath' -ErrorAction SilentlyContinue).ProfileImagePath
-              if ($profilePath -and ((Split-Path $profilePath -Leaf) -notin $systemAccounts)) {
-                  Remove-Item "$profilePath\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\LocalState\start*.bin" -Force -ErrorAction SilentlyContinue
-              }
-          }
-      Stop-Process -Name 'StartMenuExperienceHost' -Force -ErrorAction SilentlyContinue
-
 - name: ClassicContextMenu
   type: Microsoft.Windows/Registry
   metadata:
@@ -197,20 +117,10 @@ resources:
       String: ""
     _exist: true
 
-- name: RemovePinToStartContextMenu
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Remove "Pin to Start" from the context menu
-    securityContext: elevated
-  properties:
-    keyPath: HKLM\SOFTWARE\Classes\Folder\shellex\ContextMenuHandlers\PintoStartScreen
-    _exist: false
-
 - name: HideDesktopIcons
   type: Microsoft.Windows/Registry
   metadata:
     description: Hide desktop icons
-    securityContext: elevated
   properties:
     keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
     valueName: NoDesktop
@@ -663,38 +573,10 @@ resources:
       DWord: 0
     _exist: true
 
-# Cursors
-- name: InstallBibataCursor
-  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
-  metadata:
-    description: Install Bibata cursor
-    securityContext: elevated
-  properties:
-    testScript: |
-      if (Get-ChildItem -Path "$env:WINDIR\Cursors" -Directory -Filter "Bibata*" -ErrorAction SilentlyContinue | Select-Object -First 1) {
-        return $true
-      }
-      return $false
-    setScript: |
-      cd "$env:TEMP"
-      curl.exe --silent --fail -L -O https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.6/Bibata-Modern-Classic-Windows.zip | Out-Null
-      if (Test-Path -Path Bibata) {
-        Remove-Item -Path Bibata -Force -Recurse
-      }
-      New-Item -Path .\Bibata -ItemType Directory -Force
-      Expand-Archive -Path Bibata-Modern-Classic-Windows.zip -DestinationPath .\Bibata
-      $cursors = Get-ChildItem -Path .\Bibata
-      foreach ($cursor in $cursors) {
-        $installPath = Join-Path -Path $cursor.FullName -ChildPath "install.inf"
-        Start-Process "$installPath" -Verb "Install"
-      }
-
 - name: SetBibataCursorSchemeName
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor scheme name (default value)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: "\"\""
@@ -706,8 +588,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor scheme source
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: "\"Scheme Source\""
@@ -719,8 +599,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor base size
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: CursorBaseSize
@@ -732,8 +610,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor contact visualization
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: ContactVisualization
@@ -745,8 +621,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor gesture visualization
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: GestureVisualization
@@ -758,8 +632,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor AppStarting (busy/working)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: AppStarting
@@ -771,8 +643,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Arrow (normal select)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Arrow
@@ -784,8 +654,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Crosshair (precision select)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Crosshair
@@ -797,8 +665,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Hand (link select)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Hand
@@ -810,8 +676,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Help (help select)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Help
@@ -823,8 +687,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor IBeam (text select)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: IBeam
@@ -836,8 +698,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor No (unavailable)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: No
@@ -849,8 +709,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor NWPen (handwriting)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: NWPen
@@ -862,8 +720,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor SizeAll (move)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: SizeAll
@@ -875,8 +731,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor SizeNESW (diagonal resize 2)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: SizeNESW
@@ -888,8 +742,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor SizeNS (vertical resize)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: SizeNS
@@ -901,8 +753,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor SizeNWSE (diagonal resize 1)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: SizeNWSE
@@ -914,8 +764,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor SizeWE (horizontal resize)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: SizeWE
@@ -927,8 +775,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor UpArrow (alternate select)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: UpArrow
@@ -940,8 +786,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Wait (busy)
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Wait
@@ -953,8 +797,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor precisionhair
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: precisionhair
@@ -966,8 +808,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Grab
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Grab
@@ -979,8 +819,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Grabbing
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Grabbing
@@ -992,8 +830,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Pin
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Pin
@@ -1005,8 +841,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Person
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Person
@@ -1018,8 +852,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Pan
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Pan
@@ -1031,8 +863,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Zoom-in
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Zoom-in
@@ -1044,8 +874,6 @@ resources:
   type: Microsoft.Windows/Registry
   metadata:
     description: Set Bibata cursor Zoom-out
-  dependsOn:
-    - InstallBibataCursor
   properties:
     keyPath: HKCU\Control Panel\Cursors
     valueName: Zoom-out
@@ -1057,8 +885,6 @@ resources:
   type: Microsoft.DSC.Transitional/RunCommandOnSet
   metadata:
     description: Refresh cursor scheme via SystemParametersInfo
-  dependsOn:
-    - InstallBibataCursor
   properties:
     executable: pwsh
     arguments:

@@ -10,19 +10,9 @@ metadata:
       identifier: dscv3
 
 resources:
-- name: Discord
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Discord
-  properties:
-    id: Discord.Discord
-    source: winget
-    installMode: silent
 
 - name: DiscordStartup
   type: Microsoft.Windows/Registry
-  dependsOn:
-  - Discord
   metadata:
     description: Ensure Discord does not start on login
     securityContext: elevated
@@ -30,104 +20,6 @@ resources:
     keyPath: HKLM\Software\Microsoft\Windows\CurrentVersion\Run
     valueName: Discord
     _exist: false
-
-- name: TinyNvidiaUpdateChecker
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install TinyNvidiaUpdateChecker
-  properties:
-    id: Hawaii_Beach.TinyNvidiaUpdateChecker
-    source: winget
-    installMode: silent
-
-- name: Steam
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install Steam
-  properties:
-    id: Valve.Steam
-    source: winget
-    installMode: silent
-
-- name: GOGGalaxy
-  type: Microsoft.WinGet/Package
-  metadata:
-    description: Install GOG Galaxy
-  properties:
-    id: GOG.Galaxy
-    source: winget
-    installMode: silent
-
-# ============================================================================
-# Gaming & performance (HKCU)
-# Adapted from autounattend.xml Winhancements.ps1 (UserCustomizations)
-# ============================================================================
-
-- name: AutoGameMode
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Enable Windows Game Mode (deprioritise background work during games)
-  properties:
-    keyPath: HKCU\Software\Microsoft\GameBar
-    valueName: AutoGameModeEnabled
-    valueData:
-      DWord: 1
-    _exist: true
-
-- name: GameDVRFSEBehaviorMode
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Allow Windows to optimise fullscreen games
-  properties:
-    keyPath: HKCU\System\GameConfigStore
-    valueName: GameDVR_FSEBehaviorMode
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: GameDVREnabled
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Disable Game DVR master switch (system-side)
-  properties:
-    keyPath: HKCU\System\GameConfigStore
-    valueName: GameDVR_Enabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: GameBarNexus
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Prevent Xbox button on controllers from opening Game Bar
-  properties:
-    keyPath: HKCU\Software\Microsoft\GameBar
-    valueName: UseNexusForGameBarEnabled
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: GameBarStartupPanel
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Suppress Game Bar tips/hints panel
-  properties:
-    keyPath: HKCU\Software\Microsoft\GameBar
-    valueName: ShowStartupPanel
-    valueData:
-      DWord: 0
-    _exist: true
-
-- name: DirectXGlobalSettings
-  type: Microsoft.Windows/Registry
-  metadata:
-    description: Global DirectX user preferences (flip model, no VRR/HDR auto-enable)
-  properties:
-    keyPath: HKCU\Software\Microsoft\DirectX\UserGpuPreferences
-    valueName: DirectXUserGlobalSettings
-    valueData:
-      String: "SwapEffectUpgradeEnable=1;VRROptimizeEnable=0;AutoHDREnable=0;"
-    _exist: true
 
 # ============================================================================
 # Gaming & performance (HKLM)

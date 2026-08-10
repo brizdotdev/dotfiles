@@ -9,6 +9,7 @@ metadata:
     processor:
       identifier: dscv3
 resources:
+
 - name: MaxPerformanceOnAC
   type: Microsoft.DSC.Transitional/PowerShellScript
   metadata:

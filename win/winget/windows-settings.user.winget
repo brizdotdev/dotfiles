@@ -1,0 +1,620 @@
+##############################################################################
+# Settings
+# Windows general settings and options
+##############################################################################
+$schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
+metadata:
+  winget:
+    processor:
+      identifier: dscv3
+
+resources:
+
+- name: AdvancedSettings
+  type: Microsoft.WinGet/Package
+  metadata:
+    description: Install Advanced Settings
+  properties:
+    id: 9N8MHTPHNGVV
+    source: msstore
+    installMode: silent
+    acceptAgreements: true
+
+# File Explorer
+- name: ExplorerLaunchTo
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Open File Explorer to This PC
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: LaunchTo
+    valueData:
+      DWord: 1
+    _exist: true
+
+- type: Microsoft.Windows/Registry
+  name: FullPathTitlebar
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: FullPathAddress
+    valueData:
+      DWord: 1
+  metadata:
+    description: Show full path in Explorer titlebar
+
+- name: ShowSuperHidden
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Show system (super hidden) files in Explorer
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: ShowSuperHidden
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: ShowHiddenFiles
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Show hidden files in Explorer
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: Hidden
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: ShowFileExt
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Show file extensions in Explorer
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: HideFileExt
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: FullPathTitle
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Show full path in Explorer title bar
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\CabinetState
+    valueName: FullPath
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: NoThumbsdbNetwork
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Thumbs.db on network folders
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+    valueName: DisableThumbnailsOnNetworkFolders
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: HideOfficeFiles
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide files from office.com
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer
+    valueName: ShowCloudFilesInQuickAccess
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: HideGallery
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Gallery from Explorer
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: ShowGallery
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: HideGallery2
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Gallery from Explorer
+  properties:
+    keyPath: HKCU\Software\Classes\CLSID\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}
+    valueName: System.IsPinnedToNameSpaceTree
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: HideOneDriveExplorer
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide OneDrive from Explorer navigation pane
+  properties:
+    keyPath: HKCU\Software\Classes\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}
+    valueName: System.IsPinnedToNameSpaceTree
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: NoShowFrequent
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide frequent folders in Quick access
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer
+    valueName: ShowFrequent
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableAutoplay
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable AutoPlay for removable media
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers
+    valueName: DisableAutoplay
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Accessibility
+- name: DisableNarratorHotkey
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Turn off Windows Narrator hotkey
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Narrator\NoRoam
+    valueName: WinEnterLaunchEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableStickyKeys
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Sticky Keys prompt
+  properties:
+    keyPath: HKCU\Control Panel\Accessibility\StickyKeys
+    valueName: Flags
+    valueData:
+      String: "10"
+    _exist: true
+
+# Multitasking
+- name: DisableSnapAssist
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Snap Assist
+  properties:
+    keyPath: HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: SnapAssist
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableAltTabTabs
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable showing tabs in Alt+Tab
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: MultiTaskingAltTabFilter
+    valueData:
+      DWord: 3
+    _exist: true
+
+- name: DisableSnapGroups
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable showing snapped windows (snap groups) in Alt+Tab, Task View and taskbar
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: EnableTaskGroups
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisallowShaking
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Aero Shake (shake window to minimize others)
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+    valueName: DisallowShaking
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Startup
+- name: NoStartupDelay
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Remove app launch delay after logon
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize
+    valueName: StartupDelayInMSec
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: RemoveOnedriveStartup
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Remove OneDriveSetup from current user startup run key
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+    valueName: OneDriveSetup
+    _exist: false
+
+- name: ClipboardHistory
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable Clipboard History
+  properties:
+    keyPath: HKCU\Software\Microsoft\Clipboard
+    valueName: EnableClipboardHistory
+    valueData:
+      DWord: 1
+    _exist: true
+
+# Clock
+- name: ClockItime
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set clock to 24-hour format (iTime)
+  properties:
+    keyPath: HKCU\Control Panel\International
+    valueName: iTime
+    valueData:
+      String: "1"
+    _exist: true
+
+- name: ClockShortTime
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set short time format to HH:mm
+  properties:
+    keyPath: HKCU\Control Panel\International
+    valueName: sShortTime
+    valueData:
+      String: HH:mm
+    _exist: true
+
+- name: ClockTimeFormat
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set long time format to HH:mm:ss
+  properties:
+    keyPath: HKCU\Control Panel\International
+    valueName: sTimeFormat
+    valueData:
+      String: HH:mm:ss
+    _exist: true
+
+- name: DisableCopilot
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Windows Copilot
+  properties:
+    keyPath: HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot
+    valueName: TurnOffWindowsCopilot
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableGameDvr
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Game DVR app capture
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\GameDVR
+    valueName: AppCaptureEnabled
+    valueData:
+      DWord: 0
+    _exist: true
+
+# Mouse
+- name: MouseSensitivity
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set mouse sensitivity to 13
+  properties:
+    keyPath: HKCU\Control Panel\Mouse
+    valueName: MouseSensitivity
+    valueData:
+      String: "13"
+    _exist: true
+
+- name: MouseSpeed
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable enhanced pointer precision (MouseSpeed)
+  properties:
+    keyPath: HKCU\Control Panel\Mouse
+    valueName: MouseSpeed
+    valueData:
+      String: "0"
+    _exist: true
+
+- name: MouseThreshold1
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable enhanced pointer precision (MouseThreshold1)
+  properties:
+    keyPath: HKCU\Control Panel\Mouse
+    valueName: MouseThreshold1
+    valueData:
+      String: "0"
+    _exist: true
+
+- name: MouseThreshold2
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable enhanced pointer precision (MouseThreshold2)
+  properties:
+    keyPath: HKCU\Control Panel\Mouse
+    valueName: MouseThreshold2
+    valueData:
+      String: "0"
+    _exist: true
+
+# Touchpad
+- name: TouchpadAAPThreshold
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad AAP threshold
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: AAPThreshold
+    valueData:
+      DWord: 2
+    _exist: true
+
+- name: TouchpadCursorSpeed
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad cursor speed
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: CursorSpeed
+    valueData:
+      DWord: 12
+    _exist: true
+
+- name: TouchpadEnableEdgy
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable touchpad edgy gestures
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: EnableEdgy
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: TouchpadFeedbackIntensity
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad feedback intensity
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: FeedbackIntensity
+    valueData:
+      DWord: 50
+    _exist: true
+
+- name: TouchpadClickForceSensitivity
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad click force sensitivity
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: ClickForceSensitivity
+    valueData:
+      DWord: 50
+    _exist: true
+
+- name: TouchpadHonorMouseAccelSetting
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Honor mouse acceleration setting on touchpad
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: HonorMouseAccelSetting
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TouchpadRightClickZoneWidth
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad right-click zone width
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: RightClickZoneWidth
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TouchpadRightClickZoneHeight
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad right-click zone height
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: RightClickZoneHeight
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TouchpadEdgeAutoPanningEnabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable touchpad edge auto panning
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: EdgeAutoPanningEnabled
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: TouchpadBoostedPanningEnabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable touchpad boosted panning
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: BoostedPanningEnabled
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: TouchpadPanSensitivity
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad pan sensitivity
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: PanSensitivity
+    valueData:
+      DWord: 50
+    _exist: true
+
+- name: TouchpadZoomSensitivity
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad zoom sensitivity
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: ZoomSensitivity
+    valueData:
+      DWord: 50
+    _exist: true
+
+- name: TouchpadSingleFingerPanningMode
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad single finger panning mode
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: SingleFingerPanningMode
+    valueData:
+      DWord: 2
+    _exist: true
+
+- name: TouchpadPressureAutoPanningEnabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable touchpad pressure auto panning
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: PressureAutoPanningEnabled
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: TouchpadScrollDirection
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set touchpad scroll direction (down motion scrolls down)
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: ScrollDirection
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: AlpsTouchpadScrollDirection
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Set ALPS Dell touchpad scroll direction (down motion scrolls down)
+  properties:
+    keyPath: HKCU\Software\Alps\Apoint
+    valueName: InvertScrollFlag
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: TouchpadThreeFingerTapEnabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Enable touchpad three-finger tap
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\PrecisionTouchPad
+    valueName: ThreeFingerTapEnabled
+    valueData:
+      DWord: 4
+    _exist: true
+
+# Microsoft Store
+- name: DisableWindowsStoreBackgroundNcb
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Windows store running in the background
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+    valueName: NCBEnabled
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableWindowsStoreBackgroundUser
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Mark Windows Store background access as disabled by user
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+    valueName: DisabledByUser
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableWindowsStoreBackgroundDisabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Windows Store background access
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+    valueName: Disabled
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableWindowsStoreBackgroundIgnoreBatterySaver
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Keep Windows Store background access battery saver override disabled
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+    valueName: IgnoreBatterySaver
+    valueData:
+      DWord: 0
+    _exist: true
+
+- name: DisableWindowsStoreBackgroundSleepDisabled
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Disable Windows Store background activity during sleep
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+    valueName: SleepDisabled
+    valueData:
+      DWord: 1
+    _exist: true
+
+- name: DisableWindowsStoreBackgroundSleepIgnoreBatterySaver
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Keep Windows Store sleep battery saver override disabled
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\Microsoft.WindowsStore_8wekyb3d8bbwe
+    valueName: SleepIgnoreBatterySaver
+    valueData:
+      DWord: 0
+    _exist: true

@@ -10,39 +10,6 @@ metadata:
       identifier: dscv3
 
 resources:
-##############################################################################
-# PowerShell
-##############################################################################
-
-- name: Terminal
-  type: Microsoft.WinGet/Package
-  properties:
-    id: Microsoft.WindowsTerminal
-    source: winget
-    installMode: silent
-  metadata:
-    description: Install Windows Terminal
-    securityContext: elevated
-
-- name: PowerShell
-  type: Microsoft.WinGet/Package
-  properties:
-    id: Microsoft.PowerShell
-    source: winget
-    installMode: silent
-  metadata:
-    description: Install PowerShell 7
-    securityContext: elevated
-
-- name: Starship
-  type: Microsoft.WinGet/Package
-  properties:
-    id: Starship.Starship
-    source: winget
-    installMode: silent
-  metadata:
-    description: Install Starship
-    securityContext: elevated
 
 - name: Zoxide
   type: Microsoft.WinGet/Package
