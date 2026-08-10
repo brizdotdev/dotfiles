@@ -14,11 +14,25 @@
     Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force; & $env:USERPROFILE\.dotfiles\win\install.ps1 -Pass Answers
     ```
 
-1. Apply the machine configs **from a shell already elevated as an admin account**
+1. Apply the machine configs **signed in to Windows as the admin account**, from an
+   elevated shell in that account's own session
 
     ```powershell
-    & $env:USERPROFILE\.dotfiles\win\install.ps1 -Pass Machine
+    & C:\Users\<you>\.dotfiles\win\install.ps1 -Pass Machine
     ```
+
+    Sign in as the admin account properly (switch user) rather than elevating from
+    your own session. `Microsoft.WinGet/Package` units need the
+    `Microsoft.Winget.Source` index package registered for the account running them,
+    and MSIX deployment refuses to register anything for an account with no logon
+    session — `0x80073D19 ERROR_DEPLOYMENT_BLOCKED_BY_USER_LOG_OFF`. A UAC elevation
+    with another account's credentials creates a *token* in your session, not a
+    session for that account, so it hits this.
+
+    `query user` will show whether the account actually has a session. If you'd
+    rather keep elevating from your own session, sign in as the admin account once
+    and run `winget source update` there first; the script checks this up front and
+    stops with instructions if the source isn't usable.
 
 1. Apply the user configs, back **in your own non-elevated shell**
 
