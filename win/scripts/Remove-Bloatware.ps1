@@ -133,7 +133,9 @@ $i = 0
 foreach ($package in $packages) {
     $i++
     Write-Progress -Activity "Removing bloatware" -Status "Removing $package ($i/$($packages.Count))" -PercentComplete (($i / $packages.Count) * 100)
-    Get-AppxPackage -Name $package | Remove-AppxPackage -ErrorAction SilentlyContinue
+    # -AllUsers so removal applies to the signed-in user even when this script is
+    # elevated as a different account (e.g. over-the-shoulder UAC as a local admin)
+    Get-AppxPackage -Name $package -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
     Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $package | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue | Out-Null
 }
 Write-Progress -Activity "Removing bloatware" -Completed
