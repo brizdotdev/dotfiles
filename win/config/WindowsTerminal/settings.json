@@ -51,6 +51,14 @@
         {
             "command": "find",
             "id": "User.find"
+        },
+        {
+            "command":
+            {
+                "action": "sendInput",
+                "input": "\u001b[13;2u"
+            },
+            "id": "User.sendInput.ShiftEnterCSIu"
         }
     ],
     "alwaysShowTabs": false,
@@ -115,6 +123,10 @@
         {
             "id": null,
             "keys": "alt+enter"
+        },
+        {
+            "id": "User.sendInput.ShiftEnterCSIu",
+            "keys": "shift+enter"
         }
     ],
     "launchMode": "default",
