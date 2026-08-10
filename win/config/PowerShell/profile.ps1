@@ -288,7 +288,28 @@ $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 # `starship init powershell` only prints ANOTHER Invoke-Expression that runs
 # starship.exe a second time with --print-full-init, so ask for the full init
 # directly and skip a whole process spawn.
-$InitScript = Get-CachedInitScript -Name 'starship' -Generate { & starship init powershell --print-full-init }
+#
+# The generated init builds STARSHIP_SESSION_KEY with `Get-Random -Count 16`.
+# The first Get-Random of a session pays ~150ms of one-time RNG setup, which is
+# nearly a fifth of this profile's entire startup, spent on a throwaway session
+# id. A GUID's hex is random enough for that and costs nothing. Patch the cached
+# copy so this happens once per starship version rather than once per shell, and
+# only keep the patch if it actually applied and still parses.
+$InitScript = Get-CachedInitScript -Name 'starship' -Generate {
+    $init = @(& starship init powershell --print-full-init) -join [Environment]::NewLine
+
+    $patched = $init -replace
+    '(?m)^(\s*)\$ENV:STARSHIP_SESSION_KEY\s*=\s*-join .*$',
+    '$1$$ENV:STARSHIP_SESSION_KEY = [guid]::NewGuid().ToString(''N'').Substring(0, 16)'
+
+    if ($patched -ne $init) {
+        $parseErrors = $null
+        $null = [System.Management.Automation.Language.Parser]::ParseInput($patched, [ref]$null, [ref]$parseErrors)
+        if ($parseErrors.Count -eq 0) { $init = $patched }
+    }
+
+    $init
+}
 if ($InitScript) {
     function Invoke-Starship-TransientFunction {
         &starship module character
@@ -309,55 +330,113 @@ if ($InitScript) {
 
 $InitScript = Get-CachedInitScript -Name 'mise' -Generate { & mise activate pwsh }
 if ($InitScript) {
-    . $InitScript
+   . $InitScript
 }
 
 Remove-Variable -Name InitScript -ErrorAction SilentlyContinue
 
 # fastfetch
 
-$null = Register-EngineEvent -SourceIdentifier 'PowerShell.OnIdle' -MaxTriggerCount 1 -Action {
+## Exec profile.local.ps1 if it exists
+# Runs inline rather than from the deferred handler below: an event action gets
+# its own scope, so functions and aliases defined inside it never reach the
+# prompt. Only $env: and $global: assignments survive that boundary, which is
+# too sharp an edge for a general-purpose local override file.
+$LocalProfile = Join-Path $PSScriptRoot -ChildPath "profile.local.ps1"
+if (Test-Path $LocalProfile) {
+    . $LocalProfile
+}
+Remove-Variable -Name LocalProfile -ErrorAction SilentlyContinue
 
-    ################################################################################
-    # Imports
-    ################################################################################
-    Import-Module posh-git
-    $GitPromptSettings.EnableFileStatus = $false
-    Import-Module DockerCompletion
-    Import-Module CompletionPredictor
-    Import-Module PSFzf
-    Set-PsFzfOption -TabExpansion
+################################################################################
+# Deferred startup
+################################################################################
+# These imports cost ~3.3s in total on this machine - posh-git ~1330ms, PSFzf
+# ~1250ms, DockerCompletion ~780ms, CompletionPredictor ~130ms - so none of them
+# can sit on the path to the first prompt.
+#
+# The catch is that a PowerShell.OnIdle -Action handler runs on the runspace's
+# own thread, so for as long as it works, PSReadLine cannot process a keystroke.
+# Doing all four in a single firing froze input for seconds at a time, most
+# noticeably right after a command finished. So keep a queue and drain it a
+# slice per firing: once a firing has spent DeferredStartupBudgetMs it stops
+# taking new work and hands the thread back, and the next idle gap picks up
+# where it left off.
+#
+# A single Import-Module cannot be interrupted, so the budget is a floor rather
+# than a cap - the longest unavoidable block is posh-git at ~1.3s. Order is
+# cheapest-and-most-wanted first, so the first firing lands prediction and
+# docker completion together and git completion follows in the next one.
+$global:DeferredStartupBudgetMs = 250
+$global:DeferredStartupErrors = @()
 
-    ################################################################################
-    # Completions
-    ################################################################################
-    # Deferred: these only affect tab completion, which is unusable until after
-    # the first prompt anyway. Argument completers are engine-global, so
-    # registering them from this event handler still works.
+$global:DeferredStartupQueue = [System.Collections.Queue]::new(@(
+        # Feeds the PredictionSource = HistoryAndPlugin set in Initialize-PSReadLine.
+        { Import-Module CompletionPredictor }
 
-    $GhInit = Get-CachedInitScript -Name 'gh' -Generate { gh completion -s powershell }
-    if ($GhInit) { . $GhInit }
+        { Import-Module DockerCompletion }
 
-    if (Get-Command -Name dotnet -CommandType Application -ErrorAction SilentlyContinue) {
-        Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
-            param($wordToComplete, $commandAst, $cursorPosition)
-            $null = $wordToComplete
-            dotnet complete --position $cursorPosition $commandAst.ToString() |
-            ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
+        {
+            Import-Module posh-git
+            # starship already renders git status in the prompt, so posh-git is
+            # only here for `git <Tab>` and its file-status scan is pure cost.
+            $GitPromptSettings.EnableFileStatus = $false
+        }
+
+        {
+            Import-Module PSFzf
+            # Replaces the Tab handler bound in Initialize-PSReadLine, so it has
+            # to land after it.
+            Set-PsFzfOption -TabExpansion
+        }
+
+        {
+            # These only affect tab completion, which is unusable until after the
+            # first prompt anyway. Argument completers are engine-global, so
+            # registering them from an event handler still reaches the prompt.
+            $GhInit = Get-CachedInitScript -Name 'gh' -Generate { gh completion -s powershell }
+            if ($GhInit) { . $GhInit }
+
+            if (Get-Command -Name dotnet -CommandType Application -ErrorAction SilentlyContinue) {
+                Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
+                    param($wordToComplete, $commandAst, $cursorPosition)
+                    $null = $wordToComplete
+                    dotnet complete --position $cursorPosition $commandAst.ToString() |
+                    ForEach-Object { [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_) }
+                }
+            }
+        }
+
+        {
+            $env:FZF_DEFAULT_OPTS = "--layout=reverse --multi --cycle"
+            # https://github.com/ryanoasis/nerd-fonts/wiki/FAQ-and-Troubleshooting#less-settings
+            $env:LESSUTFCHARDEF = "e000-f8ff:p,f0001-fffff:p"
+        }
+    ))
+
+# MaxTriggerCount is a backstop, not the exit condition: the handler unregisters
+# itself once the queue runs dry, and budgeted draining means that usually takes
+# fewer firings than there are items. If the self-unregister ever fails, this
+# still stops the subscription instead of waking every ~300ms forever.
+$null = Register-EngineEvent -SourceIdentifier 'PowerShell.OnIdle' `
+    -MaxTriggerCount $global:DeferredStartupQueue.Count -Action {
+
+    $budget = [System.Diagnostics.Stopwatch]::StartNew()
+    while ($global:DeferredStartupQueue.Count -gt 0 -and
+        $budget.ElapsedMilliseconds -lt $global:DeferredStartupBudgetMs) {
+
+        $item = $global:DeferredStartupQueue.Dequeue()
+        try { & $item }
+        catch {
+            # An event action's errors are swallowed into its event job, so stash
+            # them somewhere readable: `$DeferredStartupErrors` at the prompt.
+            $global:DeferredStartupErrors += $_
         }
     }
 
-    ################################################################################
-    # Env
-    ################################################################################
-    $env:FZF_DEFAULT_OPTS = "--layout=reverse --multi --cycle"
-    # https://github.com/ryanoasis/nerd-fonts/wiki/FAQ-and-Troubleshooting#less-settings
-    $env:LESSUTFCHARDEF = "e000-f8ff:p,f0001-fffff:p"
-
-    ## Exec profile.local.ps1 if it exists
-    $LocalProfile = Join-Path $PSScriptRoot -ChildPath "profile.local.ps1"
-    if (Test-Path $LocalProfile) {
-        & $LocalProfile
+    if ($global:DeferredStartupQueue.Count -eq 0) {
+        Unregister-Event -SourceIdentifier 'PowerShell.OnIdle' -Force -ErrorAction SilentlyContinue
+        Remove-Variable -Name DeferredStartupQueue, DeferredStartupBudgetMs `
+            -Scope Global -ErrorAction SilentlyContinue
     }
-
 }
