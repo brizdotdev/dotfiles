@@ -135,14 +135,14 @@ resources:
   properties:
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $profileAllHosts = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\profile.ps1'
+      $profileAllHosts = Get-PwshProfilePath -Scope CurrentUserAllHosts
       $config = @{
         $profileAllHosts = "${WinGetConfigRoot}\..\config\PowerShell\profile.ps1"
       }
       return Test-SymlinkConfig -Config $config
     setScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $profileAllHosts = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\profile.ps1'
+      $profileAllHosts = Get-PwshProfilePath -Scope CurrentUserAllHosts
       $config = @{
         $profileAllHosts = "${WinGetConfigRoot}\..\config\PowerShell\profile.ps1"
       }

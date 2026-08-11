@@ -132,6 +132,40 @@ function Add-EnvVar {
 	}
 }
 
+function Get-PwshProfilePath {
+	<#
+	.SYNOPSIS
+		Gets the path to a PowerShell 7 profile, asking pwsh itself so the Documents
+		location is resolved correctly (OneDrive redirection, relocated Documents folder).
+	.PARAMETER Scope
+		Which $PROFILE scope to resolve. Defaults to CurrentUserAllHosts (profile.ps1).
+	.OUTPUTS
+		[string] The full path to the requested PowerShell 7 profile.
+	.NOTES
+		Falls back to the conventional Documents\PowerShell path when pwsh is not yet on
+		PATH, which happens when PowerShell 7 was installed earlier in the same session.
+	.EXAMPLE
+		Get-PwshProfilePath
+	.EXAMPLE
+		Get-PwshProfilePath -Scope CurrentUserCurrentHost
+	#>
+	Param (
+		[ValidateSet('CurrentUserAllHosts', 'CurrentUserCurrentHost', 'AllUsersAllHosts', 'AllUsersCurrentHost')]
+		[string]$Scope = 'CurrentUserAllHosts'
+	)
+	$path = $null
+	if (Get-Command -Name pwsh -ErrorAction SilentlyContinue) {
+		$path = & pwsh -NoProfile -NoLogo -Command "`$PROFILE.$Scope" 2>$null
+	}
+	if ([string]::IsNullOrWhiteSpace($path)) {
+		$leaf = if ($Scope -like '*AllHosts') { 'profile.ps1' } else { 'Microsoft.PowerShell_profile.ps1' }
+		$root = if ($Scope -like 'AllUsers*') { Join-Path $env:ProgramFiles 'PowerShell\7' }
+			else { Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell' }
+		$path = Join-Path $root $leaf
+	}
+	return $path.Trim()
+}
+
 function Test-Symlink {
 	<#
 	.SYNOPSIS
