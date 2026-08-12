@@ -1,0 +1,66 @@
+[bootstrap.packages]
+"apt:7zip" = "latest"
+"apt:poppler-utils" = "latest"
+"apt:poppler-data" = "latest"
+
+[tools]
+"github:agavra/tuicr" = "latest"
+
+atuin = "latest"
+bat = "latest"
+btop = "latest"
+delta = "latest"
+doggo = "latest"
+duf = "latest"
+dust = "latest"
+eza = "latest"
+fd = "latest"
+ffmpeg = "latest"
+fx = "latest"
+fzf = "latest"
+gh = "latest"
+glow = "latest"
+gum = "latest"
+herdr = "latest"
+hyperfine = "latest"
+jq = "latest"
+lazygit = "latest"
+neovim = "latest"
+oha = "latest"
+qsv = "latest"
+resvg = "latest"
+ripgrep = "latest"
+sd = "latest"
+television = "latest"
+yazi = "latest"
+yq = "latest"
+
+python = "latest"
+pipx = "latest"
+uv = "latest"
+"pipx:posting" = "latest"
+"pipx:sqlit-tui" = "latest"
+
+
+[env]
+FX_THEME = "9"
+FX_SHOW_SIZE = "true"
+FX_LINE_NUMBERS = "true"
+
+[settings.pipx]
+uvx = true
+
+[settings]
+dotfiles.default_mode = "symlink"
+dotfiles.root = "~/.dotfiles"
+experimental = true
+
+[dotfiles]
+# Git
+# "~/.gitconfig" = "~/.dotfiles/common/config/git/.gitconfig"
+"~/.gitignore_global" = "~/.dotfiles/common/config/git/.gitignore_global"
+
+# Links configs rooted at XDG_CONFIG_HOME / CLAUDE_CONFIG_DIR, which [dotfiles]
+# can't express — its targets must be literal paths, with no env expansion.
+[bootstrap.hooks.post-dotfiles]
+run = "bash $HOME/.dotfiles/common/config/mise/link-configs.sh"
