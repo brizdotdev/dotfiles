@@ -1,0 +1,33 @@
+# herdr configuration
+onboarding = false
+
+[update]
+# Check herdr.dev for new Herdr versions in the background.
+version_check = false
+
+[ui]
+# Ask for a tab name before creating a new tab.
+# Set false to create tabs immediately with generated names.
+prompt_new_tab_name = false
+
+# Ask for a workspace name before interactive creation.
+prompt_new_workspace_name = false
+
+# Draw borders around split panes.
+pane_borders = false
+
+# Draw interactive scrollbars beside terminal panes.
+# Set false to reclaim the scrollbar column and keep it out of terminal-native selections.
+# pane_scrollbars = true
+
+# Keep split panes visually separated instead of sharing divider borders.
+pane_gaps = false
+
+# Hide the tab row when a workspace has exactly one tab.
+# New tabs can still be created with the configured keybinding.
+hide_tab_bar_when_single_tab = true
+
+[experimental]
+# Experimental local Kitty graphics rendering for attached clients.
+# Requires a Kitty graphics-compatible outer terminal.
+kitty_graphics = true
