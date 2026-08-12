@@ -128,6 +128,8 @@ resources:
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Add-EnvVar -Name "POWERSHELL_UPDATECHECK" -Value "false"
 
+# PowerShell has no environment variable for the profile location: $PROFILE is
+# derived from $PSHOME and the Documents folder, so a symlink is the only option.
 - name: PowerShellSettings
   type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
@@ -151,22 +153,16 @@ resources:
 - name: StarshipSettings
   type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
-    description: Ensure Starship is configured
+    description: Ensure Starship reads its config from the dotfiles repo
   properties:
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $starshipConfig = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.config\starship.toml'
-      $config = @{
-        $starshipConfig = "${WinGetConfigRoot}\..\..\common\config\starship\starship.toml"
-      }
-      return Test-SymlinkConfig -Config $config
+      $starshipConfig = [IO.Path]::GetFullPath("${WinGetConfigRoot}\..\..\common\config\starship\starship.toml")
+      Test-EnvVar -Name "STARSHIP_CONFIG" -Value $starshipConfig
     setScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $starshipConfig = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.config\starship.toml'
-      $config = @{
-        $starshipConfig = "${WinGetConfigRoot}\..\..\common\config\starship\starship.toml"
-      }
-      New-SymlinkConfig -Config $config
+      $starshipConfig = [IO.Path]::GetFullPath("${WinGetConfigRoot}\..\..\common\config\starship\starship.toml")
+      Add-EnvVar -Name "STARSHIP_CONFIG" -Value $starshipConfig
 
 - name: SetLessAsPager
   type: Microsoft.DSC.Transitional/WindowsPowerShellScript

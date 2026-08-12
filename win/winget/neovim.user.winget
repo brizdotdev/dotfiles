@@ -1,6 +1,7 @@
 ##############################################################################
 # Neovim
-# Installs Neovim, sets it as EDITOR, and symlinks Neovim/vim configs
+# Installs Neovim, sets it as EDITOR, symlinks the Neovim config and points vim
+# at the dotfiles vimrc via $VIMINIT
 ##############################################################################
 $schema: https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2023/08/config/document.json
 metadata:
@@ -35,6 +36,9 @@ resources:
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
       Add-EnvVar -Name "EDITOR" -Value "nvim"
 
+# Neovim has no dedicated config-path variable ($NVIM_APPNAME only renames the
+# leaf folder). $XDG_CONFIG_HOME would work, but it is user-wide and every other
+# XDG-aware tool would follow it into the repo, so the symlink stays.
 - name: NvimSettings
   type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
@@ -53,20 +57,19 @@ resources:
       }
       New-SymlinkConfig -Config $config
 
+# Vim looks at $VIMINIT (a set of Ex commands) before ~/.vimrc, so sourcing the
+# dotfiles vimrc from there replaces the symlink. The path is single-quoted
+# because Vim treats a backslash in a double-quoted string as an escape.
 - name: VimrcSettings
   type: Microsoft.DSC.Transitional/WindowsPowerShellScript
   metadata:
-    description: Ensure vimrc is configured
+    description: Ensure vim reads its vimrc from the dotfiles repo
   properties:
     testScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
-      }
-      return Test-SymlinkConfig -Config $config
+      $vimrc = "$env:DOTFILES\common\config\vim\.vimrc"
+      Test-EnvVar -Name "VIMINIT" -Value "let `$MYVIMRC='$vimrc' | source `$MYVIMRC"
     setScript: |
       . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:USERPROFILE\.vimrc" = "$env:DOTFILES\common\config\vim\.vimrc"
-      }
-      New-SymlinkConfig -Config $config
+      $vimrc = "$env:DOTFILES\common\config\vim\.vimrc"
+      Add-EnvVar -Name "VIMINIT" -Value "let `$MYVIMRC='$vimrc' | source `$MYVIMRC"

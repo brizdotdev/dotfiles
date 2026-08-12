@@ -74,24 +74,6 @@ resources:
 # Git
 ##############################################################################
 
-- name: MiseConfigSymlink
-  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
-  metadata:
-    description: Symlink mise config.toml to dotfiles
-  properties:
-    testScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:USERPROFILE\.config\mise\config.toml" = "$env:DOTFILES\common\config\mise\mise.toml"
-      }
-      return Test-SymlinkConfig -Config $config
-    setScript: |
-      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
-      $config = @{
-        "$env:USERPROFILE\.config\mise\config.toml" = "$env:DOTFILES\common\config\mise\mise.toml"
-      }
-      New-SymlinkConfig -Config $config
-
 ##############################################################################
 # Utils
 ##############################################################################
@@ -113,6 +95,18 @@ resources:
     id: jdx.mise
     source: winget
     installMode: silent
+
+- name: MiseGlobalConfig
+  type: Microsoft.DSC.Transitional/WindowsPowerShellScript
+  metadata:
+    description: Ensure mise reads its global config from the dotfiles repo
+  properties:
+    testScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Test-EnvVar -Name "MISE_GLOBAL_CONFIG_FILE" -Value "$env:DOTFILES\common\config\mise\mise.toml"
+    setScript: |
+      . "${WinGetConfigRoot}\..\scripts\Utils.ps1"
+      Add-EnvVar -Name "MISE_GLOBAL_CONFIG_FILE" -Value "$env:DOTFILES\common\config\mise\mise.toml"
 
 - name: MiseShimsPath
   type: Microsoft.DSC.Transitional/WindowsPowerShellScript
