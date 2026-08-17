@@ -1,5 +1,9 @@
 # Agent Config
 
+## General preferences
+
+- In all interactions and commit messages, be extremely concise and sacrifice grammar for the sake of concision.
+
 ## Coding preferences - general
 
 - Be careful with destructive actions that are not explicitly requested by the user. If you are unsure, ask for clarification before proceeding.
