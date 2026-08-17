@@ -1,0 +1,4 @@
+diff_view = "side-by-side"
+ignore_whitespace = true
+relative_line_numbers = true
+no_update_check = true

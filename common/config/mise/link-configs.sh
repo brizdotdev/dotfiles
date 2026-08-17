@@ -11,7 +11,7 @@ dotfiles="$HOME/.dotfiles/common/config"
 # Whole directories under $XDG_CONFIG_HOME — add names under common/config/
 config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
 mkdir -p "$config_home"
-for name in yazi lazygit herdr; do
+for name in yazi lazygit herdr tuicr; do
   echo "Linking $dotfiles/$name -> $config_home/$name"
   rm -rf "$config_home/$name"
   ln -sfn "$dotfiles/$name" "$config_home/$name"
