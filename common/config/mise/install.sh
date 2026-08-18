@@ -2,6 +2,7 @@
 set -euo pipefail
 
 config_file="${1:-mise.devcontainer.toml}"
+config_path="$HOME/.dotfiles/common/config/mise/$config_file"
 
 # Where mise looks for its global config, in order of precedence.
 # https://mise.jdx.dev/configuration.html
@@ -20,8 +21,9 @@ fi
 
 echo "Linking mise config ($config_file -> $target)..."
 mkdir -p "$(dirname "$target")"
-ln -sf "$HOME/.dotfiles/common/config/mise/$config_file" "$target"
+ln -sf "$config_path" "$target"
 
 echo "Bootstrapping mise..."
 cd ~
-mise bootstrap
+mise trust --yes "$config_path"
+mise bootstrap --yes
