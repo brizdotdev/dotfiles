@@ -2,6 +2,8 @@
 "apt:7zip" = "latest"
 "apt:poppler-utils" = "latest"
 "apt:poppler-data" = "latest"
+"apt:file" = "latest"
+"apt:less" = "latest"
 
 [tools]
 "github:agavra/tuicr" = "latest"
