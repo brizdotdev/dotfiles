@@ -32,7 +32,7 @@ MERGE_GLUE=' '                      # joins merged items (model -> context bar)
 
 ICON_COMPACTION=$'\xef\x80\xa1'     # U+F021 nerd font cog
 ICON_CLOCK=$'\xef\x94\xa0'          # U+F520 nf-oct-stopwatch (session duration)
-ICON_WORKTREE=$'\xf0\x96\xa0\xb0'   # U+16830
+ICON_WORKTREE=$''
 ICON_TOKENS=$'\xef\x8a\x92'         # U+F292 nf-fa-hashtag     — tokens this session
 ICON_CACHE=$'\xef\x87\x80'          # U+F1C0 nf-fa-database    — cache hit rate
 ICON_SPEED=$'\xef\x83\xa4'          # U+F0E4 nf-fa-tachometer  — token speed

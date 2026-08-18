@@ -21,7 +21,7 @@ done
 # (projects/, todos/), so only the named files are replaced, never the dir.
 claude_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 mkdir -p "$claude_dir"
-for file in settings.json CLAUDE.md; do
+for file in settings.json CLAUDE.md statusline.sh; do
   echo "Linking $dotfiles/claude/$file -> $claude_dir/$file"
   rm -f "$claude_dir/$file"
   ln -sfn "$dotfiles/claude/$file" "$claude_dir/$file"
