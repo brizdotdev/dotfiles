@@ -5,10 +5,11 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "outputStyle": "Concise",
   "respondToBashCommands": false,
-  "theme": "auto",
   "statusLine": {
-    "type": "command",
-    "command": "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/statusline.sh"
-  }
+    "command": "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/statusline.sh",
+    "type": "command"
+  },
+  "theme": "auto"
 }
