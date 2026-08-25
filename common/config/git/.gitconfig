@@ -101,11 +101,17 @@
   helper = manager
 
 [delta]
-  features = decorations
-  navigate = true    # use n and N to move between diff sections
+  features = decorations terminal-pager
   light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
-  side-by-side = true
   line-numbers = true
+
+# Settings that only make sense when delta is git's pager in a full-width terminal.
+# Lazygit passes `--features=decorations` so it opts out of this group:
+# side-by-side is too cramped in its panel, and lazygit's docs note that
+# delta's --navigate is incompatible with it.
+[delta "terminal-pager"]
+  navigate = true    # use n and N to move between diff sections
+  side-by-side = true
 
 [diff]
   algorithm = histogram

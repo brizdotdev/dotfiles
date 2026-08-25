@@ -5,9 +5,10 @@ gui:
   splitDiff: "always"
   skipRewordInEditorWarning: true
 git:
-  pagers:
+  diffRenderers:
+    - type: rawGit
     - colorArg: always
-      pager: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+      command: delta --dark --paging=never --features=decorations --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
 disableStartupPopups: true
 keybinding:
   commits:
