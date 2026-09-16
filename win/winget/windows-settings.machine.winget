@@ -10,15 +10,17 @@ metadata:
 
 resources:
 
-- name: ShowLnkExtension
+- name: HideLnkExtension
   type: Microsoft.Windows/Registry
   metadata:
-    description: Show .lnk file extension on shortcut files
+    description: Hide .lnk extension on shortcuts (taskbar, Start menu, Explorer)
     securityContext: elevated
   properties:
     keyPath: HKEY_CLASSES_ROOT\lnkfile
     valueName: NeverShowExt
-    _exist: false
+    valueData:
+      String: ''
+    _exist: true
 
 - name: DisableAutorunAllDrives
   type: Microsoft.Windows/Registry
