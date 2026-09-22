@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+#MISE description="Create a GitLab MR (prompts for anything not passed as a flag)"
+#MISE dir="{{cwd}}"
+#MISE tools={gum="latest"}
+#MISE quiet=true
+#USAGE flag "-b --branch <branch>" help="Target branch"
+#USAGE flag "-s --source-branch <source_branch>" help="Source branch (defaults to the current branch)"
+#USAGE flag "-t --title <title>" help="Merge request title"
+#USAGE flag "--draft" negate="--no-draft" help="Open the MR as a draft"
+#USAGE flag "-r --reviewer <reviewer>" var=#true help="Reviewer username (repeatable)"
+set -euo pipefail
+
+branch="${usage_branch:-}"
+if [ -z "$branch" ]; then
+  branches=$(git for-each-ref --format='%(refname:short)' refs/remotes/origin | sed 's|^origin/||' | grep -v '^HEAD$' | sort -u)
+  if [ -n "$branches" ]; then
+    branch=$(echo "$branches" | gum filter --header "Target branch" --placeholder "Filter branches...")
+  else
+    branch=$(gum input --header "Target branch" --placeholder "main")
+  fi
+fi
+[ -n "$branch" ] || { echo "A target branch is required." >&2; exit 1; }
+
+source_branch="${usage_source_branch:-}"
+if [ -z "$source_branch" ]; then
+  source_branch=$(gum input --header "Source branch (optional)" --placeholder "defaults to the current branch")
+fi
+
+title="${usage_title:-}"
+if [ -z "$title" ]; then
+  title=$(gum input --header "Title" --placeholder "Merge request title")
+fi
+[ -n "$title" ] || { echo "A title is required." >&2; exit 1; }
+
+draft="${usage_draft:-}"
+if [ -z "$draft" ]; then
+  [ "$(gum choose --header "Draft?" --selected no no yes)" = "yes" ] && draft=true || draft=false
+fi
+
+reviewers="${usage_reviewer:-}"
+if [ -z "$reviewers" ]; then
+  reviewers=$(gum input --header "Reviewers" --placeholder "space-separated usernames (optional)")
+fi
+
+args=()
+[ -n "$source_branch" ] && args+=(--source-branch "$source_branch")
+[ "$draft" = "true" ] && args+=(--draft)
+for r in $reviewers; do args+=(--reviewer "$r"); done
+
+echo "Enter the MR description, then press Ctrl-D:" >&2
+glab mr create --push --remove-source-branch -d - -a abrizmohun -b "$branch" -t "$title" ${args[@]+"${args[@]}"}

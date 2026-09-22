@@ -52,6 +52,9 @@ FX_THEME = "9"
 FX_SHOW_SIZE = "true"
 FX_LINE_NUMBERS = "true"
 
+[task_config]
+includes = ["~/.dotfiles/common/config/mise/tasks"]
+
 [settings.pipx]
 uvx = true
 
