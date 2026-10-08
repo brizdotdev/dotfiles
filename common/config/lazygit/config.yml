@@ -6,9 +6,12 @@ gui:
   skipRewordInEditorWarning: true
 git:
   diffRenderers:
+    - command: delta --{{colorScheme}} --paging=never --features=decorations --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}" {{if gt .width 160}}--side-by-side{{end}}
     - type: rawGit
-    - colorArg: always
-      command: delta --dark --paging=never --features=decorations --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+      args: [--color-words]
+      name: color-words
+    - type: rawGit # git's default diff
+      name: default
 disableStartupPopups: true
 keybinding:
   commits:
