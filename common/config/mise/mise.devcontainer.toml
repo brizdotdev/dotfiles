@@ -4,6 +4,7 @@
 "apt:poppler-data" = "latest"
 "apt:file" = "latest"
 "apt:less" = "latest"
+"apt:build-essential" = "latest"
 
 [tools]
 "github:agavra/tuicr" = "latest"
