@@ -41,11 +41,9 @@ yazi = "latest"
 yq = "latest"
 
 python = "latest"
-pipx = "latest"
 uv = "latest"
-"pipx:posting" = "latest"
-"pipx:sqlit-tui" = "latest"
-
+"pypi:posting" = { version = "latest", uvx_args = "--python 3.14" }
+"pypi:sqlit-tui" = { version = "latest", uvx_args = "--python 3.14" }
 
 [env]
 FX_THEME = "9"
@@ -55,7 +53,7 @@ FX_LINE_NUMBERS = "true"
 [task_config]
 includes = ["~/.dotfiles/common/config/mise/tasks"]
 
-[settings.pipx]
+[settings.pypi]
 uvx = true
 
 [settings]
