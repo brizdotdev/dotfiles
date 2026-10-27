@@ -118,17 +118,19 @@ resources:
       DWord: 0
     _exist: true
 
-# Activity history (adapted from winutil WPFTweaksActivity)
-- name: DisableActivityFeed
+# Activity history (adapted from winutil WPFTweaksActivity, post-d1a6179 fix)
+# EnableActivityFeed must stay 1: setting it to 0 also breaks Win+V clipboard history.
+# Privacy is preserved by stopping publish/upload instead.
+- name: KeepActivityFeed
   type: Microsoft.Windows/Registry
   metadata:
-    description: Disable activity feed (Timeline)
+    description: Keep activity feed enabled (required for Win+V clipboard history)
     securityContext: elevated
   properties:
     keyPath: HKLM\SOFTWARE\Policies\Microsoft\Windows\System
     valueName: EnableActivityFeed
     valueData:
-      DWord: 0
+      DWord: 1
     _exist: true
 
 - name: NoPublishUserActivities

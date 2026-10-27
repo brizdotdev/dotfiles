@@ -128,6 +128,17 @@ resources:
       DWord: 1
     _exist: true
 
+- name: HideSpotlightDesktopIcon
+  type: Microsoft.Windows/Registry
+  metadata:
+    description: Hide Spotlight "Learn about this picture" desktop icon (wallpaper rotation keeps working)
+  properties:
+    keyPath: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel
+    valueName: "{2cc5ca98-6485-489a-920e-b3e88a6ccce3}"
+    valueData:
+      DWord: 1
+    _exist: true
+
 # Taskbar
 - name: TaskbarAlignmentCenter
   type: Microsoft.Windows/Registry
