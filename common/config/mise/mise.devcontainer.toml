@@ -9,7 +9,7 @@
 [tools]
 "github:agavra/tuicr" = "latest"
 
-glab = "latest"
+glab = { version = "latest", install_env = { GITLAB_TOKEN = "" } }
 "github:rcieri/glab-tui" = "latest"
 
 atuin = "latest"
